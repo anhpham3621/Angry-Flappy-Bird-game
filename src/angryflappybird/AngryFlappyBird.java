@@ -106,7 +106,7 @@ public class AngryFlappyBird extends Application {
             gc = canvas.getGraphicsContext2D();
 
             // create a background
-            ImageView background = DEF.IMVIEW.get("background");
+            ImageView background = DEF.IMVIEW.get("day_background");
             
             // create the game scene
             gameScene = new Group();
@@ -127,7 +127,7 @@ public class AngryFlappyBird extends Application {
     	}
         
         // initialize blob
-        blob = new Sprite(DEF.BLOB_POS_X, DEF.BLOB_POS_Y,DEF.IMAGE.get("blob0"));
+        blob = new Sprite(DEF.BLOB_POS_X, DEF.BLOB_POS_Y,DEF.IMAGE.get("bird1"));
         blob.render(gc);
         
         // initialize timer
@@ -182,9 +182,11 @@ public class AngryFlappyBird extends Application {
 			// blob flies upward with animation
 			if (CLICKED && diffTime <= DEF.BLOB_DROP_TIME) {
 				
+			    //the range we loop through the images
 				int imageIndex = Math.floorDiv(counter++, DEF.BLOB_IMG_PERIOD);
 				imageIndex = Math.floorMod(imageIndex, DEF.BLOB_IMG_LEN);
-				blob.setImage(DEF.IMAGE.get("blob"+String.valueOf(imageIndex)));
+				//blob0 , blob1 etc...
+				blob.setImage(DEF.IMAGE.get("bird"+String.valueOf(imageIndex+1)));
 				blob.setVelocity(0, DEF.BLOB_FLY_VEL);
 			}
 			// blob drops after a period of time without button click

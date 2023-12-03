@@ -19,10 +19,13 @@ public class Defines {
     final int SCENE_WIDTH = 400;
 
     // coefficients related to the blob
-    final int BLOB_WIDTH = 70;
-    final int BLOB_HEIGHT = 70;
-    final int BLOB_POS_X = 70;
-    final int BLOB_POS_Y = 200;
+    
+    //for some reason this changes the background
+    final int BLOB_WIDTH = 400;
+    final int BLOB_HEIGHT = 570;
+    
+    final int BLOB_POS_X = 10;
+    final int BLOB_POS_Y = 100;
     final int BLOB_DROP_TIME = 300000000;  	// the elapsed time threshold before the blob starts dropping
     final int BLOB_DROP_VEL = 300;    		// the blob drop velocity
     final int BLOB_FLY_VEL = -40;
@@ -30,7 +33,7 @@ public class Defines {
     final int BLOB_IMG_PERIOD = 5;
     
     // coefficients related to the floors
-    final int FLOOR_WIDTH = 400;
+    final int FLOOR_WIDTH = 500;
     final int FLOOR_HEIGHT = 100;
     final int FLOOR_COUNT = 2;
     
@@ -44,8 +47,11 @@ public class Defines {
     
     // coefficients related to media display
     final String STAGE_TITLE = "Angry Flappy Bird";
-	private final String IMAGE_DIR = "../resources/images/";
-    final String[] IMAGE_FILES = {"background","blob0", "blob1", "blob2", "blob3", "floor"};
+	private final String IMAGE_DIR = "../final_images/";
+    final String[] IMAGE_FILES = {"bird1", "day_background", "floor",
+    "bird2", "bird3", "bird4", "bird_with_parachute",
+   "downward_pipe", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
+    "special_coin", "start_button_sprite", "upward_pipe", "white_egg"};
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
