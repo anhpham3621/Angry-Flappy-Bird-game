@@ -37,6 +37,13 @@ public class Defines {
     final int FLOOR_HEIGHT = 100;
     final int FLOOR_COUNT = 2;
     
+    // coefficients related to the pipes
+    final int D_PIPE_POS_X = 100;
+    final int D_PIPE_POS_Y = 100;
+    
+    final int U_PIPE_POS_X = 300;
+    final int U_PIPE_POS_Y = 300;
+    
     // coefficients related to time
     final int SCENE_SHIFT_TIME = 5;
     final double SCENE_SHIFT_INCR = -0.4;
@@ -49,8 +56,8 @@ public class Defines {
     final String STAGE_TITLE = "Angry Flappy Bird";
 	private final String IMAGE_DIR = "../final_images/";
     final String[] IMAGE_FILES = {"day_background", "bird1", "bird2", "bird3", "bird4",  "floor", "bird_with_parachute",
-   "downward_pipe", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
-      "special_coin", "start_button_sprite", "upward_pipe", "white_egg"};
+   "dpipe1", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
+      "special_coin", "start_button_sprite", "upipe1", "white_egg"};
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();

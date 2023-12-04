@@ -52,6 +52,11 @@ public class AngryFlappyBird extends Application {
     private GraphicsContext gc;		
     private int currentScore;
     
+    private ImageView background;
+    
+    private Sprite uPipe;
+    private Sprite dPipe;
+    
 	// the mandatory main method 
     public static void main(String[] args) {
         launch(args);
@@ -152,7 +157,7 @@ public class AngryFlappyBird extends Application {
         // You can customize the font size and style if needed
         scoreText.setStyle("-fx-font-size: 24; -fx-font-weight: bold; -fx-fill: black");
         
-    	// Create a Text object to display the score
+    	// Create a Text object to display the][i[ score
         Text livesText = new Text("Score: 3");
 
         // You can customize the font size and style if needed
@@ -168,13 +173,16 @@ public class AngryFlappyBird extends Application {
             Canvas canvas = new Canvas(DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
             gc = canvas.getGraphicsContext2D();
 
+            //Make background defined globally as an attribute
             // create a background
-            ImageView background = DEF.IMVIEW.get("day_background");
+            background = DEF.IMVIEW.get("day_background");
             System.out.println(background);
             // create the game scene
             gameScene = new Group();
             gameScene.getChildren().addAll(background, canvas, scoreText);
     	}
+    
+    	
     	
     	// initialize floor
     	for(int i=0; i<DEF.FLOOR_COUNT; i++) {
@@ -191,6 +199,13 @@ public class AngryFlappyBird extends Application {
         // initialize blob
         blob = new Sprite(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
         blob.render(gc);
+        
+        // initialize pipes
+        uPipe = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
+        uPipe.render(gc);
+        
+       dPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
+        dPipe.render(gc);
         
         // initialize timer
         startTime = System.nanoTime();
@@ -216,8 +231,11 @@ public class AngryFlappyBird extends Application {
     	     gc.clearRect(0, 0, DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
 
     	     if (GAME_START) {
+    	    	 switchBackground();
+
     	    	 // step1: update floor
     	    	 moveFloor();
+    	    	 movePipe();
     	    	 System.out.println("In the animation");
     	    	 
     	    	 // step2: update blob
@@ -259,6 +277,9 @@ public class AngryFlappyBird extends Application {
 			}
 			// blob drops after a period of time without button click
 			else {
+				
+				//check the image when it's landing
+				//if the wing is upward, flip it to a downward flapping wing
 			    blob.setVelocity(0, DEF.BLOB_DROP_VEL); 
 			    CLICKED = false;
 			}
@@ -266,6 +287,14 @@ public class AngryFlappyBird extends Application {
 			// render blob on GUI
 			blob.update(elapsedTime * DEF.NANOSEC_TO_SEC);
 			blob.render(gc);
+    	 }
+    	 
+    	 public void movePipe() {
+    		 uPipe.update(elapsedTime * DEF.NANOSEC_TO_SEC);
+ 			uPipe.render(gc);
+ 			
+ 			dPipe.update(elapsedTime * DEF.NANOSEC_TO_SEC);
+			dPipe.render(gc);
     	 }
     	 
     	 public void checkCollision() {
@@ -294,6 +323,36 @@ public class AngryFlappyBird extends Application {
 	        fadeTransition.setAutoReverse(true);
 	        parallelTransition.getChildren().add(fadeTransition);
 	        parallelTransition.play();
+	     }
+	     
+	     /**
+	      *     	else if (!firstEntry && firstBackground % 2 == 1) {
+    		Canvas canvas = new Canvas(DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
+            gc = canvas.getGraphicsContext2D();
+
+            // create a background
+            ImageView background = DEF.IMVIEW.get("night_background");
+            System.out.println(background);
+            // create the game scene
+            gameScene = new Group();
+            gameScene.getChildren().addAll(background, canvas, scoreText);
+            firstBackground ++;
+    	}
+	      */
+	     private void switchBackground() {
+	    	 
+//	    	 Text scoreText = new Text("Score: 0");
+//			 Canvas canvas = new Canvas(DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
+//			 gc = canvas.getGraphicsContext2D();
+	    	 
+	    	 gc.drawImage(DEF.IMAGE.get("night_background"), 0, 0);
+//			
+			    // create a background
+			background = DEF.IMVIEW.get("night_background");
+			System.out.println("The background is working: ");
+//			// create the game scene
+//			gameScene = new Group();
+//			gameScene.getChildren().addAll(background, canvas, scoreText); 
 	     }
     	 
     } // End of MyTimer class
