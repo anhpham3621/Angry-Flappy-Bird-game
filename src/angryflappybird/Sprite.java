@@ -29,7 +29,16 @@ public class Sprite {
         this.velocityY = 0;
     }
 
-    public void setImage(Image image) {
+    public Sprite(int bLOB_POS_X, int bLOB_POS_Y, Image image2) {
+		// TODO Auto-generated constructor stub
+    	setPositionXY(bLOB_POS_X, bLOB_POS_Y);
+    	System.out.println("The image : " + image2);
+        setImage(image2);
+        this.velocityX = 0;
+        this.velocityY = 0;
+	}
+
+	public void setImage(Image image) {
         this.image = image;
         this.width = image.getWidth();
         this.height = image.getHeight();

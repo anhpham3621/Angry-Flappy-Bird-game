@@ -21,8 +21,8 @@ public class Defines {
     // coefficients related to the blob
     
     //for some reason this changes the background
-    final int BLOB_WIDTH = 400;
-    final int BLOB_HEIGHT = 570;
+    final int BLOB_WIDTH = 100;
+    final int BLOB_HEIGHT = 100;
     
     final int BLOB_POS_X = 10;
     final int BLOB_POS_Y = 100;
@@ -48,16 +48,18 @@ public class Defines {
     // coefficients related to media display
     final String STAGE_TITLE = "Angry Flappy Bird";
 	private final String IMAGE_DIR = "../final_images/";
-    final String[] IMAGE_FILES = {"bird1", "day_background", "floor",
-    "bird2", "bird3", "bird4", "bird_with_parachute",
+    final String[] IMAGE_FILES = {"day_background", "bird1", "bird2", "bird3", "bird4",  "floor", "bird_with_parachute",
    "downward_pipe", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
-    "special_coin", "start_button_sprite", "upward_pipe", "white_egg"};
+      "special_coin", "start_button_sprite", "upward_pipe", "white_egg"};
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
     
     //nodes on the scene graph
     Button startButton;
+    Button easyButton;
+    Button mediumButton;
+    Button hardButton;
     
     // constructor
 	Defines() {
@@ -66,9 +68,11 @@ public class Defines {
 		for(int i=0; i<IMAGE_FILES.length; i++) {
 			Image img;
 			if (i == 5) {
+//				System.out.println(IMAGE_FILES[i]);
 				img = new Image(pathImage(IMAGE_FILES[i]), FLOOR_WIDTH, FLOOR_HEIGHT, false, false);
 			}
 			else if (i == 1 || i == 2 || i == 3 || i == 4){
+				System.out.println(IMAGE_FILES[i]);
 				img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
 			}
 			else {
@@ -85,13 +89,21 @@ public class Defines {
 		
 		// initialize scene nodes
 		startButton = new Button("Go!");
+		easyButton = new Button("Easy");
+//		easyButton.setStyle("-fx-background-color: #FFFF00;");
+		mediumButton = new Button("Medium");
+//		mediumButton.setStyle("-fx-background-color: #808080;");
+		hardButton = new Button("Hard");
+//		hardButton.setStyle("-fx-background-color: #808080;");
 	}
 	
+//	this returns the path of a specific image
 	public String pathImage(String filepath) {
     	String fullpath = getClass().getResource(IMAGE_DIR+filepath+".png").toExternalForm();
     	return fullpath;
     }
 	
+//	this returns the image once it's been resized
 	public Image resizeImage(String filepath, int width, int height) {
     	IMAGE.put(filepath, new Image(pathImage(filepath), width, height, false, false));
     	return IMAGE.get(filepath);
