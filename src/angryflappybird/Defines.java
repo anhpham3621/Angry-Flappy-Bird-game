@@ -55,7 +55,7 @@ public class Defines {
     // coefficients related to media display
     final String STAGE_TITLE = "Angry Flappy Bird";
 	private final String IMAGE_DIR = "../final_images/";
-    final String[] IMAGE_FILES = {"day_background", "bird1", "bird2", "bird3", "bird4",  "floor", "bird_with_parachute",
+    final String[] IMAGE_FILES = {"day_background", "bird1", "bird2", "bird3", "bird4",  "floor1", "bird_with_parachute",
    "dpipe1", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
       "special_coin", "start_button_sprite", "upipe1", "white_egg"};
 
