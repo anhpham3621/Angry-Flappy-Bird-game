@@ -47,10 +47,15 @@ public class Defines {
     
     // coefficients related to media display
     final String STAGE_TITLE = "Angry Flappy Bird";
+<<<<<<< HEAD
 	private final String IMAGE_DIR = "../final_images/";
     final String[] IMAGE_FILES = {"day_background", "bird1", "bird2", "bird3", "bird4",  "floor", "bird_with_parachute",
    "downward_pipe", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
       "special_coin", "start_button_sprite", "upward_pipe", "white_egg"};
+=======
+	private final String IMAGE_DIR = "../resources/images/";
+    final String[] IMAGE_FILES = {"background","blob0", "blob1", "blob2", "blob3", "floor1"};
+>>>>>>> Anh-Branch
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
