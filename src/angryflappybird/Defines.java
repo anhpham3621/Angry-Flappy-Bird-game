@@ -44,6 +44,17 @@ public class Defines {
     final int U_PIPE_POS_X = 300;
     final int U_PIPE_POS_Y = 300;
     
+    // coefficients related to the pipes size
+    final int PIPE_WIDTH = 70;   // Adjust to your desired width
+    final int PIPE_HEIGHT = 325;  // Adjust to your desired height
+    final int PIPE_COUNT = 5;
+
+    //initial pipe position
+    final double PIPE_INITIAL_Y= 250;
+    final double PIPE_RANGE= 200;
+    final double PIPE_Y_GAP=500;
+    final double PIPE_X_GAP=500;
+   
     // coefficients related to time
     final int SCENE_SHIFT_TIME = 5;
     final double SCENE_SHIFT_INCR = -0.4;
@@ -77,6 +88,10 @@ public class Defines {
 			if (i == 5) {
 //				System.out.println(IMAGE_FILES[i]);
 				img = new Image(pathImage(IMAGE_FILES[i]), FLOOR_WIDTH, FLOOR_HEIGHT, false, false);
+			}
+			else if (i == 7 || i == 14 ){
+				System.out.println(IMAGE_FILES[i]);
+				img = new Image(pathImage(IMAGE_FILES[i]), PIPE_WIDTH, PIPE_HEIGHT, false, false);
 			}
 			else if (i == 1 || i == 2 || i == 3 || i == 4){
 				System.out.println(IMAGE_FILES[i]);

@@ -195,17 +195,67 @@ public class AngryFlappyBird extends Application {
     		floor.render(gc);
     		floors.add(floor);
     	}
-    	
+    	//initialize pipe
+    	/*
+    	for(int i=0; i<DEF.PIPE_COUNT; i++) {
+    		//have only i xPos
+    		// but 2 y pos for up and down pipe
+    		//
+    		double dPipePos= DEF.PIPE_INITIAL_Y + PIPE_RANGE*Math.random();
+    		double upPipePos= dPipePos - PIPE_Y_GAP;
+    		
+    		//int posX = i * DEF.FLOOR_WIDTH;
+    		//int posY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
+    		
+    		Sprite upPipe1 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("upipe1"));
+    		Sprite upPipe2 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("upipe2"));
+    		Sprite upPipe3 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("upipe3"));
+    		Sprite upPipe4 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("upipe4"));
+    		Sprite upPipe5 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("upipe5"));
+    		
+    		Sprite dpipe1 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("dpipe1"));
+    		Sprite dpipe2 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("dpipe2"));
+    		Sprite dpipe3 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("dpipe3"));
+    		Sprite dpipe4 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("dpipe4"));
+    		Sprite dpipe5 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("dpipe5"));
+    		//Sprite floor = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("floor1"));
+
+    		upPipe1.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    		upPipe2.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    		upPipe3.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    		upPipe4.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    		upPipe5.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    		dpipe1.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    		dpipe2.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    		dpipe3.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    		dpipe4.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    		dpipe5.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    		
+    		upPipe1.render(gc);
+    		upPipe2.render(gc);
+    		upPipe3.render(gc);
+    		upPipe4.render(gc);
+    		upPipe5.render(gc);
+    		dpipe1.render(gc);
+    		dpipe2.render(gc);
+    		dpipe3.render(gc);
+    		dpipe4.render(gc);
+    		dpipe5.render(gc);
+
+    		
+    		//floors.add(floor);
+    	}
+    	*/
         
         // initialize blob
         blob = new Sprite(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
         blob.render(gc);
         
         // initialize pipes
-        uPipe = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
+        uPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
         uPipe.render(gc);
         
-       dPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
+        dPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
         dPipe.render(gc);
         
         // initialize timer
@@ -259,6 +309,10 @@ public class AngryFlappyBird extends Application {
     		}
     	 }
     	 
+    	 //private void movePipe() { 
+    	 //}
+    	 
+    	 
     	 // step2: update blob
     	 private void moveBlob() {
     		 System.out.println("Move blob");
@@ -291,7 +345,7 @@ public class AngryFlappyBird extends Application {
     	 }
     	 
     	 public void movePipe() {
-    		 uPipe.update(elapsedTime * DEF.NANOSEC_TO_SEC);
+    		uPipe.update(elapsedTime * DEF.NANOSEC_TO_SEC);
  			uPipe.render(gc);
  			
  			dPipe.update(elapsedTime * DEF.NANOSEC_TO_SEC);
