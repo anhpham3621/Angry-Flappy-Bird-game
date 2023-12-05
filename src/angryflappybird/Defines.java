@@ -37,17 +37,25 @@ public class Defines {
     final int FLOOR_HEIGHT = 100;
     final int FLOOR_COUNT = 2;
     
-    // coefficients related to the pipes
-    final int D_PIPE_POS_X = 100;
-    final int D_PIPE_POS_Y = 100;
-    
-    final int U_PIPE_POS_X = 300;
-    final int U_PIPE_POS_Y = 300;
+    // coefficients related to the pipes\
+    //horizontal align
+    final int D_PIPE_POS_X = 200;
+    //vertical align
+    final int D_PIPE_POS_Y = 30;
+
+    //horizontal align
+    final int U_PIPE_POS_X = 200;
+    //vertical align
+    final int U_PIPE_POS_Y = 400; //Adjust the position of the upward facing pipe to increase the gap between downward facing
     
     // coefficients related to the pipes size
     final int PIPE_WIDTH = 70;   // Adjust to your desired width
-    final int PIPE_HEIGHT = 325;  // Adjust to your desired height
-    final int PIPE_COUNT = 5;
+    final int PIPE_HEIGHT = 200;  // Adjust height 
+    final int U_PIPE_HEIGHT = 300;
+    final int U_PIPE_WIDTH = 70;
+    final int D_PIPE_HEIGHT = 200; 
+    final int D_PIPE_WIDTH = 70;
+    final int PIPE_COUNT = 2;
 
     //initial pipe position
     final double PIPE_INITIAL_Y= 250;
@@ -67,7 +75,7 @@ public class Defines {
     final String STAGE_TITLE = "Angry Flappy Bird";
 	private final String IMAGE_DIR = "../final_images/";
     final String[] IMAGE_FILES = {"day_background", "bird1", "bird2", "bird3", "bird4",  "floor1", "bird_with_parachute",
-   "dpipe1", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
+   "dpipe1", "dpipe2", "dpipe3", "dpipe4", "dpipe5", "upipe1", "upipe2", "upipe3", "upipe4", "upipe5", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
       "special_coin", "start_button_sprite", "upipe1", "white_egg"};
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
@@ -89,9 +97,11 @@ public class Defines {
 //				System.out.println(IMAGE_FILES[i]);
 				img = new Image(pathImage(IMAGE_FILES[i]), FLOOR_WIDTH, FLOOR_HEIGHT, false, false);
 			}
-			else if (i == 7 || i == 14 ){
+			else if (IMAGE_FILES[i] == "dpipe1"){
 				System.out.println(IMAGE_FILES[i]);
-				img = new Image(pathImage(IMAGE_FILES[i]), PIPE_WIDTH, PIPE_HEIGHT, false, false);
+				img = new Image(pathImage(IMAGE_FILES[i]), D_PIPE_WIDTH, D_PIPE_HEIGHT, false, false);
+			} else if (IMAGE_FILES[i] == "upipe1") {
+				img = new Image(pathImage(IMAGE_FILES[i]), U_PIPE_WIDTH, U_PIPE_HEIGHT, false, false);
 			}
 			else if (i == 1 || i == 2 || i == 3 || i == 4){
 				System.out.println(IMAGE_FILES[i]);

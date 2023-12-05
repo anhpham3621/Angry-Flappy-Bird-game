@@ -40,6 +40,8 @@ public class AngryFlappyBird extends Application {
     // game components
     private Sprite blob;
     private ArrayList<Sprite> floors;
+    private ArrayList<Sprite> uPipes;
+    private ArrayList<Sprite> dPipes;
     
     // game flags
     private boolean CLICKED, GAME_START, GAME_OVER;
@@ -167,6 +169,8 @@ public class AngryFlappyBird extends Application {
         GAME_OVER = false;
         GAME_START = false;
         floors = new ArrayList<>();
+        uPipes = new ArrayList<>();
+        dPipes = new ArrayList<>();
         
     	if(firstEntry) {
     		// create two canvases
@@ -195,7 +199,27 @@ public class AngryFlappyBird extends Application {
     		floor.render(gc);
     		floors.add(floor);
     	}
-    	//initialize pipe
+    	//initialize upward pipe
+    	for (int i = 0; i < DEF.PIPE_COUNT; i++ ) {
+    		uPipe = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
+    		uPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    		uPipe.render(gc);
+    		uPipes.add(uPipe);
+    	}
+    	//initialize downward pipe
+    	for (int i = 0; i < DEF.PIPE_COUNT; i++) {
+    		dPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
+    		dPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    		dPipe.render(gc);
+    		dPipes.add(dPipe);
+    	}
+        
+        
+        // initialize pipes
+        uPipe = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
+        uPipe.render(gc);
+        dPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
+        dPipe.render(gc);
     	/*
     	for(int i=0; i<DEF.PIPE_COUNT; i++) {
     		//have only i xPos
@@ -246,17 +270,11 @@ public class AngryFlappyBird extends Application {
     		//floors.add(floor);
     	}
     	*/
-        
+        int pipe_gap = 150;
         // initialize blob
         blob = new Sprite(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
         blob.render(gc);
         
-        // initialize pipes
-        uPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
-        uPipe.render(gc);
-        
-        dPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
-        dPipe.render(gc);
         
         // initialize timer
         startTime = System.nanoTime();
@@ -270,7 +288,6 @@ public class AngryFlappyBird extends Application {
     	
     	int counter = 0;
     	
-    	 @Override
     	 public void handle(long now) {   	
     	    	
 
@@ -309,8 +326,32 @@ public class AngryFlappyBird extends Application {
     		}
     	 }
     	 
-    	 //private void movePipe() { 
-    	 //}
+
+    	 public void movePipe() {
+    		 
+    		for (int i = 0; i < DEF.PIPE_COUNT; i++) {
+    			if (uPipes.get(i).getPositionX() <= -DEF.U_PIPE_WIDTH) {
+    				double nextX = uPipes.get((i+1)%DEF.FLOOR_COUNT).getPositionX() + DEF.FLOOR_WIDTH;
+    	        	double nextY = DEF.U_PIPE_HEIGHT;
+    	        	uPipes.get(i).setPositionXY(nextX, nextY);
+    			}
+    			uPipes.get(i).render(gc);
+    			uPipes.get(i).update(DEF.SCENE_SHIFT_TIME);
+    		}
+    		
+    		for (int i = 0; i < DEF.PIPE_COUNT; i++) {
+    			if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
+    				double nextX = dPipes.get((i+1)%DEF.FLOOR_COUNT).getPositionX() + DEF.FLOOR_WIDTH;
+    	        	double nextY = DEF.U_PIPE_HEIGHT;
+    	        	dPipes.get(i).setPositionXY(nextX, nextY);
+    			}
+    			dPipes.get(i).render(gc);
+    			dPipes.get(i).update(DEF.SCENE_SHIFT_TIME);
+    		}
+// 			dPipe.update(elapsedTime * DEF.NANOSEC_TO_SEC);
+//			dPipe.render(gc);
+    	 }
+    	 
     	 
     	 
     	 // step2: update blob
@@ -344,14 +385,7 @@ public class AngryFlappyBird extends Application {
 			blob.render(gc);
     	 }
     	 
-    	 public void movePipe() {
-    		uPipe.update(elapsedTime * DEF.NANOSEC_TO_SEC);
- 			uPipe.render(gc);
- 			
- 			dPipe.update(elapsedTime * DEF.NANOSEC_TO_SEC);
-			dPipe.render(gc);
-    	 }
-    	 
+
     	 public void checkCollision() {
     		 
     		// check collision  
