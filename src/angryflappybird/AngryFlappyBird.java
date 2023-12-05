@@ -2,7 +2,9 @@ package angryflappybird;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -53,11 +55,13 @@ public class AngryFlappyBird extends Application {
     private VBox gameDesc;
     private GraphicsContext gc;		
     private int currentScore;
+    private int bg_counter = 0;
     
     private ImageView background;
     
     private Sprite uPipe;
     private Sprite dPipe;
+    private Boolean isNightBackground = false;
     
 	// the mandatory main method 
     public static void main(String[] args) {
@@ -67,6 +71,9 @@ public class AngryFlappyBird extends Application {
     // the start method sets the Stage layer
     @Override
     public void start(Stage primaryStage) throws Exception {
+    	
+    	
+    	
     	
 
     	
@@ -199,6 +206,7 @@ public class AngryFlappyBird extends Application {
     		floor.render(gc);
     		floors.add(floor);
     	}
+
     	//initialize upward pipe
     	for (int i = 0; i < DEF.PIPE_COUNT; i++ ) {
     		uPipe = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
@@ -271,10 +279,19 @@ public class AngryFlappyBird extends Application {
     	}
     	*/
         int pipe_gap = 150;
+
         // initialize blob
         blob = new Sprite(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
         blob.render(gc);
         
+//        // initialize pipes
+//
+//        uPipe = new Sprite(0, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
+//        uPipe.render(gc);
+//        
+//        dPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
+//        dPipe.render(gc);
+
         
         // initialize timer
         startTime = System.nanoTime();
@@ -285,12 +302,20 @@ public class AngryFlappyBird extends Application {
     //timer stuff
     class MyTimer extends AnimationTimer {
     	
+    	private Timeline backgroundSwitchTimeline;
+
+//        MyTimer() {
+//        	System.out.println("i am here");
+//            // Initialize the background switch timeline
+//            
+//        }
+
+    	
     	
     	int counter = 0;
-    	
+    	int bgr_counter = 0;
     	 public void handle(long now) {   	
-    	    	
-
+    		 bgr_counter++;
     		 // time keeping
     	     elapsedTime = now - startTime;
     	     startTime = now;
@@ -299,12 +324,16 @@ public class AngryFlappyBird extends Application {
     	     gc.clearRect(0, 0, DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
 
     	     if (GAME_START) {
-    	    	 switchBackground();
+    	    	 
+    	    	 if (bgr_counter % 100 == 0) {
+    	    		 System.out.println("The bgr counter is : " + bgr_counter);
+    	    		 switchBackground();
+    	    	 }
+//    	    	 switchBackground();
 
     	    	 // step1: update floor
     	    	 moveFloor();
     	    	 movePipe();
-    	    	 System.out.println("In the animation");
     	    	 
     	    	 // step2: update blob
     	    	 moveBlob();
@@ -356,18 +385,14 @@ public class AngryFlappyBird extends Application {
     	 
     	 // step2: update blob
     	 private void moveBlob() {
-    		 System.out.println("Move blob");
     		 
 			long diffTime = System.nanoTime() - clickTime;
-			System.out.println(diffTime);
-			System.out.println(DEF.BLOB_DROP_TIME);
 			
 			// blob flies upward with animation
 			if (CLICKED && diffTime <= DEF.BLOB_DROP_TIME) {
 				
 				int imageIndex = Math.floorDiv(counter++, DEF.BLOB_IMG_PERIOD);
 				imageIndex = Math.floorMod(imageIndex, DEF.BLOB_IMG_LEN);
-				System.out.println("The image index: " + imageIndex);
 				blob.setImage(DEF.IMAGE.get("bird"+String.valueOf(imageIndex+1)));
 				blob.setVelocity(0, DEF.BLOB_FLY_VEL);
 			}
@@ -428,21 +453,28 @@ public class AngryFlappyBird extends Application {
             firstBackground ++;
     	}
 	      */
+	    
 	     private void switchBackground() {
 	    	 
-//	    	 Text scoreText = new Text("Score: 0");
-//			 Canvas canvas = new Canvas(DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
-//			 gc = canvas.getGraphicsContext2D();
-	    	 
 	    	 gc.drawImage(DEF.IMAGE.get("night_background"), 0, 0);
-//			
+//				
 			    // create a background
-			background = DEF.IMVIEW.get("night_background");
-			System.out.println("The background is working: ");
-//			// create the game scene
-//			gameScene = new Group();
-//			gameScene.getChildren().addAll(background, canvas, scoreText); 
-	     }
+//			background = DEF.IMVIEW.get("night_background");
+//			System.out.println("The background is working: ");
+
+	    	    // Switch between day and night backgrounds
+//	    	    if (isNightBackground) {
+//	    	    	System.out.println("Switching to night");
+//	    	        gc.drawImage(DEF.IMAGE.get("night_background"), 0, 0);
+//	    	    } else {
+//	    	    	System.out.println("Switching to day");
+//	    	        gc.drawImage(DEF.IMAGE.get("day_background"), 0, 0);
+//	    	    }
+
+	    	    // Toggle the background state
+	    	    //isNightBackground = !isNightBackground;
+	    	}
+
     	 
     } // End of MyTimer class
 

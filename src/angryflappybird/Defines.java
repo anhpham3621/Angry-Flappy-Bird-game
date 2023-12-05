@@ -69,6 +69,7 @@ public class Defines {
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;
     final double TRANSITION_TIME = 0.1;
     final int TRANSITION_CYCLE = 2;
+    final int BACKGROUND_SWITCH_INTERVAL = 5;
     
     
     // coefficients related to media display
@@ -97,6 +98,7 @@ public class Defines {
 //				System.out.println(IMAGE_FILES[i]);
 				img = new Image(pathImage(IMAGE_FILES[i]), FLOOR_WIDTH, FLOOR_HEIGHT, false, false);
 			}
+
 			else if (IMAGE_FILES[i] == "dpipe1"){
 				System.out.println(IMAGE_FILES[i]);
 				img = new Image(pathImage(IMAGE_FILES[i]), D_PIPE_WIDTH, D_PIPE_HEIGHT, false, false);
@@ -104,7 +106,6 @@ public class Defines {
 				img = new Image(pathImage(IMAGE_FILES[i]), U_PIPE_WIDTH, U_PIPE_HEIGHT, false, false);
 			}
 			else if (i == 1 || i == 2 || i == 3 || i == 4){
-				System.out.println(IMAGE_FILES[i]);
 				img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
 			}
 			else {
