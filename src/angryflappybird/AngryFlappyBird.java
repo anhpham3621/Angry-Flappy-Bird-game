@@ -40,10 +40,11 @@ public class AngryFlappyBird extends Application {
     private AnimationTimer timer;
     
     // game components
-    private Sprite blob;
+    private Blob blob;
     private ArrayList<Sprite> floors;
     private ArrayList<Pipe> uPipes;
     private ArrayList<Pipe> dPipes;
+    private Sprite whiteEgg;
     
     // game flags
     private boolean CLICKED, GAME_START, GAME_OVER;
@@ -194,7 +195,6 @@ public class AngryFlappyBird extends Application {
     		
     		int posX = i * DEF.FLOOR_WIDTH;
     		int posY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
-    		
     		Sprite floor = new Sprite(posX, posY, DEF.IMAGE.get("floor1"));
     		floor.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
     		floor.render(gc);
@@ -216,11 +216,13 @@ public class AngryFlappyBird extends Application {
     		dPipes.add(dPipe);
     	}
         
+    	whiteEgg = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y - 100, DEF.IMAGE.get("white_egg"));
+    	whiteEgg.render(gc);
         
         int pipe_gap = 150;
 
         // initialize blob
-        blob = new Sprite(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
+        blob = new Blob(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
         blob.render(gc);
 
         
@@ -278,7 +280,7 @@ public class AngryFlappyBird extends Application {
     	        	floors.get(i).setPositionXY(nextX, nextY);
     			}
     			floors.get(i).render(gc);
-    			floors.get(i).update(DEF.SCENE_SHIFT_TIME);
+    			floors.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
     		}
     	 }
     	 
@@ -289,6 +291,8 @@ public class AngryFlappyBird extends Application {
     	  */
     	 public void movePipe() {
     		 
+    		 //so we need to add to this funcgtion that will change the 
+//    		 scene shift time speed based on the mode
     		for (int i = 0; i < DEF.PIPE_COUNT - 1; i++) {
     			if (uPipes.get(i).getPositionX() <= -DEF.U_PIPE_WIDTH) {
     				double nextX = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.U_PIPE_POS_X;
@@ -296,7 +300,7 @@ public class AngryFlappyBird extends Application {
     	        	uPipes.get(i).setPositionXY(nextX, nextY);
     			}
     			uPipes.get(i).render(gc);
-    			uPipes.get(i).update(DEF.SCENE_SHIFT_TIME);
+    			uPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
     		}
     		
     		for (int i = 0; i < DEF.PIPE_COUNT - 1; i++) {
@@ -306,7 +310,7 @@ public class AngryFlappyBird extends Application {
     	        	dPipes.get(i).setPositionXY(nextX, nextY);
     			}
     			dPipes.get(i).render(gc);
-    			dPipes.get(i).update(DEF.SCENE_SHIFT_TIME);
+    			dPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
     		}
     	 }
     	 
@@ -341,11 +345,58 @@ public class AngryFlappyBird extends Application {
     	 
 
     	 public void checkCollision() {
-    		 
-    		// check collision  
+    		boolean hitAUpipe = false; 
+    		// check collision  with the floor
 			for (Sprite floor: floors) {
 				GAME_OVER = GAME_OVER || blob.intersectsSprite(floor);
 			}
+			
+			/**handling the blob intersecting with a upipe
+			 * the life of the blob should go to life - 1
+			 * the UI should be updated
+			 * if the life reaches 0, the game ends
+			**/
+			
+//			for (Pipe uPipe: uPipes) {
+//				if (blob.intersectsPipe(uPipe)) {
+//					current_lives --;
+//					//show the hit effect
+//					showHitEffect();
+//					//re-render the current_lives
+//				}
+//			}
+			
+			/**handling the blob intersecting with a dpipe
+			*the life of the blob should go to life - 1
+			*the UI should be updated
+			*if the life reaches 0, the game ends
+			**/
+//			for (Pipe dPipe: dPipes) {
+//				if (blob.intersectsPipe(dPipe)) {
+//					current_lives --;
+//					//show the hit effect
+//					showHitEffect();
+//					//re-render the current_lives
+//				}
+//			}
+			
+			/**
+			 * This handles the logic for letting the white eggs increment the total coins
+			 * available
+			 */
+//			for (Sprite egg: whiteEggs) {
+//				if (blob.intersectsPipe(dPipe)) {
+//					current_score ++;
+//					//show the the additional score gained
+//					showHitEffect();
+//					//re-render the current_score on the screen
+//				}
+//			}
+			
+			//set the game_over to true if no lives remaining
+//			if (current_lives == 0) {
+//				GAME_OVER = true;
+//			}
 			
 			// end the game when blob hit stuff
 			if (GAME_OVER) {

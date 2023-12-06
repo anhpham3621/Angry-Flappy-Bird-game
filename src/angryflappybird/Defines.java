@@ -64,7 +64,9 @@ public class Defines {
     final double PIPE_X_GAP=500;
    
     // coefficients related to time
-    final int SCENE_SHIFT_TIME = 5;
+    final int EASY_SCENE_SHIFT_TIME = 10;
+    final int MID_SCENE_SHIFT_TIME = 30;
+    final int HARD_SCENE_SHIFT_TIME = 50;
     final double SCENE_SHIFT_INCR = -0.4;
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;
     final double TRANSITION_TIME = 0.1;
@@ -104,6 +106,8 @@ public class Defines {
 				img = new Image(pathImage(IMAGE_FILES[i]), D_PIPE_WIDTH, D_PIPE_HEIGHT, false, false);
 			} else if (IMAGE_FILES[i] == "upipe1") {
 				img = new Image(pathImage(IMAGE_FILES[i]), U_PIPE_WIDTH, U_PIPE_HEIGHT, false, false);
+			} else if(IMAGE_FILES[i] == "white_egg") {
+				img = new Image(pathImage("white_egg"), BLOB_WIDTH, BLOB_HEIGHT, false, false);
 			}
 			else if (i == 1 || i == 2 || i == 3 || i == 4){
 				img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
