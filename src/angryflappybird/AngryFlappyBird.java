@@ -216,6 +216,7 @@ public class AngryFlappyBird extends Application {
     		dPipes.add(dPipe);
     	}
         
+    	//for rendering the eggs on the pipe
     	whiteEgg = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y - 100, DEF.IMAGE.get("white_egg"));
     	whiteEgg.render(gc);
         
