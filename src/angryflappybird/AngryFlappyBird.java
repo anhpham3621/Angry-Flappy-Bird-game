@@ -42,8 +42,8 @@ public class AngryFlappyBird extends Application {
     // game components
     private Sprite blob;
     private ArrayList<Sprite> floors;
-    private ArrayList<Sprite> uPipes;
-    private ArrayList<Sprite> dPipes;
+    private ArrayList<Pipe> uPipes;
+    private ArrayList<Pipe> dPipes;
     
     // game flags
     private boolean CLICKED, GAME_START, GAME_OVER;
@@ -59,8 +59,8 @@ public class AngryFlappyBird extends Application {
     
     private ImageView background;
     
-    private Sprite uPipe;
-    private Sprite dPipe;
+    private Pipe uPipe;
+    private Pipe dPipe;
     private Boolean isNightBackground = false;
     
 	// the mandatory main method 
@@ -71,11 +71,6 @@ public class AngryFlappyBird extends Application {
     // the start method sets the Stage layer
     @Override
     public void start(Stage primaryStage) throws Exception {
-    	
-    	
-    	
-    	
-
     	
     	// initialize scene graphs and UIs
         resetGameControl();    // resets the gameControl
@@ -140,7 +135,6 @@ public class AngryFlappyBird extends Application {
         gHBox.getChildren().addAll(goldEggImage, goldEggLabel);
 
         gameDesc.getChildren().addAll(pHBox, gHBox, wHBox, piHBox);
-//        adding the remainder whi
         gameLevel = new VBox(5);
         gameLevel.getChildren().addAll(DEF.easyButton, DEF.mediumButton, DEF.hardButton);
         gameControl.getChildren().addAll(DEF.startButton, gameLevel, gameDesc);
@@ -209,88 +203,25 @@ public class AngryFlappyBird extends Application {
 
     	//initialize upward pipe
     	for (int i = 0; i < DEF.PIPE_COUNT; i++ ) {
-    		uPipe = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
+    		uPipe = new Pipe(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
     		uPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
     		uPipe.render(gc);
     		uPipes.add(uPipe);
     	}
     	//initialize downward pipe
     	for (int i = 0; i < DEF.PIPE_COUNT; i++) {
-    		dPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
+    		dPipe = new Pipe(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
     		dPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
     		dPipe.render(gc);
     		dPipes.add(dPipe);
     	}
         
         
-        // initialize pipes
-//        uPipe = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
-//        uPipe.render(gc);
-//        dPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
-//        dPipe.render(gc);
-    	/*
-    	for(int i=0; i<DEF.PIPE_COUNT; i++) {
-    		//have only i xPos
-    		// but 2 y pos for up and down pipe
-    		//
-    		double dPipePos= DEF.PIPE_INITIAL_Y + PIPE_RANGE*Math.random();
-    		double upPipePos= dPipePos - PIPE_Y_GAP;
-    		
-    		//int posX = i * DEF.FLOOR_WIDTH;
-    		//int posY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
-    		
-    		Sprite upPipe1 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("upipe1"));
-    		Sprite upPipe2 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("upipe2"));
-    		Sprite upPipe3 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("upipe3"));
-    		Sprite upPipe4 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("upipe4"));
-    		Sprite upPipe5 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("upipe5"));
-    		
-    		Sprite dpipe1 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("dpipe1"));
-    		Sprite dpipe2 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("dpipe2"));
-    		Sprite dpipe3 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("dpipe3"));
-    		Sprite dpipe4 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("dpipe4"));
-    		Sprite dpipe5 = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("dpipe5"));
-    		//Sprite floor = new Sprite(D_PIPE_POS_X, posY, DEF.IMAGE.get("floor1"));
-
-    		upPipe1.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    		upPipe2.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    		upPipe3.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    		upPipe4.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    		upPipe5.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    		dpipe1.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    		dpipe2.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    		dpipe3.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    		dpipe4.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    		dpipe5.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    		
-    		upPipe1.render(gc);
-    		upPipe2.render(gc);
-    		upPipe3.render(gc);
-    		upPipe4.render(gc);
-    		upPipe5.render(gc);
-    		dpipe1.render(gc);
-    		dpipe2.render(gc);
-    		dpipe3.render(gc);
-    		dpipe4.render(gc);
-    		dpipe5.render(gc);
-
-    		
-    		//floors.add(floor);
-    	}
-    	*/
         int pipe_gap = 150;
 
         // initialize blob
         blob = new Sprite(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
         blob.render(gc);
-        
-//        // initialize pipes
-//
-//        uPipe = new Sprite(0, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
-//        uPipe.render(gc);
-//        
-//        dPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
-//        dPipe.render(gc);
 
         
         // initialize timer
@@ -303,14 +234,6 @@ public class AngryFlappyBird extends Application {
     class MyTimer extends AnimationTimer {
     	
     	private Timeline backgroundSwitchTimeline;
-
-//        MyTimer() {
-//        	System.out.println("i am here");
-//            // Initialize the background switch timeline
-//            
-//        }
-
-    	
     	
     	int counter = 0;
     	int bgr_counter = 0;
@@ -325,18 +248,22 @@ public class AngryFlappyBird extends Application {
 
     	     if (GAME_START) {
     	    	 
+    	    	 //step1: update background
     	    	 if (bgr_counter % 100 == 0) {
     	    		 System.out.println("The bgr counter is : " + bgr_counter);
     	    		 switchBackground();
     	    	 }
-//    	    	 switchBackground();
 
-    	    	 // step1: update floor
+    	    	 //step2: update floor
     	    	 moveFloor();
+    	    	 
+    	    	 //step3: movePipe
     	    	 movePipe();
     	    	 
-    	    	 // step2: update blob
+    	    	 // step4: update blob
     	    	 moveBlob();
+    	    	 
+    	    	 //step5: check for collision
     	    	 checkCollision();
     	     }
     	 }
@@ -356,6 +283,10 @@ public class AngryFlappyBird extends Application {
     	 }
     	 
 
+    	 /**
+    	  * @params None
+    	  * movePipe is responsible for animating the upward and downward pipes
+    	  */
     	 public void movePipe() {
     		 
     		for (int i = 0; i < DEF.PIPE_COUNT - 1; i++) {
@@ -377,8 +308,6 @@ public class AngryFlappyBird extends Application {
     			dPipes.get(i).render(gc);
     			dPipes.get(i).update(DEF.SCENE_SHIFT_TIME);
     		}
-// 			dPipe.update(elapsedTime * DEF.NANOSEC_TO_SEC);
-//			dPipe.render(gc);
     	 }
     	 
     	 
