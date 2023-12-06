@@ -41,7 +41,7 @@ public class Defines {
     //horizontal align
     final int D_PIPE_POS_X = 200;
     //vertical align
-    final int D_PIPE_POS_Y = 30;
+    final int D_PIPE_POS_Y = 0;
 
     //horizontal align
     final int U_PIPE_POS_X = 200;

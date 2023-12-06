@@ -224,10 +224,10 @@ public class AngryFlappyBird extends Application {
         
         
         // initialize pipes
-        uPipe = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
-        uPipe.render(gc);
-        dPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
-        dPipe.render(gc);
+//        uPipe = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
+//        uPipe.render(gc);
+//        dPipe = new Sprite(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
+//        dPipe.render(gc);
     	/*
     	for(int i=0; i<DEF.PIPE_COUNT; i++) {
     		//have only i xPos
@@ -358,20 +358,20 @@ public class AngryFlappyBird extends Application {
 
     	 public void movePipe() {
     		 
-    		for (int i = 0; i < DEF.PIPE_COUNT; i++) {
+    		for (int i = 0; i < DEF.PIPE_COUNT - 1; i++) {
     			if (uPipes.get(i).getPositionX() <= -DEF.U_PIPE_WIDTH) {
-    				double nextX = uPipes.get((i+1)%DEF.FLOOR_COUNT).getPositionX() + DEF.FLOOR_WIDTH;
-    	        	double nextY = DEF.U_PIPE_HEIGHT;
+    				double nextX = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.U_PIPE_POS_X;
+    	        	double nextY = DEF.U_PIPE_POS_Y;
     	        	uPipes.get(i).setPositionXY(nextX, nextY);
     			}
     			uPipes.get(i).render(gc);
     			uPipes.get(i).update(DEF.SCENE_SHIFT_TIME);
     		}
     		
-    		for (int i = 0; i < DEF.PIPE_COUNT; i++) {
+    		for (int i = 0; i < DEF.PIPE_COUNT - 1; i++) {
     			if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
-    				double nextX = dPipes.get((i+1)%DEF.FLOOR_COUNT).getPositionX() + DEF.FLOOR_WIDTH;
-    	        	double nextY = DEF.U_PIPE_HEIGHT;
+    				double nextX = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.D_PIPE_POS_X;
+    	        	double nextY = DEF.D_PIPE_POS_Y;
     	        	dPipes.get(i).setPositionXY(nextX, nextY);
     			}
     			dPipes.get(i).render(gc);

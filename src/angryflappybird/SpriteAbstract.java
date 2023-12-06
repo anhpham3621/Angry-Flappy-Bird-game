@@ -2,7 +2,7 @@ package angryflappybird;
 
 import javafx.scene.image.Image;
 
-public interface SpriteInterface {
+public abstract class SpriteAbstract {
 	
 	public Image image;
 	public double positionX;
@@ -12,7 +12,14 @@ public interface SpriteInterface {
 	public double width;
 	public double height;
 	
-	public void SpriteInterface() {}
+	public void SpriteAbstract() {
+		this.positionX = 0;
+		this.positionY = 0;
+		this.positionX = 0;
+		this.positionX = 0;
+		this.positionX = 0;
+		this.positionX = 0;
+	}
 	
 
 }
