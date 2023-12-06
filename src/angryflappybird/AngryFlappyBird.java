@@ -188,8 +188,6 @@ public class AngryFlappyBird extends Application {
             gameScene.getChildren().addAll(background, canvas, scoreText);
     	}
     
-    	
-    	
     	// initialize floor
     	for(int i=0; i<DEF.FLOOR_COUNT; i++) {
     		
@@ -201,21 +199,30 @@ public class AngryFlappyBird extends Application {
     		floors.add(floor);
     	}
 
-    	//initialize upward pipe
-    	for (int i = 0; i < DEF.PIPE_COUNT; i++ ) {
-    		uPipe = new Pipe(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y, DEF.IMAGE.get("upipe1"));
-    		uPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    		uPipe.render(gc);
-    		uPipes.add(uPipe);
-    	}
-    	//initialize downward pipe
+    	Random rand = new Random();
     	for (int i = 0; i < DEF.PIPE_COUNT; i++) {
-    		dPipe = new Pipe(DEF.D_PIPE_POS_X, DEF.D_PIPE_POS_Y, DEF.IMAGE.get("dpipe1"));
-    		dPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    		dPipe.render(gc);
-    		dPipes.add(dPipe);
+    		// Random value in the range [-PIPE_GAP, PIPE_GAP]
+    		double randomOffset = rand.nextDouble() * DEF.PIPE_RANGE; // Random value in the range [-PIPE_GAP, PIPE_GAP] 
+		    // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
+		    randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
+		    double initialY = DEF.D_PIPE_POS_Y - randomOffset;
+		    System.out.println("INITIALY DOWN " + initialY);
+
+		    dPipe = new Pipe(DEF.D_PIPE_POS_X, initialY, DEF.IMAGE.get("dpipe2"));
+		    dPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+		    dPipe.render(gc);
+		    dPipes.add(dPipe);
+
+
+    	    // Calculate the initial Y for uPipe based on the corresponding dPipe
+    	    double uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
+    	    uPipe = new Pipe(DEF.U_PIPE_POS_X, uPipeInitialY, DEF.IMAGE.get("upipe1"));
+    	    System.out.println("INITIALY UP " + uPipeInitialY);
+    	    uPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    	    uPipe.render(gc);
+    	    uPipes.add(uPipe);
     	}
-        
+
     	//for rendering the eggs on the pipe
     	whiteEgg = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y - 100, DEF.IMAGE.get("white_egg"));
     	whiteEgg.render(gc);
@@ -292,7 +299,7 @@ public class AngryFlappyBird extends Application {
     	  */
     	 public void movePipe() {
     		 
-    		 //so we need to add to this funcgtion that will change the 
+    		 //so we need to add to this function that will change the 
 //    		 scene shift time speed based on the mode
     		for (int i = 0; i < DEF.PIPE_COUNT - 1; i++) {
     			if (uPipes.get(i).getPositionX() <= -DEF.U_PIPE_WIDTH) {
@@ -314,7 +321,6 @@ public class AngryFlappyBird extends Application {
     			dPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
     		}
     	 }
-    	 
     	 
     	 
     	 // step2: update blob
@@ -432,7 +438,7 @@ public class AngryFlappyBird extends Application {
 
 	    	    // Switch between day and night backgrounds based on isNightBackground
 	    	    if (isNightBackground) {
-	    	    	System.out.println("Switching to night");
+	    	    	//System.out.println("Switching to night");
 	    	        gc.drawImage(DEF.IMAGE.get("night_background"), 0, 0);
 	    	    } else {
 	    	    	System.out.println("Switching to day");

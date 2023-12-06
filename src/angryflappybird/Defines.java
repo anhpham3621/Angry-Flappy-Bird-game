@@ -41,7 +41,7 @@ public class Defines {
     //horizontal align
     final int D_PIPE_POS_X = 200;
     //vertical align
-    final int D_PIPE_POS_Y = 0;
+    final int D_PIPE_POS_Y = -250;
 
     //horizontal align
     final int U_PIPE_POS_X = 200;
@@ -53,15 +53,14 @@ public class Defines {
     final int PIPE_HEIGHT = 200;  // Adjust height 
     final int U_PIPE_HEIGHT = 300;
     final int U_PIPE_WIDTH = 70;
-    final int D_PIPE_HEIGHT = 200; 
+    final int D_PIPE_HEIGHT = 450; 
     final int D_PIPE_WIDTH = 70;
     final int PIPE_COUNT = 2;
 
     //initial pipe position
-    final double PIPE_INITIAL_Y= 250;
-    final double PIPE_RANGE= 200;
-    final double PIPE_Y_GAP=500;
-    final double PIPE_X_GAP=500;
+    final double PIPE_RANGE= 150;
+    //pipe gap has to be larger than pipe height for dPipe
+    final double PIPE_Y_GAP=800;
    
     // coefficients related to time
     final int EASY_SCENE_SHIFT_TIME = 10;
@@ -78,8 +77,9 @@ public class Defines {
     final String STAGE_TITLE = "Angry Flappy Bird";
 	private final String IMAGE_DIR = "../final_images/";
     final String[] IMAGE_FILES = {"day_background", "bird1", "bird2", "bird3", "bird4",  "floor1", "bird_with_parachute",
-   "dpipe1", "dpipe2", "dpipe3", "dpipe4", "dpipe5", "upipe1", "upipe2", "upipe3", "upipe4", "upipe5", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
-      "special_coin", "start_button_sprite", "upipe1", "white_egg"};
+   "dpipe2", "dpipe2", "dpipe3", "dpipe4", "dpipe5", "upipe1", "upipe2", "upipe3", "upipe4", "upipe5", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
+      "special_coin", "start_button_sprite", "upipe1", "white_egg", "upipe1"};
+    //image_pipe
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
@@ -101,7 +101,7 @@ public class Defines {
 				img = new Image(pathImage(IMAGE_FILES[i]), FLOOR_WIDTH, FLOOR_HEIGHT, false, false);
 			}
 
-			else if (IMAGE_FILES[i] == "dpipe1"){
+			else if (IMAGE_FILES[i] == "dpipe2"){
 				System.out.println(IMAGE_FILES[i]);
 				img = new Image(pathImage(IMAGE_FILES[i]), D_PIPE_WIDTH, D_PIPE_HEIGHT, false, false);
 			} else if (IMAGE_FILES[i] == "upipe1") {
