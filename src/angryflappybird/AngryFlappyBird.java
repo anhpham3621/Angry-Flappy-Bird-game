@@ -439,40 +439,27 @@ public class AngryFlappyBird extends Application {
 	        parallelTransition.play();
 	     }
 	     
-	     /**
-	      *     	else if (!firstEntry && firstBackground % 2 == 1) {
-    		Canvas canvas = new Canvas(DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
-            gc = canvas.getGraphicsContext2D();
-
-            // create a background
-            ImageView background = DEF.IMVIEW.get("night_background");
-            System.out.println(background);
-            // create the game scene
-            gameScene = new Group();
-            gameScene.getChildren().addAll(background, canvas, scoreText);
-            firstBackground ++;
-    	}
-	      */
 	    
+	     /**
+	      * @param None
+	      * Switches the background of the scene from day to night and vice-versa
+	      */
 	     private void switchBackground() {
-	    	 
-	    	 gc.drawImage(DEF.IMAGE.get("night_background"), 0, 0);
-//				
-			    // create a background
-//			background = DEF.IMVIEW.get("night_background");
-//			System.out.println("The background is working: ");
+			// create a background
+			background = DEF.IMVIEW.get("night_background");
+			System.out.println("The background is working: ");
 
-	    	    // Switch between day and night backgrounds
-//	    	    if (isNightBackground) {
-//	    	    	System.out.println("Switching to night");
-//	    	        gc.drawImage(DEF.IMAGE.get("night_background"), 0, 0);
-//	    	    } else {
-//	    	    	System.out.println("Switching to day");
-//	    	        gc.drawImage(DEF.IMAGE.get("day_background"), 0, 0);
-//	    	    }
+	    	    // Switch between day and night backgrounds based on isNightBackground
+	    	    if (isNightBackground) {
+	    	    	System.out.println("Switching to night");
+	    	        gc.drawImage(DEF.IMAGE.get("night_background"), 0, 0);
+	    	    } else {
+	    	    	System.out.println("Switching to day");
+	    	        gc.drawImage(DEF.IMAGE.get("day_background"), 0, 0);
+	    	    }
 
 	    	    // Toggle the background state
-	    	    //isNightBackground = !isNightBackground;
+	    	    isNightBackground = !isNightBackground;
 	    	}
 
     	 
