@@ -62,7 +62,7 @@ public class AngryFlappyBird extends Application {
     
     private Pipe uPipe;
     private Pipe dPipe;
-    private Boolean isNightBackground = false;
+    private boolean isNightBackground = true;
     
 	// the mandatory main method 
     public static void main(String[] args) {
@@ -259,10 +259,13 @@ public class AngryFlappyBird extends Application {
     	     if (GAME_START) {
     	    	 
     	    	 //step1: update background
-    	    	 if (bgr_counter % 100 == 0) {
+    	    	 if (bgr_counter>450) {
     	    		 System.out.println("The bgr counter is : " + bgr_counter);
-    	    		 switchBackground();
+    	    		 bgr_counter=0;
+    	    		 isNightBackground= !isNightBackground;
     	    	 }
+    	    		 displayBackground();
+    	    	 
 
     	    	 //step2: update floor
     	    	 moveFloor();
@@ -277,7 +280,14 @@ public class AngryFlappyBird extends Application {
     	    	 checkCollision();
     	     }
     	 }
-    	 
+    	 private void displayBackground() {
+    	     if(isNightBackground) {
+    	     gc.drawImage (DEF.IMAGE.get("night_background"), 0, 0);
+    	     } 
+    	 else if(!isNightBackground) {
+    	     gc.drawImage (DEF.IMAGE.get("day_background"), 0, 0);
+    	     }
+    	 }
     	 // step1: update floor
     	 private void moveFloor() {
     		
@@ -427,27 +437,8 @@ public class AngryFlappyBird extends Application {
 	     }
 	     
 	    
-	     /**
-	      * @param None
-	      * Switches the background of the scene from day to night and vice-versa
-	      */
-	     private void switchBackground() {
-			// create a background
-			background = DEF.IMVIEW.get("night_background");
-			System.out.println("The background is working: ");
-
-	    	    // Switch between day and night backgrounds based on isNightBackground
-	    	    if (isNightBackground) {
-	    	    	//System.out.println("Switching to night");
-	    	        gc.drawImage(DEF.IMAGE.get("night_background"), 0, 0);
-	    	    } else {
-	    	    	System.out.println("Switching to day");
-	    	        gc.drawImage(DEF.IMAGE.get("day_background"), 0, 0);
-	    	    }
-
-	    	    // Toggle the background state
-	    	    isNightBackground = !isNightBackground;
-	    	}
+	    
+	    
 
     	 
     } // End of MyTimer class
