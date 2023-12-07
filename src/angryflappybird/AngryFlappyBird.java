@@ -199,24 +199,29 @@ public class AngryFlappyBird extends Application {
     		floors.add(floor);
     	}
 
+    	//initialize pipes
     	Random rand = new Random();
     	for (int i = 0; i < DEF.PIPE_COUNT; i++) {
-    		// Random value in the range [-PIPE_GAP, PIPE_GAP]
-    		double randomOffset = rand.nextDouble() * DEF.PIPE_RANGE; // Random value in the range [-PIPE_GAP, PIPE_GAP] 
-		    // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
-		    randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
-		    double initialY = DEF.D_PIPE_POS_Y - randomOffset;
-		    System.out.println("INITIALY DOWN " + initialY);
-
-		    dPipe = new Pipe(DEF.D_PIPE_POS_X, initialY, DEF.IMAGE.get("dpipe2"));
-		    dPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-		    dPipe.render(gc);
-		    dPipes.add(dPipe);
-
+    	    // Random value in the range [-PIPE_GAP, PIPE_GAP]
+    	    double randomOffset = rand.nextDouble() * DEF.PIPE_RANGE; // Random value in the range [-PIPE_GAP, PIPE_GAP] 
+    	    // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
+    	    randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
+    	    double initialY = DEF.D_PIPE_POS_Y - randomOffset;
+    	    System.out.println("INITIALY DOWN " + initialY);
+    	    //unfinished x-calculation
+    	    //double initalX= DEF.SCENE_WIDTH/12+DEF.PIPE_X_GAP;
+    	    double initalX=DEF.D_PIPE_POS_X;	
+    	    dPipe = new Pipe(initalX, initialY, DEF.IMAGE.get("dpipe2"));
+    	    dPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    	    dPipe.render(gc);
+    	    dPipes.add(dPipe);
 
     	    // Calculate the initial Y for uPipe based on the corresponding dPipe
     	    double uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
-    	    uPipe = new Pipe(DEF.U_PIPE_POS_X, uPipeInitialY, DEF.IMAGE.get("upipe1"));
+    	    //unfinished x-calculation
+    	    //double uPipeInitalX=DEF.SCENE_WIDTH/12+DEF.PIPE_X_GAP;
+    	    double uPipeInitalX=DEF.D_PIPE_POS_X;	
+    	    uPipe = new Pipe(uPipeInitalX, uPipeInitialY, DEF.IMAGE.get("upipe1"));
     	    System.out.println("INITIALY UP " + uPipeInitialY);
     	    uPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
     	    uPipe.render(gc);
@@ -307,32 +312,32 @@ public class AngryFlappyBird extends Application {
     	  * @params None
     	  * movePipe is responsible for animating the upward and downward pipes
     	  */
-    	 public void movePipe() {
-    		 
-    		 //so we need to add to this function that will change the 
-//    		 scene shift time speed based on the mode
-    		for (int i = 0; i < DEF.PIPE_COUNT - 1; i++) {
-    			if (uPipes.get(i).getPositionX() <= -DEF.U_PIPE_WIDTH) {
-    				double nextX = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.U_PIPE_POS_X;
-    	        	double nextY = DEF.U_PIPE_POS_Y;
-    	        	uPipes.get(i).setPositionXY(nextX, nextY);
-    			}
-    			uPipes.get(i).render(gc);
-    			uPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
-    		}
-    		
-    		for (int i = 0; i < DEF.PIPE_COUNT - 1; i++) {
-    			if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
-    				double nextX = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.D_PIPE_POS_X;
-    	        	double nextY = DEF.D_PIPE_POS_Y;
-    	        	dPipes.get(i).setPositionXY(nextX, nextY);
-    			}
-    			dPipes.get(i).render(gc);
-    			dPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
-    		}
-    	 }
-    	 
-    	 
+    	Random rand1 = new Random();
+	    public void movePipe() {
+	    for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
+	        if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
+	            double nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.D_PIPE_POS_X;
+	            //double nextY = DEF.D_PIPE_POS_Y;
+	            double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE; // Random value in the range [-PIPE_GAP, PIPE_GAP] 
+	            // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
+	            randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
+	            double nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
+	            System.out.println("NEXT Y DOWN " + nextY_down);
+	            dPipes.get(i).setPositionXY(nextX_down, nextY_down);
+	            
+	            double nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.U_PIPE_POS_X;
+	            double nextY_up = nextY_down + DEF.PIPE_Y_GAP;
+	            //double nextY = DEF.U_PIPE_POS_Y;
+	            uPipes.get(i).setPositionXY(nextX_up, nextY_up);
+	        }
+	        dPipes.get(i).render(gc);
+	        dPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
+	        
+	        uPipes.get(i).render(gc);
+	        uPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
+	        }
+	    }
+
     	 // step2: update blob
     	 private void moveBlob() {
     		 

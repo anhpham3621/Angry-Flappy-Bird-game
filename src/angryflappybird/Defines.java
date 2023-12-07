@@ -12,7 +12,7 @@ import javafx.scene.text.Text;
 
 public class Defines {
     
-	// dimension of the GUI application
+    // dimension of the GUI application
     final int APP_HEIGHT = 600;
     final int APP_WIDTH = 600;
     final int SCENE_HEIGHT = 570;
@@ -41,7 +41,7 @@ public class Defines {
     //horizontal align
     final int D_PIPE_POS_X = 200;
     //vertical align
-    final int D_PIPE_POS_Y = -250;
+    final int D_PIPE_POS_Y = -240;
 
     //horizontal align
     final int U_PIPE_POS_X = 200;
@@ -49,19 +49,20 @@ public class Defines {
     final int U_PIPE_POS_Y = 400; //Adjust the position of the upward facing pipe to increase the gap between downward facing
     
     // coefficients related to the pipes size
-    final int PIPE_WIDTH = 70;   // Adjust to your desired width
+    final int PIPE_WIDTH = 60;   // Adjust to your desired width
     final int PIPE_HEIGHT = 200;  // Adjust height 
-    final int U_PIPE_HEIGHT = 300;
-    final int U_PIPE_WIDTH = 70;
-    final int D_PIPE_HEIGHT = 450; 
-    final int D_PIPE_WIDTH = 70;
+    final int U_PIPE_HEIGHT = 400;
+    final int U_PIPE_WIDTH = 55;
+    final int D_PIPE_HEIGHT = 500; 
+    final int D_PIPE_WIDTH = 55;
     final int PIPE_COUNT = 2;
 
     //initial pipe position
     final double PIPE_RANGE= 150;
     //pipe gap has to be larger than pipe height for dPipe
-    final double PIPE_Y_GAP=800;
-   
+    final double PIPE_Y_GAP=750;
+    final double PIPE_X_GAP=150;
+    
     // coefficients related to time
     final int EASY_SCENE_SHIFT_TIME = 10;
     final int MID_SCENE_SHIFT_TIME = 30;
@@ -75,10 +76,10 @@ public class Defines {
     
     // coefficients related to media display
     final String STAGE_TITLE = "Angry Flappy Bird";
-	private final String IMAGE_DIR = "../final_images/";
+    private final String IMAGE_DIR = "../final_images/";
     final String[] IMAGE_FILES = {"day_background", "bird1", "bird2", "bird3", "bird4",  "floor1", "bird_with_parachute",
-   "dpipe2", "dpipe2", "dpipe3", "dpipe4", "dpipe5", "upipe1", "upipe2", "upipe3", "upipe4", "upipe5", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
-      "special_coin", "start_button_sprite", "upipe1", "white_egg", "upipe1"};
+    "dpipe2", "dpipe2", "dpipe3", "dpipe4", "dpipe5", "upipe1", "upipe2", "upipe3", "upipe4", "upipe5", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
+        "special_coin", "start_button_sprite", "upipe1", "white_egg", "upipe1"};
     //image_pipe
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
@@ -91,58 +92,58 @@ public class Defines {
     Button hardButton;
     
     // constructor
-	Defines() {
-		
-		// initialize images
-		for(int i=0; i<IMAGE_FILES.length; i++) {
-			Image img;
-			if (i == 5) {
+    Defines() {
+        
+        // initialize images
+        for(int i=0; i<IMAGE_FILES.length; i++) {
+            Image img;
+            if (i == 5) {
 //				System.out.println(IMAGE_FILES[i]);
-				img = new Image(pathImage(IMAGE_FILES[i]), FLOOR_WIDTH, FLOOR_HEIGHT, false, false);
-			}
+                img = new Image(pathImage(IMAGE_FILES[i]), FLOOR_WIDTH, FLOOR_HEIGHT, false, false);
+            }
 
-			else if (IMAGE_FILES[i] == "dpipe2"){
-				System.out.println(IMAGE_FILES[i]);
-				img = new Image(pathImage(IMAGE_FILES[i]), D_PIPE_WIDTH, D_PIPE_HEIGHT, false, false);
-			} else if (IMAGE_FILES[i] == "upipe1") {
-				img = new Image(pathImage(IMAGE_FILES[i]), U_PIPE_WIDTH, U_PIPE_HEIGHT, false, false);
-			} else if(IMAGE_FILES[i] == "white_egg") {
-				img = new Image(pathImage("white_egg"), BLOB_WIDTH, BLOB_HEIGHT, false, false);
-			}
-			else if (i == 1 || i == 2 || i == 3 || i == 4){
-				img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
-			}
-			else {
-				img = new Image(pathImage(IMAGE_FILES[i]), SCENE_WIDTH, SCENE_HEIGHT, false, false);
-			}
-    		IMAGE.put(IMAGE_FILES[i],img);
-    	}
-		
-		// initialize image views
-		for(int i=0; i<IMAGE_FILES.length; i++) {
-    		ImageView imgView = new ImageView(IMAGE.get(IMAGE_FILES[i]));
-    		IMVIEW.put(IMAGE_FILES[i],imgView);
-    	}
-		
-		// initialize scene nodes
-		startButton = new Button("Go!");
-		easyButton = new Button("Easy");
+            else if (IMAGE_FILES[i] == "dpipe2"){
+                System.out.println(IMAGE_FILES[i]);
+                img = new Image(pathImage(IMAGE_FILES[i]), D_PIPE_WIDTH, D_PIPE_HEIGHT, false, false);
+            } else if (IMAGE_FILES[i] == "upipe1") {
+                img = new Image(pathImage(IMAGE_FILES[i]), U_PIPE_WIDTH, U_PIPE_HEIGHT, false, false);
+            } else if(IMAGE_FILES[i] == "white_egg") {
+                img = new Image(pathImage("white_egg"), BLOB_WIDTH, BLOB_HEIGHT, false, false);
+            }
+            else if (i == 1 || i == 2 || i == 3 || i == 4){
+                img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
+            }
+            else {
+                img = new Image(pathImage(IMAGE_FILES[i]), SCENE_WIDTH, SCENE_HEIGHT, false, false);
+            }
+            IMAGE.put(IMAGE_FILES[i],img);
+        }
+        
+        // initialize image views
+        for(int i=0; i<IMAGE_FILES.length; i++) {
+            ImageView imgView = new ImageView(IMAGE.get(IMAGE_FILES[i]));
+            IMVIEW.put(IMAGE_FILES[i],imgView);
+        }
+        
+        // initialize scene nodes
+        startButton = new Button("Go!");
+        easyButton = new Button("Easy");
 //		easyButton.setStyle("-fx-background-color: #FFFF00;");
-		mediumButton = new Button("Medium");
+        mediumButton = new Button("Medium");
 //		mediumButton.setStyle("-fx-background-color: #808080;");
-		hardButton = new Button("Hard");
+        hardButton = new Button("Hard");
 //		hardButton.setStyle("-fx-background-color: #808080;");
-	}
-	
-//	this returns the path of a specific image
-	public String pathImage(String filepath) {
-    	String fullpath = getClass().getResource(IMAGE_DIR+filepath+".png").toExternalForm();
-    	return fullpath;
     }
-	
+    
+//	this returns the path of a specific image
+    public String pathImage(String filepath) {
+        String fullpath = getClass().getResource(IMAGE_DIR+filepath+".png").toExternalForm();
+        return fullpath;
+    }
+    
 //	this returns the image once it's been resized
-	public Image resizeImage(String filepath, int width, int height) {
-    	IMAGE.put(filepath, new Image(pathImage(filepath), width, height, false, false));
-    	return IMAGE.get(filepath);
+    public Image resizeImage(String filepath, int width, int height) {
+        IMAGE.put(filepath, new Image(pathImage(filepath), width, height, false, false));
+        return IMAGE.get(filepath);
     }
 }
