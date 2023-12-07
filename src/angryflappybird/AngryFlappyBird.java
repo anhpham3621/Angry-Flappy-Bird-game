@@ -51,6 +51,8 @@ public class AngryFlappyBird extends Application {
     private ArrayList<Pipe> uPipes;
     private ArrayList<Pipe> dPipes;
     private Sprite whiteEgg;
+    private Blob blob2;
+    private double uPipeInitialY;
     
     // game flags
     private boolean CLICKED, GAME_START, GAME_OVER;
@@ -63,6 +65,10 @@ public class AngryFlappyBird extends Application {
     private GraphicsContext gc;		
     private int currentScore;
     private int bg_counter = 0;
+    double nextX_down = 0;
+	double nextY_down = 0;
+	double nextX_up = 0;
+	double nextY_up = 0;
     
     private ImageView background;
     
@@ -78,21 +84,6 @@ public class AngryFlappyBird extends Application {
     // the start method sets the Stage layer
     @Override
     public void start(Stage primaryStage) throws Exception {
-    	
-    	//initialize text display
-//    	// Add the Text element for lives
-//        Text livesText = new Text("Lives: " + currentLives);
-//        livesText.setStyle("-fx-font-size: 24; -fx-font-weight: bold; -fx-fill: black");
-        
-//        //Hbox for LivesText
-//        HBox root1 = new HBox();
-//		HBox.setMargin(gameScene, new Insets(0,0,0,15));
-//		root1.getChildren().add(gameScene);
-//		root1.getChildren().add(gameControl);
-//      Scene LivesScene = new Scene(root1, DEF.APP_WIDTH, DEF.APP_HEIGHT);
-        
-        // Display the Text element for lives
-        //gameScene.getChildren().addAll(background, canvas, scoresText, livesText);
 
     	// initialize scene graphs and UIs
         resetGameControl();    // resets the gameControl
@@ -208,7 +199,7 @@ public class AngryFlappyBird extends Application {
             //Make background defined globally as an attribute
             // create a background
             background = DEF.IMVIEW.get("day_background");
-            System.out.println(background);
+//            System.out.println(background);
             // create the game scene
             gameScene = new Group();
             gameScene.getChildren().addAll(background, canvas, scoreText, livesText);
@@ -232,7 +223,7 @@ public class AngryFlappyBird extends Application {
             // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
             randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
             double initialY = DEF.D_PIPE_POS_Y - randomOffset;
-            System.out.println("INITIALY DOWN " + initialY);
+//            System.out.println("INITIALY DOWN " + initialY);
 
             dPipe = new Pipe(DEF.D_PIPE_POS_X, initialY, DEF.IMAGE.get("dpipe2"));
             dPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
@@ -240,17 +231,20 @@ public class AngryFlappyBird extends Application {
             dPipes.add(dPipe);
 
 
-            // Calculate the initial Y for uPipe based on the corresponding dPipe
-            double uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
+            // Calculate the initial Y forU uPipe based on the corresponding dPipe
+            uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
             uPipe = new Pipe(DEF.U_PIPE_POS_X, uPipeInitialY, DEF.IMAGE.get("upipe1"));
-            System.out.println("INITIALY UP " + uPipeInitialY);
+//            System.out.println("INITIALY UP " + uPipeInitialY);
             uPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
             uPipe.render(gc);
             uPipes.add(uPipe);
         }
 
         //for rendering the eggs on the pipe
-        whiteEgg = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y - 100, DEF.IMAGE.get("white_egg"));
+        System.out.println(uPipeInitialY);
+        whiteEgg = new Sprite(DEF.U_PIPE_POS_X, uPipeInitialY, DEF.IMAGE.get("white_egg"));
+//        System.out.println(whiteEgg);
+        whiteEgg.setVelocity(-0.5, 0);
         whiteEgg.render(gc);
         
         int pipe_gap = 150;
@@ -286,7 +280,7 @@ public class AngryFlappyBird extends Application {
     	    	 
     	    	 //step1: update background
     	    	 if (bgr_counter>450) {
-    	    		 System.out.println("The bgr counter is : " + bgr_counter);
+//    	    		 System.out.println("The bgr counter is : " + bgr_counter);
     	    		 bgr_counter=0;
     	    		 isNightBackground= !isNightBackground;
     	    	 }
@@ -301,6 +295,9 @@ public class AngryFlappyBird extends Application {
     	    	 
     	    	 // step4: update blob
     	    	 moveBlob();
+    	    	 
+    	    	 //setp5: update egg
+    	    	 moveEgg();
     	    	 
     	    	 //step5: check for collision
     	    	 checkCollision();
@@ -335,29 +332,38 @@ public class AngryFlappyBird extends Application {
     	  */
     	Random rand1 = new Random();
 	    public void movePipe() {
+	    	
 	    for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
 	        if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
-	            double nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.D_PIPE_POS_X;
+	            nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.D_PIPE_POS_X;
 	            //double nextY = DEF.D_PIPE_POS_Y;
 	            double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE; // Random value in the range [-PIPE_GAP, PIPE_GAP] 
 	            // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
 	            randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
-	            double nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
-	            System.out.println("NEXT Y DOWN " + nextY_down);
+	            nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
+//	            System.out.println("NEXT Y DOWN " + nextY_down);
 	            dPipes.get(i).setPositionXY(nextX_down, nextY_down);
 	            
-	            double nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.U_PIPE_POS_X;
-	            double nextY_up = nextY_down + DEF.PIPE_Y_GAP;
+	            
+	            nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.U_PIPE_POS_X;
+	            nextY_up = nextY_down + DEF.PIPE_Y_GAP;
 	            //double nextY = DEF.U_PIPE_POS_Y;
 	            uPipes.get(i).setPositionXY(nextX_up, nextY_up);
+//	            whiteEgg.setPositionXY(nextX_up+100, nextY_up);
 	        }
+//	        whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+	        
+//	        System.out.println("the bird position: " + nextY_up);
 	        dPipes.get(i).render(gc);
 	        dPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
 	        
 	        uPipes.get(i).render(gc);
 	        uPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
+//	        whiteEgg.render(gc);
+//	        moveEgg(nextX_up, nextY_up);
+//	        whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
 	        }
-	    }
+	    };
 
     	 // step2: update blob
     	 private void moveBlob() {
@@ -386,6 +392,29 @@ public class AngryFlappyBird extends Application {
 			blob.render(gc);
     	 }
     	 
+    	 public void moveEgg() {
+    		 
+    		 for (int i = 0; i < 2; i++) {
+    			 
+    			 
+    			 if (whiteEgg.getPositionX() <= -DEF.FLOOR_WIDTH) {
+    				 System.out.println("moving egg");
+     				double nextX = DEF.FLOOR_WIDTH;
+     	        	double nextY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
+     	        	whiteEgg.setPositionXY(nextX, 250);
+     			}
+    			 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+    	   			whiteEgg.render(gc);
+    	   			whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
+//    			 double x_pos = 250;
+//    			 double y_pos = 250;
+//    			 whiteEgg.setPositionXY(x_pos, y_pos);
+    		 }
+    		 
+//    		 WHEN I take out the position, the bird velocity works but only onced
+//    		 	
+    	        
+    	 }
 
     	 public void checkCollision() {
     	        boolean hitAUpipe = false; 

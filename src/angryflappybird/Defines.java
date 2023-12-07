@@ -63,6 +63,12 @@ public class Defines {
     final double PIPE_Y_GAP=750;
     final double PIPE_X_GAP=150;
     
+    //coefficients related to egg
+    final double WHITE_EGG_HEIGHT = 50;
+    final double WHITE_EGG_WIDTH = 50;
+    final double WHITE_EGG_POS_Y = 300;
+    final double WHITE_EGG_POS_X = 200;
+    
     // coefficients related to time
     final int EASY_SCENE_SHIFT_TIME = 10;
     final int MID_SCENE_SHIFT_TIME = 30;
@@ -103,12 +109,13 @@ public class Defines {
             }
 
             else if (IMAGE_FILES[i] == "dpipe2"){
-                System.out.println(IMAGE_FILES[i]);
+//                System.out.println(IMAGE_FILES[i]);
                 img = new Image(pathImage(IMAGE_FILES[i]), D_PIPE_WIDTH, D_PIPE_HEIGHT, false, false);
             } else if (IMAGE_FILES[i] == "upipe1") {
                 img = new Image(pathImage(IMAGE_FILES[i]), U_PIPE_WIDTH, U_PIPE_HEIGHT, false, false);
             } else if(IMAGE_FILES[i] == "white_egg") {
-                img = new Image(pathImage("white_egg"), BLOB_WIDTH, BLOB_HEIGHT, false, false);
+            	System.out.println("the white egg is visible");
+                img = new Image(pathImage("white_egg"), WHITE_EGG_WIDTH, WHITE_EGG_HEIGHT, false, false);
             }
             else if (i == 1 || i == 2 || i == 3 || i == 4){
                 img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
