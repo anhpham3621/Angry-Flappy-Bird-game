@@ -35,6 +35,8 @@ public class AngryFlappyBird extends Application {
 	
 	private Defines DEF = new Defines();
     
+	//text display
+	private int currentLives;
     // time related attributes
     private long clickTime, startTime, elapsedTime;   
     private AnimationTimer timer;
@@ -73,6 +75,21 @@ public class AngryFlappyBird extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
     	
+    	//initialize text display
+//    	// Add the Text element for lives
+//        Text livesText = new Text("Lives: " + currentLives);
+//        livesText.setStyle("-fx-font-size: 24; -fx-font-weight: bold; -fx-fill: black");
+        
+//        //Hbox for LivesText
+//        HBox root1 = new HBox();
+//		HBox.setMargin(gameScene, new Insets(0,0,0,15));
+//		root1.getChildren().add(gameScene);
+//		root1.getChildren().add(gameControl);
+//      Scene LivesScene = new Scene(root1, DEF.APP_WIDTH, DEF.APP_HEIGHT);
+        
+        // Display the Text element for lives
+        //gameScene.getChildren().addAll(background, canvas, scoresText, livesText);
+
     	// initialize scene graphs and UIs
         resetGameControl();    // resets the gameControl
     	resetGameScene(true);  // resets the gameScene
@@ -155,17 +172,17 @@ public class AngryFlappyBird extends Application {
     }
     
     private void resetGameScene(boolean firstEntry) {
-    	// Create a Text object to display the score
+    	// Text object to display the score
         Text scoreText = new Text("Score: 0");
 
-        // You can customize the font size and style if needed
+        // set style
         scoreText.setStyle("-fx-font-size: 24; -fx-font-weight: bold; -fx-fill: black");
         
-    	// Create a Text object to display the][i[ score
-        Text livesText = new Text("Score: 3");
+        Text livesText = new Text("Lives Left: 3");
 
         // You can customize the font size and style if needed
-        livesText.setStyle("-fx-font-size: 24; -fx-font-weight: bold; -fx-fill: black");
+        livesText.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: red");
+        
     	// reset variables
         CLICKED = false;
         GAME_OVER = false;
@@ -185,7 +202,11 @@ public class AngryFlappyBird extends Application {
             System.out.println(background);
             // create the game scene
             gameScene = new Group();
-            gameScene.getChildren().addAll(background, canvas, scoreText);
+            gameScene.getChildren().addAll(background, canvas, scoreText, livesText);
+            //Reset position of text so livesText does not sit on top of scoresText
+            livesText.setLayoutX(DEF.SCENE_WIDTH - livesText.getBoundsInLocal().getWidth() - 70);
+            livesText.setLayoutY(DEF.SCENE_HEIGHT - livesText.getBoundsInLocal().getHeight() - 10);
+            
     	}
     
     	// initialize floor
@@ -385,6 +406,7 @@ public class AngryFlappyBird extends Application {
 //					//show the hit effect
 //					showHitEffect();
 //					//re-render the current_lives
+//					updateLivesText();
 //				}
 //			}
 			
@@ -399,6 +421,7 @@ public class AngryFlappyBird extends Application {
 //					//show the hit effect
 //					showHitEffect();
 //					//re-render the current_lives
+// 					updateLivesText();
 //				}
 //			}
 			
@@ -441,10 +464,12 @@ public class AngryFlappyBird extends Application {
 	        parallelTransition.play();
 	     }
 	     
-	    
-	    
-	    
-
+	     //when bird loses a life, update remaining lives
+	     //havent tested this function
+	     private void updateLivesText() {
+	    	    Text livesText = (Text) gameScene.getChildren().get(gameScene.getChildren().size() - 1);
+	    	    livesText.setText("Lives Left: " + currentLives);
+	    	}
     	 
     } // End of MyTimer class
 
