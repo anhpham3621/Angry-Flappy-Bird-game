@@ -21,6 +21,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -172,18 +176,23 @@ public class AngryFlappyBird extends Application {
     }
     
     private void resetGameScene(boolean firstEntry) {
-    	// Text object to display the score
-        Text scoreText = new Text("Score: 0");
-
-        // set style
-        scoreText.setStyle("-fx-font-size: 24; -fx-font-weight: bold; -fx-fill: black");
-        
-        Text livesText = new Text("Lives Left: 3");
+        // Create a Text object to display the score
+        Text scoreText = new Text("0");
 
         // You can customize the font size and style if needed
-        livesText.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-fill: red");
-        
-    	// reset variables
+        //scoreText.setStyle("-fx-font-size: 24; -fx-font-weight: bold; -fx-fill: black");
+        scoreText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 35));
+        scoreText.setFill(Color.WHITE); 
+        scoreText.setX(10);
+        scoreText.setY(35);
+        // Create a Text object to display the][i[ score
+        Text livesText = new Text("3 lives");
+
+        livesText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        livesText.setFill(Color.BROWN); 
+        livesText.setX(280);
+        livesText.setY(560);
+        // reset variables
         CLICKED = false;
         GAME_OVER = false;
         GAME_START = false;
@@ -191,8 +200,8 @@ public class AngryFlappyBird extends Application {
         uPipes = new ArrayList<>();
         dPipes = new ArrayList<>();
         
-    	if(firstEntry) {
-    		// create two canvases
+        if(firstEntry) {
+            // create two canvases
             Canvas canvas = new Canvas(DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
             gc = canvas.getGraphicsContext2D();
 
@@ -203,55 +212,46 @@ public class AngryFlappyBird extends Application {
             // create the game scene
             gameScene = new Group();
             gameScene.getChildren().addAll(background, canvas, scoreText, livesText);
-            //Reset position of text so livesText does not sit on top of scoresText
-            livesText.setLayoutX(DEF.SCENE_WIDTH - livesText.getBoundsInLocal().getWidth() - 70);
-            livesText.setLayoutY(DEF.SCENE_HEIGHT - livesText.getBoundsInLocal().getHeight() - 10);
-            
-    	}
+        }
     
-    	// initialize floor
-    	for(int i=0; i<DEF.FLOOR_COUNT; i++) {
-    		
-    		int posX = i * DEF.FLOOR_WIDTH;
-    		int posY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
-    		Sprite floor = new Sprite(posX, posY, DEF.IMAGE.get("floor1"));
-    		floor.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    		floor.render(gc);
-    		floors.add(floor);
-    	}
+        // initialize floor
+        for(int i=0; i<DEF.FLOOR_COUNT; i++) {
+            
+            int posX = i * DEF.FLOOR_WIDTH;
+            int posY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
+            Sprite floor = new Sprite(posX, posY, DEF.IMAGE.get("floor1"));
+            floor.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+            floor.render(gc);
+            floors.add(floor);
+        }
 
-    	//initialize pipes
-    	Random rand = new Random();
-    	for (int i = 0; i < DEF.PIPE_COUNT; i++) {
-    	    // Random value in the range [-PIPE_GAP, PIPE_GAP]
-    	    double randomOffset = rand.nextDouble() * DEF.PIPE_RANGE; // Random value in the range [-PIPE_GAP, PIPE_GAP] 
-    	    // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
-    	    randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
-    	    double initialY = DEF.D_PIPE_POS_Y - randomOffset;
-    	    System.out.println("INITIALY DOWN " + initialY);
-    	    //unfinished x-calculation
-    	    //double initalX= DEF.SCENE_WIDTH/12+DEF.PIPE_X_GAP;
-    	    double initalX=DEF.D_PIPE_POS_X;	
-    	    dPipe = new Pipe(initalX, initialY, DEF.IMAGE.get("dpipe2"));
-    	    dPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    	    dPipe.render(gc);
-    	    dPipes.add(dPipe);
+        Random rand = new Random();
+        for (int i = 0; i < DEF.PIPE_COUNT; i++) {
+            // Random value in the range [-PIPE_GAP, PIPE_GAP]
+            double randomOffset = rand.nextDouble() * DEF.PIPE_RANGE; // Random value in the range [-PIPE_GAP, PIPE_GAP] 
+            // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
+            randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
+            double initialY = DEF.D_PIPE_POS_Y - randomOffset;
+            System.out.println("INITIALY DOWN " + initialY);
 
-    	    // Calculate the initial Y for uPipe based on the corresponding dPipe
-    	    double uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
-    	    //unfinished x-calculation
-    	    //double uPipeInitalX=DEF.SCENE_WIDTH/12+DEF.PIPE_X_GAP;
-    	    double uPipeInitalX=DEF.D_PIPE_POS_X;	
-    	    uPipe = new Pipe(uPipeInitalX, uPipeInitialY, DEF.IMAGE.get("upipe1"));
-    	    System.out.println("INITIALY UP " + uPipeInitialY);
-    	    uPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-    	    uPipe.render(gc);
-    	    uPipes.add(uPipe);
-    	}
+            dPipe = new Pipe(DEF.D_PIPE_POS_X, initialY, DEF.IMAGE.get("dpipe2"));
+            dPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+            dPipe.render(gc);
+            dPipes.add(dPipe);
 
-    	//for rendering the eggs on the pipe
-    	whiteEgg = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y - 100, DEF.IMAGE.get("white_egg"));
-    	whiteEgg.render(gc);
+
+            // Calculate the initial Y for uPipe based on the corresponding dPipe
+            double uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
+            uPipe = new Pipe(DEF.U_PIPE_POS_X, uPipeInitialY, DEF.IMAGE.get("upipe1"));
+            System.out.println("INITIALY UP " + uPipeInitialY);
+            uPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+            uPipe.render(gc);
+            uPipes.add(uPipe);
+        }
+
+        //for rendering the eggs on the pipe
+        whiteEgg = new Sprite(DEF.U_PIPE_POS_X, DEF.U_PIPE_POS_Y - 100, DEF.IMAGE.get("white_egg"));
+        whiteEgg.render(gc);
         
         int pipe_gap = 150;
 
@@ -388,71 +388,71 @@ public class AngryFlappyBird extends Application {
     	 
 
     	 public void checkCollision() {
-    		boolean hitAUpipe = false; 
-    		// check collision  with the floor
-			for (Sprite floor: floors) {
-				GAME_OVER = GAME_OVER || blob.intersectsSprite(floor);
-			}
-			
-			/**handling the blob intersecting with a upipe
-			 * the life of the blob should go to life - 1
-			 * the UI should be updated
-			 * if the life reaches 0, the game ends
-			**/
-			
-//			for (Pipe uPipe: uPipes) {
-//				if (blob.intersectsPipe(uPipe)) {
-//					current_lives --;
-//					//show the hit effect
-//					showHitEffect();
-//					//re-render the current_lives
-//					updateLivesText();
-//				}
-//			}
-			
-			/**handling the blob intersecting with a dpipe
-			*the life of the blob should go to life - 1
-			*the UI should be updated
-			*if the life reaches 0, the game ends
-			**/
-//			for (Pipe dPipe: dPipes) {
-//				if (blob.intersectsPipe(dPipe)) {
-//					current_lives --;
-//					//show the hit effect
-//					showHitEffect();
-//					//re-render the current_lives
-// 					updateLivesText();
-//				}
-//			}
-			
-			/**
-			 * This handles the logic for letting the white eggs increment the total coins
-			 * available
-			 */
-//			for (Sprite egg: whiteEggs) {
-//				if (blob.intersectsPipe(dPipe)) {
-//					current_score ++;
-//					//show the the additional score gained
-//					showHitEffect();
-//					//re-render the current_score on the screen
-//				}
-//			}
-			
-			//set the game_over to true if no lives remaining
-//			if (current_lives == 0) {
-//				GAME_OVER = true;
-//			}
-			
-			// end the game when blob hit stuff
-			if (GAME_OVER) {
-				showHitEffect(); 
-				for (Sprite floor: floors) {
-					floor.setVelocity(0, 0);
-				}
-				timer.stop();
-			}
-			
-    	 }
+    	        boolean hitAUpipe = false; 
+    	        // check collision  with the floor
+    	        for (Sprite floor: floors) {
+    	            GAME_OVER = GAME_OVER || blob.intersectsSprite(floor);
+    	        }
+    	        
+    	        /**handling the blob intersecting with a upipe
+    	         * the life of the blob should go to life - 1
+    	         * the UI should be updated
+    	         * if the life reaches 0, the game ends
+    	        **/
+    	        
+    	        for (Pipe uPipe: uPipes) {
+    	            if (blob.intersectsPipe(uPipe)) {
+    	                
+    	                //show the hit effect
+//    	                  showHitEffect();
+    	                //re-render the current_lives
+    	                GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
+    	            }
+    	        }
+    	        
+    	        /**handling the blob intersecting with a dpipe
+    	        *the life of the blob should go to life - 1
+    	        *the UI should be updated
+    	        *if the life reaches 0, the game ends
+    	        **/
+    	        for (Pipe dPipe: dPipes) {
+    	           if (blob.intersectsPipe(dPipe)) {
+//    	              current_lives --;
+    	                //show the hit effect
+    	            //showHitEffect();
+    	                //re-render the current_lives
+    	               GAME_OVER = GAME_OVER || blob.intersectsPipe(dPipe);
+    	           }
+    	        }
+    	        
+    	        /**
+    	         * This handles the logic for letting the white eggs increment the total coins
+    	         * available
+    	         */
+//    	          for (Sprite egg: whiteEggs) {
+//    	              if (blob.intersectsPipe(dPipe)) {
+//    	                  current_score ++;
+//    	                  //show the the additional score gained
+//    	                  showHitEffect();
+//    	                  //re-render the current_score on the screen
+//    	              }
+//    	          }
+    	        
+    	        //set the game_over to true if no lives remaining
+//    	          if (current_lives == 0) {
+//    	              GAME_OVER = true;
+//    	          }
+    	        
+    	        // end the game when blob hit stuff
+    	        if (GAME_OVER) {
+    	            showHitEffect(); 
+    	            for (Sprite floor: floors) {
+    	                floor.setVelocity(0, 0);
+    	            }
+    	            timer.stop();
+    	        }
+    	        
+    	     }
     	 
 	     private void showHitEffect() {
 	        ParallelTransition parallelTransition = new ParallelTransition();
