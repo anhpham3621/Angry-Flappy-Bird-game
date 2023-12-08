@@ -405,7 +405,10 @@ class MyTimer extends AnimationTimer {
 				 //show the hit effect
 				 //showHitEffect();
 				 //re-render the current_lives
+				 System.out.println("Hit uPipe");
+				System.out.println("lives BEFORE uPIPE:" + currentLives);
 			 	currentLives--;
+			 	 System.out.println("lives AFTER uPIPE:" + currentLives);
 			 	// if (currentLives>=0){
 			 	updateLivesText();
 			 	 //}
@@ -425,9 +428,13 @@ class MyTimer extends AnimationTimer {
 				//show the hit effect
 				//showHitEffect();
 				//re-render the current_lives
+				 System.out.println("Hit dPipe");
+				 System.out.println("lives BEFORE dPIPE:" + currentLives);
 			 	 currentLives--;
+			 	 System.out.println("lives AFTER dPIPE:" + currentLives);
 		// 	 	 if (currentLives>0){
-			 		 updateLivesText();
+			 	 updateLivesText();
+			 		 
 			 	 //}
 			 GAME_OVER = GAME_OVER || blob.intersectsPipe(dPipe);
 			// Reset the position of the bird after collision with pipes
@@ -459,7 +466,7 @@ class MyTimer extends AnimationTimer {
 		            // The bird has passed through a new set of pipes
 		            currentScores++;
 		            lastPassedPipeIndex = currentPassedPipeIndex;
-		            System.out.println("Passed through pipes! Current Score: " + currentScores);
+		            //System.out.println("Passed through pipes! Current Score: " + currentScores);
 		            updateScoreText();
 		        }
 		    }
@@ -478,6 +485,22 @@ class MyTimer extends AnimationTimer {
 			 }
 			 timer.stop();
 		 }
+		// Set the game_over to true if no lives remaining
+		 if (currentLives == 0) {
+		        GAME_OVER = true;
+		        //gameOverText.setVisible(true);
+		        
+		        // Reset the scores and lives
+//		        currentScores = 0;
+//		        updateScoreText();
+//		        
+//		        currentLives = 3; // Reset to the initial number of lives
+//		        updateLivesText();
+//		        
+		        System.out.println("Game Over! Scores: " + currentScores + ", Lives: " + currentLives);
+		        System.out.println("Game Restarted!");
+		        // Allow the player to play again by clicking anywhere on the scene
+		 }
 	 }
 
 	 private void showHitEffect() {
@@ -494,8 +517,9 @@ class MyTimer extends AnimationTimer {
 		 //when bird loses a life, update remaining lives
 	 //havent tested this function
 	 private void updateLivesText() {
-	 	 if (currentLives > 0) {
+	 	 if (currentLives >= 0) {
 	 		 livesText.setText("Lives Left: " + currentLives);
+	 		System.out.println("You have " + currentLives + " lives left");
 	 	 } else {
 	 		 livesText.setText("Lives Left: 0");
 	 	 }
@@ -506,7 +530,7 @@ class MyTimer extends AnimationTimer {
 //		 currentScore += 5;
 		 // Update the score text on the screen
 			 scoreText.setText("Score: " + currentScores);
-			 System.out.println("Update Score " + currentScores);
+			 //System.out.println("Update Score " + currentScores);
 		 }
 		
 		
