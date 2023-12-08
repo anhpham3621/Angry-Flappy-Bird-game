@@ -43,6 +43,8 @@ public class AngryFlappyBird extends Application {
 	private Text gameOverText;
 	private int currentScores=0;
 	Text scoreText= new Text("Score: 0");
+	
+	private int lastPassedPipeIndex = -1;
 	// time related attributes
 	private long clickTime, startTime, elapsedTime;
 	private AnimationTimer timer;
@@ -144,7 +146,7 @@ public class AngryFlappyBird extends Application {
 	}
 	private void resetGameScene(boolean firstEntry) {
 		// Create a Text object to display the score
-		Text scoreText = new Text("Score: 0");
+		//Text scoreText = new Text("Score: 0");
 		
 		scoreText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 19));
 		scoreText.setFill(Color.WHITE);
@@ -247,7 +249,7 @@ class MyTimer extends AnimationTimer {
 	
 	 // clear current scene
 	 gc.clearRect(0, 0, DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
-	if (GAME_START) {
+	 if (GAME_START) {
 	 	
 	 	 //step1: update background
 	 	 if (bgr_counter>450) {
@@ -376,6 +378,15 @@ class MyTimer extends AnimationTimer {
 // 		 	
 	 }
 	 
+	// Helper method to reset the position of the bird
+	 //should be fixed, the bird should be where?
+	 private void resetBirdPosition() {
+	     blob.setPositionXY(DEF.BLOB_POS_X, DEF.BLOB_POS_Y);
+	     blob.setVelocity(0, 0);
+	     //bird appear again
+	     //blob.render(gc);
+	 }
+	 
 	 public void checkCollision() {
 		 boolean hitAUpipe = false;
 		 // check collision with the floor
@@ -399,6 +410,8 @@ class MyTimer extends AnimationTimer {
 			 	updateLivesText();
 			 	 //}
 			 	GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
+			 // Reset the position of the bird after collision with pipes
+	            resetBirdPosition();
 			 }
 		 }
 		
@@ -417,6 +430,8 @@ class MyTimer extends AnimationTimer {
 			 		 updateLivesText();
 			 	 //}
 			 GAME_OVER = GAME_OVER || blob.intersectsPipe(dPipe);
+			// Reset the position of the bird after collision with pipes
+	            resetBirdPosition();
 			 }
 		 }
 		 
@@ -424,14 +439,31 @@ class MyTimer extends AnimationTimer {
 		 * This handles the logic for letting the white eggs increment the total coins
 		 * available
 		 */
-	// 	 for (Sprite egg: whiteEggs) {
-	// 	 if (blob.intersectsPipe(dPipe)) {
-	// 	 current_score ++;
-	// 	 //show the the additional score gained
-	// 	 showHitEffect();
-	// 	 //re-render the current_score on the screen
-	// 	 }
-	// 	 }
+		// handling the logic for letting the white eggs increment the total coins available
+		    for (Pipe dPipe : dPipes) {
+		        if (blob.intersectsSprite(whiteEgg)) {
+		            currentScores += 5;
+		            // show the additional score gained
+		            //showHitEffect();
+		            // re-render the current_score on the screen
+		            updateScoreText();
+
+		            // Reset the position of the bird after collecting a white egg
+		            //resetBirdPosition();
+		        }
+		    }
+		 // check if the bird goes through a pair of pipes without collision
+		    if (!GAME_OVER && blob.getPositionX() > uPipes.get(0).getPositionX() + DEF.D_PIPE_WIDTH) {
+		        int currentPassedPipeIndex = (int) (blob.getPositionX() / (DEF.D_PIPE_WIDTH + DEF.PIPE_X_GAP));
+		        if (currentPassedPipeIndex > lastPassedPipeIndex) {
+		            // The bird has passed through a new set of pipes
+		            currentScores++;
+		            lastPassedPipeIndex = currentPassedPipeIndex;
+		            System.out.println("Passed through pipes! Current Score: " + currentScores);
+		            updateScoreText();
+		        }
+		    }
+
 		
 		 //set the game_over to true if no lives remaining
 	// 	 if (currentLives == 0) {
@@ -440,11 +472,11 @@ class MyTimer extends AnimationTimer {
 		
 		 // end the game when blob hit stuff
 		 if (GAME_OVER) {
-		 showHitEffect();
-		 for (Sprite floor: floors) {
-		 floor.setVelocity(0, 0);
-		 }
-		 timer.stop();
+			 showHitEffect();
+			 for (Sprite floor: floors) {
+			 floor.setVelocity(0, 0);
+			 }
+			 timer.stop();
 		 }
 	 }
 
@@ -473,7 +505,8 @@ class MyTimer extends AnimationTimer {
 //		 if (blob.intersectsSprite(whiteEgg)) {
 //		 currentScore += 5;
 		 // Update the score text on the screen
-			 scoreText.setText("Score: " + currentScore);
+			 scoreText.setText("Score: " + currentScores);
+			 System.out.println("Update Score " + currentScores);
 		 }
 		
 		
