@@ -39,7 +39,7 @@ public class Defines {
     
     // coefficients related to the pipes\
     //horizontal align
-    final int D_PIPE_POS_X = 200;
+    final int D_PIPE_POS_X = 400;
     //vertical align
     final int D_PIPE_POS_Y = -240;
 

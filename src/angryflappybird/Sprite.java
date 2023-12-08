@@ -13,6 +13,10 @@ public class Sprite {
     private double velocityY;
     private double width;
     private double height;
+    
+ // Add these boolean attributes
+    private boolean isVisible = true;
+    private boolean isDisabled = false;
 //    private String IMAGE_DIR = "../resources/images/";
 
     public Sprite() {
