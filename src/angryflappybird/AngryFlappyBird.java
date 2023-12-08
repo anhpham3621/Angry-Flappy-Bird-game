@@ -40,7 +40,9 @@ public class AngryFlappyBird extends Application {
 	private Defines DEF = new Defines();
     
 	//text display
-	private int currentLives;
+	private int currentLives=3;
+	Text livesText = new Text("Lives Left: 3");
+	private Text gameOverText;
     // time related attributes
     private long clickTime, startTime, elapsedTime;   
     private AnimationTimer timer;
@@ -111,6 +113,7 @@ public class AngryFlappyBird extends Application {
         
         DEF.startButton.setOnMouseClicked(this::mouseClickHandler);
         
+        
         gameControl = new VBox(30);
         
         gameDesc = new VBox(15);
@@ -154,7 +157,7 @@ public class AngryFlappyBird extends Application {
         
 
     }
-    
+   
     private void mouseClickHandler(MouseEvent e) {
     	if (GAME_OVER) {
             resetGameScene(false);
@@ -177,12 +180,22 @@ public class AngryFlappyBird extends Application {
         scoreText.setX(10);
         scoreText.setY(35);
         // Create a Text object to display the][i[ score
-        Text livesText = new Text("3 lives");
-
+        
         livesText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
         livesText.setFill(Color.BROWN); 
         livesText.setX(280);
         livesText.setY(560);
+        gameOverText = new Text("Game Over, click to play again");
+        gameOverText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        gameOverText.setFill(Color.RED);
+        gameOverText.setX(DEF.SCENE_WIDTH / 2 - 150);
+        gameOverText.setY(DEF.SCENE_HEIGHT / 2);
+
+        // Set the initial visibility of gameOverText to false
+        gameOverText.setVisible(false);
+
+//        gameScene = new Group();
+//        gameScene.getChildren().addAll(background, canvas, scoreText, livesText, gameOverText);
         // reset variables
         CLICKED = false;
         GAME_OVER = false;
@@ -202,7 +215,7 @@ public class AngryFlappyBird extends Application {
 //            System.out.println(background);
             // create the game scene
             gameScene = new Group();
-            gameScene.getChildren().addAll(background, canvas, scoreText, livesText);
+            gameScene.getChildren().addAll(background, canvas, scoreText, livesText,gameOverText);
         }
     
         // initialize floor
@@ -435,6 +448,11 @@ public class AngryFlappyBird extends Application {
     	                //show the hit effect
 //    	                  showHitEffect();
     	                //re-render the current_lives
+    	            	currentLives--;
+    	            	
+    	            	// if (currentLives>=0){
+    	            	updateLivesText();
+    	            	 //}
     	                GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
     	            }
     	        }
@@ -450,6 +468,10 @@ public class AngryFlappyBird extends Application {
     	                //show the hit effect
     	            //showHitEffect();
     	                //re-render the current_lives
+    	        	   currentLives--;
+//    	        	   if (currentLives>0){
+    	        		  updateLivesText();
+    	        	   //}
     	               GAME_OVER = GAME_OVER || blob.intersectsPipe(dPipe);
     	           }
     	        }
@@ -468,7 +490,7 @@ public class AngryFlappyBird extends Application {
 //    	          }
     	        
     	        //set the game_over to true if no lives remaining
-//    	          if (current_lives == 0) {
+//    	          if (currentLives == 0) {
 //    	              GAME_OVER = true;
 //    	          }
     	        
@@ -479,6 +501,20 @@ public class AngryFlappyBird extends Application {
     	                floor.setVelocity(0, 0);
     	            }
     	            timer.stop();
+    	            if (currentLives == 0) {
+//      	              GAME_OVER = true;
+    	            	gameOverText.setVisible(true);
+    	            	gameScene.setOnMouseClicked(e -> {
+        	                gameOverText.setVisible(false); // Hide the game over message when restarting
+        	            });
+     	            }
+    	         // Display the game over message
+    	            
+
+    	            // Allow the player to play again by clicking anywhere on the scene
+//    	            gameScene.setOnMouseClicked(e -> {
+//    	                gameOverText.setVisible(false); // Hide the game over message when restarting
+//    	            });
     	        }
     	        
     	     }
@@ -496,8 +532,11 @@ public class AngryFlappyBird extends Application {
 	     //when bird loses a life, update remaining lives
 	     //havent tested this function
 	     private void updateLivesText() {
-	    	    Text livesText = (Text) gameScene.getChildren().get(gameScene.getChildren().size() - 1);
-	    	    livesText.setText("Lives Left: " + currentLives);
+	    	    if (currentLives > 0) {
+	    	        livesText.setText("Lives Left: " + currentLives);
+	    	    } else {
+	    	        livesText.setText("Lives Left: 0");
+	    	    }
 	    	}
     	 
     } // End of MyTimer class
