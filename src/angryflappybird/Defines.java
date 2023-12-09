@@ -68,7 +68,7 @@ public class Defines {
     final double PIPE_RANGE= 150;
     //pipe gap has to be larger than pipe height for dPipe
     final double PIPE_Y_GAP=750;
-    final double PIPE_X_GAP=150;
+    final double PIPE_X_GAP=300;
     
     //coefficients related to egg
     final double WHITE_EGG_HEIGHT = 80;
