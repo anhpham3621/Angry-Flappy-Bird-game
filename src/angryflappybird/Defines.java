@@ -60,6 +60,9 @@ public class Defines {
     // coefficients related to the pigs
     final int PIG_HEIGHT = 80;
     final int PIG_WIDTH = 80;
+    final int PIG_POS_X = 400;
+    final int PIG_POS_Y = 300;
+    final int PIG_POS_START = 300;
 
     //initial pipe position
     final double PIPE_RANGE= 150;

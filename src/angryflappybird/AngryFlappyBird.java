@@ -71,6 +71,7 @@ public class AngryFlappyBird extends Application {
 	double nextY_down = 0;
 	double nextX_up = 0;
 	double nextY_up = 0;
+	double initialY = 0;
 	private ImageView background;
 	private Pipe uPipe;
 	private Pipe dPipe;
@@ -208,11 +209,12 @@ public class AngryFlappyBird extends Application {
 			double randomOffset = rand.nextDouble() * DEF.PIPE_RANGE;
 			// Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
 			randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
-			double initialY = DEF.D_PIPE_POS_Y - randomOffset;
+			initialY = DEF.D_PIPE_POS_Y - randomOffset;
 			dPipe = new Pipe(initialX, initialY, DEF.IMAGE.get("dpipe2"));
 			dPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
 			dPipe.render(gc);
 			dPipes.add(dPipe);
+			System.out.println("the init y 1: "+initialY);
 			// Calculate the initial Y forU uPipe based on the corresponding dPipe
 			uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
 			uPipe = new Pipe(initialX, uPipeInitialY, DEF.IMAGE.get("upipe1"));
@@ -224,18 +226,18 @@ public class AngryFlappyBird extends Application {
 		//for rendering the eggs on the pipe
 		System.out.println("tHE UP pipeY: "+uPipeInitialY);
 		System.out.println("tHE UP pipeX: " + DEF.D_PIPE_POS_X);
-		whiteEgg = new Sprite(DEF.D_PIPE_POS_X+5, uPipeInitialY-10, DEF.IMAGE.get("white_egg"));
+		whiteEgg = new Sprite(DEF.D_PIPE_POS_X+5, uPipeInitialY-8, DEF.IMAGE.get("white_egg"));
 		// System.out.println(whiteEgg);
 //		whiteEgg.setVelocity(-0.5, 0);
 		whiteEgg.render(gc);
-		int pipe_gap = 150;
 		// initialize blob
 		blob = new Blob(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
 		blob.render(gc);
-		
-		pig = new Sprite(DEF.BLOB_POS_X+10, DEF.BLOB_POS_Y+30, DEF.IMAGE.get("monster_thief"));
+		System.out.println("the init y: "+initialY);
+		double pigStart = initialY+DEF.PIG_POS_START;
+		pig = new Sprite(DEF.PIG_POS_X, initialY + DEF.D_PIPE_HEIGHT, DEF.IMAGE.get("monster_thief"));
 		System.out.println("tHE PIG: " + pig);
-		pig.setVelocity(0, 300);
+		pig.setVelocity(0, DEF.BLOB_DROP_VEL);
 		
 		pig.render(gc);
 		
@@ -386,15 +388,20 @@ class MyTimer extends AnimationTimer {
 		 		 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
 		 		 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
 		 		 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
-//		 		 System.out.println("NEXT Y DOWN " + nextY_down);
+		 		 System.out.println("tHE PIG IS moving " + nextY_down);
 		 		 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
+				 double curr_dpipe_pos_x = dPipes.get(i).getPositionX();
+//				 System.out.println("curr pig x position: "+curr_dpipe_pos_x);
+				 double curr_dpipe_pos_y = dPipes.get(i).getPositionY();
+				 System.out.println("curr pig y position: "+curr_dpipe_pos_y);
+//				 UTILIZE THE HEIGHT OF THE PIG TO SET IT DOWN
+				 pig.setPositionXY(nextX_down, nextY_down+DEF.D_PIPE_HEIGHT);
+
 			 }
-			 double curr_dpipe_pos_x = dPipes.get(i).getPositionX();
-			 double curr_dpipe_pos_y = dPipes.get(i).getPositionY();
-			 pig.setPositionXY(curr_dpipe_pos_x, curr_dpipe_pos_y);
+
 		 }
 		 
-			 pig.setVelocity(0, 300);
+			 pig.setVelocity(-0.4, whiteEgg.getPositionY());
 			 pig.update(DEF.EASY_SCENE_SHIFT_TIME);
 			 pig.render(gc);
 		 
