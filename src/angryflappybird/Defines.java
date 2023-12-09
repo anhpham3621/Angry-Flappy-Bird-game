@@ -71,8 +71,8 @@ public class Defines {
     final double PIPE_X_GAP=150;
     
     //coefficients related to egg
-    final double WHITE_EGG_HEIGHT = 50;
-    final double WHITE_EGG_WIDTH = 50;
+    final double WHITE_EGG_HEIGHT = 80;
+    final double WHITE_EGG_WIDTH = 80;
     final double WHITE_EGG_POS_Y = 300;
     final double WHITE_EGG_POS_X = 200;
     

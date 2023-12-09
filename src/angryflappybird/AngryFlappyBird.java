@@ -158,7 +158,7 @@ public class AngryFlappyBird extends Application {
 		//livesText = new Text("Lives Left: 3");
 		livesText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 19));
 		livesText.setFill(Color.BROWN);
-		livesText.setX(240);
+		livesText.setX(245);
 		livesText.setY(560);
 		
 		gameOverText = new Text("Game Over, click to play again");
@@ -214,31 +214,29 @@ public class AngryFlappyBird extends Application {
 			dPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
 			dPipe.render(gc);
 			dPipes.add(dPipe);
-			System.out.println("the init y 1: "+initialY);
+			//somehow bringing white egg up here work, but down doesnt
+			whiteEgg = new Sprite(DEF.D_PIPE_POS_X-13, uPipeInitialY-60, DEF.IMAGE.get("white_egg"));
+			
 			// Calculate the initial Y forU uPipe based on the corresponding dPipe
 			uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
 			uPipe = new Pipe(initialX, uPipeInitialY, DEF.IMAGE.get("upipe1"));
 			uPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
 			uPipe.render(gc);
 			uPipes.add(uPipe);
+			
 		}
 		
 		//for rendering the eggs on the pipe
-		System.out.println("tHE UP pipeY: "+uPipeInitialY);
-		System.out.println("tHE UP pipeX: " + DEF.D_PIPE_POS_X);
-		whiteEgg = new Sprite(DEF.D_PIPE_POS_X+5, uPipeInitialY-8, DEF.IMAGE.get("white_egg"));
-		// System.out.println(whiteEgg);
-//		whiteEgg.setVelocity(-0.5, 0);
+		
 		whiteEgg.render(gc);
 		// initialize blob
 		blob = new Blob(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
 		blob.render(gc);
-		System.out.println("the init y: "+initialY);
+		
 		double pigStart = initialY+DEF.PIG_POS_START;
 		pig = new Sprite(DEF.PIG_POS_X, initialY + DEF.D_PIPE_HEIGHT, DEF.IMAGE.get("monster_thief"));
 		System.out.println("tHE PIG: " + pig);
 		pig.setVelocity(0, DEF.BLOB_DROP_VEL);
-		
 		pig.render(gc);
 		
 		// initialize timer
@@ -323,29 +321,17 @@ class MyTimer extends AnimationTimer {
 	 		 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
 	 		 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
 	 		 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
-//	 		 System.out.println("NEXT Y DOWN " + nextY_down);
 	 		 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
-	 		
 	 		
 	 		 nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.SCENE_WIDTH/20;
 	 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
-	 		System.out.println("tHE uPipe UP pipeY: "+nextY_up);
-			System.out.println("tHE uPipe UP pipeX: " + nextX_up);
-	 		 //double nextY = DEF.U_PIPE_POS_Y;
 	 		 uPipes.get(i).setPositionXY(nextX_up, nextY_up);
 	 		 }
-	 		 
-		//	 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-			
-		//	 System.out.println("the bird position: " + nextY_up);
 			 dPipes.get(i).render(gc);
 			 dPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
 			
 			 uPipes.get(i).render(gc);
 			 uPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
-//			 whiteEgg.render(gc);
-		//	 moveEgg(nextX_up, nextY_up);
-//			 whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
 	 }
 	 };
 	 
@@ -419,7 +405,6 @@ class MyTimer extends AnimationTimer {
 	  */
 	
 	 public void moveEgg() {
-//		 
 		 for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
 			 if (uPipes.get(i).getPositionX() <= -DEF.U_PIPE_WIDTH) {
 				 
@@ -427,17 +412,11 @@ class MyTimer extends AnimationTimer {
 		 		 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
 		 		 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
 		 		 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
-//		 		 System.out.println("NEXT Y DOWN " + nextY_down);
-		 		
 		 		
 		 		 nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.SCENE_WIDTH/20;
 		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
 		 		 uPipes.get(i).setPositionXY(nextX_up, nextY_up);
-
-		 		 
-		 		System.out.println("tHE egg UP pipeY: "+nextY_up);
-				System.out.println("tHE egg UP pipeX: " + nextX_up);
-		 		 whiteEgg.setPositionXY(nextX_up+6, nextY_up-30);
+		 		 whiteEgg.setPositionXY(nextX_up-8, nextY_up-60);
 			 }
 			 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
 			 whiteEgg.render(gc);
@@ -445,8 +424,6 @@ class MyTimer extends AnimationTimer {
 		 }
 		 	
 	 }
-	 
-
 	 
 	// Helper method to reset the position of the bird
 	 //should be fixed, the bird should be where?
@@ -553,8 +530,8 @@ class MyTimer extends AnimationTimer {
 		 
 		// Set the game_over to true if no lives remaining
 		 if (currentLives == 0) {
-		        GAME_OVER = true;
-		        showHitEffect();
+		         GAME_OVER = true;
+		         showHitEffect();
 				 for (Sprite floor: floors) {
 				 floor.setVelocity(0, 0);
 				 timer.stop();
