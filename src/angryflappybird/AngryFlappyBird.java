@@ -54,6 +54,7 @@ public class AngryFlappyBird extends Application {
 	private ArrayList<Pipe> uPipes;
 	private ArrayList<Pipe> dPipes;
 	private Sprite whiteEgg;
+	private Sprite goldEgg;
 	private Sprite pig;
 	private Blob blob2;
 	private double uPipeInitialY;
@@ -198,7 +199,7 @@ public class AngryFlappyBird extends Application {
 			floor.render(gc);
 			floors.add(floor);
 		}
-		//initialize Pipes
+		//initialize Pipes n eggs
 		Random rand = new Random();
 		for (int i = 0; i < DEF.PIPE_COUNT; i++) {
 			pairNumber=1;
@@ -217,10 +218,13 @@ public class AngryFlappyBird extends Application {
 			dPipes.add(dPipe);
 			//somehow bringing white egg up here work, but down doesnt
 			whiteEgg = new Sprite(DEF.D_PIPE_POS_X-13, uPipeInitialY-60, DEF.IMAGE.get("white_egg"));
+			goldEgg = new Sprite(DEF.D_PIPE_POS_X-13, uPipeInitialY-60, DEF.IMAGE.get("golden_egg"));
 			
 			// Calculate the initial Y forU uPipe based on the corresponding dPipe
 			uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
+			
 			uPipe = new Pipe(initialX, uPipeInitialY, DEF.IMAGE.get("upipe1"));
+			
 			uPipe.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
 			uPipe.render(gc);
 			uPipes.add(uPipe);
@@ -229,7 +233,7 @@ public class AngryFlappyBird extends Application {
 		
 		//for rendering the eggs on the pipe
 		
-		whiteEgg.render(gc);
+		//whiteEgg.render(gc);
 		// initialize blob
 		blob = new Blob(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
 		blob.render(gc);
@@ -290,7 +294,7 @@ class MyTimer extends AnimationTimer {
 	 	 movePig();
 	 	
 	 	 //step5: check for collision
-	 	 checkCollision();
+	 	 //checkCollision();
 	 }
 	 }
 	 private void displayBackground() {
@@ -321,7 +325,7 @@ class MyTimer extends AnimationTimer {
 	 public void movePipe() {
 
 	 	for (int i = 0; i < DEF.PIPE_COUNT; i++) {
-	 		 System.out.println("Pipe " + i + " X: " + dPipes.get(i).getPositionX());
+	 		 //System.out.println("Pipe " + i + " X: " + dPipes.get(i).getPositionX());
 	 		 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
 	 			 pairNumber++;
 	 			 
@@ -344,7 +348,7 @@ class MyTimer extends AnimationTimer {
 				 uPipes.get(i).render(gc);
 				 uPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
 	 }
-	 	System.out.println("pairNumber" + pairNumber);
+	 	//System.out.println("pairNumber" + pairNumber);
 	 }
 	 /**
 	  * This method is responsible for adding animation to the pig
@@ -383,6 +387,8 @@ class MyTimer extends AnimationTimer {
 	 }
 	 
 	 public void moveEgg() {
+		 boolean showWhite=false;
+		 boolean showGold=false;
 		 Random rand = new Random();
 		 for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
 			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
@@ -399,17 +405,40 @@ class MyTimer extends AnimationTimer {
 		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
 		 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
 		 		 
+		 		 double randWhite=rand.nextDouble();
+		 		System.out.println("rand white " +randWhite );
 		 		 
+		 		double randGold=rand.nextDouble();
+		 		System.out.println("rand gold " +randGold );
+		 		
 		 		 //Randomize whether eggs show up
-		 		 if (rand.nextDouble() < 0.5) {
-		 		 whiteEgg.setPositionXY(nextX_down-8, nextY_up-60);
-		 		 }
+		 		//if white show up and gold wont showup
+		 		if (randWhite < 0.5 & randGold>=0.3) {
+		 			System.out.println("WHITE SHOW " );
+		 			showWhite=true;
+		 		    whiteEgg.setPositionXY(nextX_down-8, nextY_up-60);
+		 		}
+		 		if (randGold < 0.3) {
+		 			System.out.println("GOLD SHOW " );
+		 			showGold=true;
+		 		    goldEgg.setPositionXY(nextX_down-8, nextY_up-60);
+		 		}
 				 
 			 }
+			// Render and update the gold egg only if it's positioned
+		     }
+		 if (!showWhite) {
 			 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
 			 whiteEgg.render(gc);
 			 whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
-		 }
+	 		}
+		
+		if(!showGold) {
+			 goldEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+	         goldEgg.render(gc);
+	         goldEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
+	 		}
+		 
 		 	
 	 }
 	 

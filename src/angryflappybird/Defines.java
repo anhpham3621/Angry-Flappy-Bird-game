@@ -70,11 +70,17 @@ public class Defines {
     final double PIPE_Y_GAP=750;
     final double PIPE_X_GAP=300;
     
-    //coefficients related to egg
+    //coefficients related to WHITE egg
     final double WHITE_EGG_HEIGHT = 80;
     final double WHITE_EGG_WIDTH = 80;
     final double WHITE_EGG_POS_Y = 300;
     final double WHITE_EGG_POS_X = 200;
+    
+  //coefficients related to GOLD egg
+    final double GOLD_EGG_HEIGHT = 80;
+    final double GOLD_EGG_WIDTH = 80;
+    final double GOLD_EGG_POS_Y = 300;
+    final double GOLD_EGG_POS_X = 200;
     
     // coefficients related to time
     final int EASY_SCENE_SHIFT_TIME = 10;
@@ -92,7 +98,7 @@ public class Defines {
     private final String IMAGE_DIR = "../final_images/";
     final String[] IMAGE_FILES = {"day_background", "bird1", "bird2", "bird3", "bird4",  "floor1", "bird_with_parachute",
     "dpipe2", "dpipe2", "dpipe3", "dpipe4", "dpipe5", "upipe1", "upipe2", "upipe3", "upipe4", "upipe5", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
-        "special_coin", "start_button_sprite", "upipe1", "white_egg", "upipe1"};
+        "special_coin", "start_button_sprite", "upipe1", "white_egg", "upipe1", "golden_egg"};
     //image_pipe
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
@@ -123,7 +129,11 @@ public class Defines {
             } else if(IMAGE_FILES[i] == "white_egg") {
             	System.out.println("the white egg is visible");
                 img = new Image(pathImage("white_egg"), WHITE_EGG_WIDTH, WHITE_EGG_HEIGHT, false, false);
-            } else if(IMAGE_FILES[i] == "monster_thief") {
+            } else if(IMAGE_FILES[i] == "golden_egg") {
+            	System.out.println("the golden egg is visible");
+                img = new Image(pathImage("golden_egg"), GOLD_EGG_WIDTH, GOLD_EGG_HEIGHT, false, false);
+            }
+            else if(IMAGE_FILES[i] == "monster_thief") {
             	img = new Image(pathImage("monster_thief"), PIG_WIDTH, PIG_HEIGHT, false, false);
             }
             else if (i == 1 || i == 2 || i == 3 || i == 4){
