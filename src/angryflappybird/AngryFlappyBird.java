@@ -247,7 +247,12 @@ public class AngryFlappyBird extends Application {
 	
 //timer stuff
 class MyTimer extends AnimationTimer {
+	//do not delete the lines commented out below, it might be helpful
+//	private long randomSeed = System.currentTimeMillis();
+//	private Random rand = new Random(randomSeed);
+//	 rand.setSeed(randomSeed);
 	private Timeline backgroundSwitchTimeline;
+	 
 	int counter = 0;
 	int bgr_counter = 0;
 	public void handle(long now) { 	
@@ -316,14 +321,14 @@ class MyTimer extends AnimationTimer {
 
 	 	for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
 	 		 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
-	 		 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + (DEF.SCENE_WIDTH/20);
+	 		 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
 	 		 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
 	 		 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
 	 		 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
 	 		 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
 	 		 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
 	 		
-	 		 nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.SCENE_WIDTH/20;
+	 		 nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
 	 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
 	 		 uPipes.get(i).setPositionXY(nextX_up, nextY_up);
 	 		 }
@@ -369,7 +374,7 @@ class MyTimer extends AnimationTimer {
 		 
 		 for (int i = 0; i < DEF.PIPE_COUNT; i++) {
 			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
-				 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + (DEF.SCENE_WIDTH/20);
+				 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
 		 		 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
 		 		 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
 		 		 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
@@ -405,18 +410,25 @@ class MyTimer extends AnimationTimer {
 	  */
 	
 	 public void moveEgg() {
+		 Random rand = new Random();
 		 for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
 			 if (uPipes.get(i).getPositionX() <= -DEF.U_PIPE_WIDTH) {
+				 
 				 
 		 		 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
 		 		 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
 		 		 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
 		 		 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
 		 		
-		 		 nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.SCENE_WIDTH/20;
+		 		 nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
 		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
 		 		 uPipes.get(i).setPositionXY(nextX_up, nextY_up);
+		 		 
+		 		 //Randomize whether eggs show up
+		 		 if (rand.nextDouble() < 0.3) {
 		 		 whiteEgg.setPositionXY(nextX_up-8, nextY_up-60);
+		 		 }
+				 
 			 }
 			 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
 			 whiteEgg.render(gc);
