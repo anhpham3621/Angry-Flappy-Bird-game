@@ -54,6 +54,7 @@ public class AngryFlappyBird extends Application {
 	private ArrayList<Pipe> uPipes;
 	private ArrayList<Pipe> dPipes;
 	private Sprite whiteEgg;
+	private Sprite pig;
 	private Blob blob2;
 	private double uPipeInitialY;
 	// game flags
@@ -224,12 +225,16 @@ public class AngryFlappyBird extends Application {
 		System.out.println(uPipeInitialY);
 		whiteEgg = new Sprite(DEF.U_PIPE_POS_X, uPipeInitialY, DEF.IMAGE.get("white_egg"));
 		// System.out.println(whiteEgg);
-		whiteEgg.setVelocity(-0.5, 0);
+//		whiteEgg.setVelocity(-0.5, 0);
 		whiteEgg.render(gc);
 		int pipe_gap = 150;
 		// initialize blob
 		blob = new Blob(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
 		blob.render(gc);
+		
+		pig = new Sprite(DEF.BLOB_POS_X, 0, DEF.IMAGE.get("monster_thief"));
+		pig.setVelocity(0,  1);
+		pig.render(gc);
 		// initialize timer
 		startTime = System.nanoTime();
 		timer = new MyTimer();
@@ -269,7 +274,10 @@ class MyTimer extends AnimationTimer {
 	 	 moveBlob();
 	 	
 	 	 //setp5: update egg
-	 	 moveEgg();
+//	 	 moveEgg();
+	 	 
+	 	 //step5: update pig
+	 	 movePig();
 	 	
 	 	 //step5: check for collision
 	 	 checkCollision();
@@ -301,6 +309,7 @@ class MyTimer extends AnimationTimer {
 	 */
 	 Random rand1 = new Random();
 	 public void movePipe() {
+
 	 	for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
 	 		 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
 	 		 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + (DEF.SCENE_WIDTH/20);
@@ -316,8 +325,9 @@ class MyTimer extends AnimationTimer {
 	 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
 	 		 //double nextY = DEF.U_PIPE_POS_Y;
 	 		 uPipes.get(i).setPositionXY(nextX_up, nextY_up);
-//	 		 whiteEgg.setPositionXY(nextX_up+100, nextY_up);
+	 		whiteEgg.setPositionXY(nextX_up, nextY_up+10);
 	 		 }
+	 		 
 		//	 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
 			
 		//	 System.out.println("the bird position: " + nextY_up);
@@ -326,11 +336,13 @@ class MyTimer extends AnimationTimer {
 			
 			 uPipes.get(i).render(gc);
 			 uPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
-		//	 whiteEgg.render(gc);
+			 whiteEgg.render(gc);
 		//	 moveEgg(nextX_up, nextY_up);
-		//	 whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
+			 whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
 	 }
 	 };
+	 
+	
 	 
 	 // step2: update blob
 	 private void moveBlob() {
@@ -356,26 +368,55 @@ class MyTimer extends AnimationTimer {
 			blob.update(elapsedTime * DEF.NANOSEC_TO_SEC);
 			blob.render(gc);
 	 }
+	 
+	 /**
+	  * Create a helper method
+	  * for loop to check the size of the pipe
+	  * check if the pipe is offscreen
+	  * 	calc the nextx and the nextY from the pipe similar to 324
+	  *     nextY set from the uPipe gotten from the height of the pipe on the top to have a range of how high 
+	  *     the egg should be from pipe. more calc done on the x var
+	  *     then set position for the egg
+	  *     randomize where the egg should show up
+	  */
 	
-	 public void moveEgg() {
+//	 public void moveEgg() {
+//		 
+//		 for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
+//			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
+//				 
+//			 }
+//		 }
 		
+//		 for (int i = 0; i < 2; i++) {
+//			 if (whiteEgg.getPositionX() <= -DEF.FLOOR_WIDTH) {
+//				System.out.println("moving egg");
+//				double nextX = DEF.FLOOR_WIDTH;
+//	 	System.out.println("The next y up: " +nextY_up);
+//	 	whiteEgg.setPositionXY(nextX, nextY_up);
+//			}
+////			 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+//	 			whiteEgg.render(gc);
+//	 			whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
+//		 }
+		 	
+//	 }
+	 
+	 /**
+	  * This method is responsible for adding animation to the pig
+	  */
+	 public void movePig() {
+		 
 		 for (int i = 0; i < 2; i++) {
-			 if (whiteEgg.getPositionX() <= -DEF.FLOOR_WIDTH) {
-				System.out.println("moving egg");
-				double nextX = DEF.FLOOR_WIDTH;
-	 	double nextY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
-	 	whiteEgg.setPositionXY(nextX, 250);
-			}
-			 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-	 			whiteEgg.render(gc);
-	 			whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
-// 			 double x_pos = 250;
-// 			 double y_pos = 250;
-// 			 whiteEgg.setPositionXY(x_pos, y_pos);
+			 if (pig.getPositionY() <= DEF.SCENE_HEIGHT) {
+				 double nextX = 200;
+				 double nextY = 0;
+				 pig.setPositionXY(nextX, nextY);
+			 }
+			 pig.setVelocity(0.5, DEF.SCENE_SHIFT_INCR);
+			 pig.render(gc);
+			 pig.update(DEF.EASY_SCENE_SHIFT_TIME);
 		 }
-		
-// 		 WHEN I take out the position, the bird velocity works but only onced
-// 		 	
 	 }
 	 
 	// Helper method to reset the position of the bird
@@ -471,35 +512,27 @@ class MyTimer extends AnimationTimer {
 		        }
 		    }
 
-		
-		 //set the game_over to true if no lives remaining
-	// 	 if (currentLives == 0) {
-	// 	 GAME_OVER = true;
-	// 	 }
-		
 		 // end the game when blob hit stuff
 		 if (GAME_OVER) {
 			 showHitEffect();
 			 for (Sprite floor: floors) {
 			 floor.setVelocity(0, 0);
-			 }
 			 timer.stop();
+			 }
+			 
 		 }
+		 
 		// Set the game_over to true if no lives remaining
 		 if (currentLives == 0) {
 		        GAME_OVER = true;
-		        //gameOverText.setVisible(true);
-		        
-		        // Reset the scores and lives
-//		        currentScores = 0;
-//		        updateScoreText();
-//		        
-//		        currentLives = 3; // Reset to the initial number of lives
-//		        updateLivesText();
-//		        
+		        showHitEffect();
+				 for (Sprite floor: floors) {
+				 floor.setVelocity(0, 0);
+				 timer.stop();
+				 }
 		        System.out.println("Game Over! Scores: " + currentScores + ", Lives: " + currentLives);
 		        System.out.println("Game Restarted!");
-		        // Allow the player to play again by clicking anywhere on the scene
+//		        timer.stop();
 		 }
 	 }
 

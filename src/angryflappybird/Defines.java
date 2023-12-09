@@ -56,6 +56,10 @@ public class Defines {
     final int D_PIPE_HEIGHT = 500; 
     final int D_PIPE_WIDTH = 55;
     final int PIPE_COUNT = 2;
+    
+    // coefficients related to the pigs
+    final int PIG_HEIGHT = 80;
+    final int PIG_WIDTH = 80;
 
     //initial pipe position
     final double PIPE_RANGE= 150;
@@ -116,6 +120,8 @@ public class Defines {
             } else if(IMAGE_FILES[i] == "white_egg") {
             	System.out.println("the white egg is visible");
                 img = new Image(pathImage("white_egg"), WHITE_EGG_WIDTH, WHITE_EGG_HEIGHT, false, false);
+            } else if(IMAGE_FILES[i] == "monster_thief") {
+            	img = new Image(pathImage("monster_thief"), PIG_WIDTH, PIG_HEIGHT, false, false);
             }
             else if (i == 1 || i == 2 || i == 3 || i == 4){
                 img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
