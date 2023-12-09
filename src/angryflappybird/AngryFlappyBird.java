@@ -38,7 +38,7 @@ import java.util.Random;
 public class AngryFlappyBird extends Application {
 	private Defines DEF = new Defines();
 	//text display
-	private int currentLives=3;
+	private int currentLives = 3;
 	Text livesText =new Text("Lives Left: 3");
 	private Text gameOverText;
 	private int currentScores=0;
@@ -222,8 +222,9 @@ public class AngryFlappyBird extends Application {
 		}
 		
 		//for rendering the eggs on the pipe
-		System.out.println(uPipeInitialY);
-		whiteEgg = new Sprite(DEF.U_PIPE_POS_X, uPipeInitialY, DEF.IMAGE.get("white_egg"));
+		System.out.println("tHE UP pipeY: "+uPipeInitialY);
+		System.out.println("tHE UP pipeX: " + DEF.D_PIPE_POS_X);
+		whiteEgg = new Sprite(DEF.D_PIPE_POS_X, uPipeInitialY, DEF.IMAGE.get("white_egg"));
 		// System.out.println(whiteEgg);
 //		whiteEgg.setVelocity(-0.5, 0);
 		whiteEgg.render(gc);
@@ -271,16 +272,16 @@ class MyTimer extends AnimationTimer {
 	 	 movePipe();
 	 	
 	 	 // step4: update blob
-	 	 moveBlob();
+//	 	 moveBlob();
 	 	
 	 	 //setp5: update egg
-//	 	 moveEgg();
+	 	 moveEgg();
 	 	 
 	 	 //step5: update pig
 	 	 movePig();
 	 	
 	 	 //step5: check for collision
-	 	 checkCollision();
+//	 	 checkCollision();
 	 }
 	 }
 	 private void displayBackground() {
@@ -323,6 +324,8 @@ class MyTimer extends AnimationTimer {
 	 		
 	 		 nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.SCENE_WIDTH/20;
 	 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
+	 		System.out.println("tHE uPipe UP pipeY: "+nextY_up);
+			System.out.println("tHE uPipe UP pipeX: " + nextX_up);
 	 		 //double nextY = DEF.U_PIPE_POS_Y;
 	 		 uPipes.get(i).setPositionXY(nextX_up, nextY_up);
 	 		whiteEgg.setPositionXY(nextX_up, nextY_up+10);
@@ -380,13 +383,29 @@ class MyTimer extends AnimationTimer {
 	  *     randomize where the egg should show up
 	  */
 	
-//	 public void moveEgg() {
+	 public void moveEgg() {
 //		 
-//		 for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
-//			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
-//				 
-//			 }
-//		 }
+		 for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
+			 if (uPipes.get(i).getPositionX() <= -DEF.U_PIPE_WIDTH) {
+				 
+		 		 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
+		 		 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
+		 		 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
+		 		 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
+//		 		 System.out.println("NEXT Y DOWN " + nextY_down);
+//		 		 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
+		 		
+		 		
+		 		 nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX() + DEF.SCENE_WIDTH/20;
+		 		 
+		 		System.out.println("tHE egg UP pipeY: "+nextY_up);
+				System.out.println("tHE egg UP pipeX: " + nextX_up);
+		 		 whiteEgg.setPositionXY(nextX_up, nextY_up-100);
+			 }
+			 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+			 whiteEgg.render(gc);
+			 whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
+		 }
 		
 //		 for (int i = 0; i < 2; i++) {
 //			 if (whiteEgg.getPositionX() <= -DEF.FLOOR_WIDTH) {
@@ -395,12 +414,12 @@ class MyTimer extends AnimationTimer {
 //	 	System.out.println("The next y up: " +nextY_up);
 //	 	whiteEgg.setPositionXY(nextX, nextY_up);
 //			}
-////			 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+//			 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
 //	 			whiteEgg.render(gc);
 //	 			whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
 //		 }
 		 	
-//	 }
+	 }
 	 
 	 /**
 	  * This method is responsible for adding animation to the pig
