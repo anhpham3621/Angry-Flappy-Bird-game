@@ -77,6 +77,8 @@ public class AngryFlappyBird extends Application {
 	private Pipe uPipe;
 	private Pipe dPipe;
 	private boolean isNightBackground = true;
+	private boolean pigHitsEgg = false;
+	private boolean blobHitsEgg = false;
 		// the mandatory main method
 	public static void main(String[] args) {
 		launch(args);
@@ -277,6 +279,8 @@ class MyTimer extends AnimationTimer {
 	int counter = 0;
 	int bgr_counter = 0;
 	public void handle(long now) { 	
+//		System.out.println("the timer is invoked");
+
 		 bgr_counter++;
 		 // time keeping
 	 elapsedTime = now - startTime;
@@ -384,10 +388,6 @@ class MyTimer extends AnimationTimer {
 		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
 		 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
 		 		
-				 double curr_dpipe_pos_x = dPipes.get(i).getPositionX();
-//				 System.out.println("curr pig x position: "+curr_dpipe_pos_x);
-				 double curr_dpipe_pos_y = dPipes.get(i).getPositionY();
-				 //System.out.println("curr pig y position: "+curr_dpipe_pos_y);
 //				 UTILIZE THE HEIGHT OF THE PIG TO SET IT DOWN
 				 pig.setPositionXY(nextX_down-9, nextY_down+DEF.D_PIPE_HEIGHT);
 
@@ -432,7 +432,7 @@ class MyTimer extends AnimationTimer {
 		 		if (randWhite < 0.5 & randGold>=0.3) {
 		 			//System.out.println("WHITE SHOW " );
 		 			showWhite=true;
-		 		    whiteEgg.setPositionXY(nextX_down-10, nextY_up-100);
+		 		    whiteEgg.setPositionXY(nextX_down-10, nextY_up-60);
 		 		}
 		 		if (randGold < 0.3) {
 		 			//System.out.println("GOLD SHOW " );
@@ -510,6 +510,7 @@ class MyTimer extends AnimationTimer {
 	 }
 	 
 	 public void checkCollision() {
+		 boolean hitAPig = false;
 		 boolean hitAUpipe = false;
 		 // check collision with the floor
 		 for (Sprite floor: floors) {
@@ -569,17 +570,20 @@ class MyTimer extends AnimationTimer {
 		 * available
 		 */
 		// handling the logic for letting the white eggs increment the total coins available
-		    for (Pipe dPipe : dPipes) {
-		        if (blob.intersectsSprite(whiteEgg)) {
+		    for (Pipe uPipe : uPipes) {
+		        if (blob.intersectsSprite(whiteEgg) && !blobHitsEgg) {
 		        	System.out.println("hit the white egg");
 		            currentScores += 5;
 		            // show the additional score gained
 		            //showHitEffect();
 		            // re-render the current_score on the screen
 		            updateScoreText();
+		            blobHitsEgg = true;
 
 		            // Reset the position of the bird after collecting a white egg
 		            //resetBirdPosition();
+		        } else if(!blob.intersectsPig(whiteEgg)) {
+		        	blobHitsEgg = false;
 		        }
 		    }
 		 // check if the bird goes through a pair of pipes without collision
@@ -600,8 +604,23 @@ class MyTimer extends AnimationTimer {
 		    if (blob.intersectsPig(pig)) {
 		    	System.out.println("the blob has intersected the pig");
 		    	GAME_OVER = true;
+		    	showHitEffect();
 		    }
+		    
+		    
+		    	if (pig.intersectsSprite(whiteEgg) && !pigHitsEgg) {
+			    	System.out.println("the pig stole the white egg");
+//			    	hitAPig = true;
+		    	 currentScores -= 5;
+				 updateScoreText();
+				 pigHitsEgg = true;
+			    } else if (!pig.intersectsSprite(whiteEgg)) {
+			    	pigHitsEgg = false;
+			    }
 
+		    
+		    //check for pig intersecting the egg
+		    
 		 // end the game when blob hit stuff
 		 if (GAME_OVER) {
 			 showHitEffect();
@@ -610,6 +629,11 @@ class MyTimer extends AnimationTimer {
 			 timer.stop();
 			 } 
 		 }
+		 
+//		 if (hitAPig) {
+//			 System.out.println("we hit a pig");
+//			
+//		 }
 		 
 		// Set the game_over to true if no lives remaining
 		 if (currentLives == 0) {
