@@ -38,11 +38,11 @@ import java.util.Random;
 public class AngryFlappyBird extends Application {
 	private Defines DEF = new Defines();
 	//text display
-	private int currentLives = 3;
-	Text livesText =new Text("Lives Left: 3");
+	private int currentLives;
+	private Text livesText;
 	private Text gameOverText;
-	private int currentScores=0;
-	Text scoreText= new Text("Score: 0");
+	private int currentScores;
+	private Text scoreText;
 	private int pairNumber = 0;
 	private int lastPassedPipeIndex = -1;
 	// time related attributes
@@ -148,19 +148,7 @@ public class AngryFlappyBird extends Application {
 		CLICKED = true;
 	}
 	private void resetGameScene(boolean firstEntry) {
-		// Create a Text object to display the score
-		//Text scoreText = new Text("Score: 0");
 		
-		scoreText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 19));
-		scoreText.setFill(Color.WHITE);
-		scoreText.setX(8);
-		scoreText.setY(20);
-		
-		//livesText = new Text("Lives Left: 3");
-		livesText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 19));
-		livesText.setFill(Color.BROWN);
-		livesText.setX(245);
-		livesText.setY(560);
 		
 		gameOverText = new Text("Game Over, click to play again");
 		gameOverText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
@@ -188,8 +176,36 @@ public class AngryFlappyBird extends Application {
 			// System.out.println(background);
 			// create the game scene
 			gameScene = new Group();
-			gameScene.getChildren().addAll(background, canvas, scoreText, livesText, gameOverText);
+			gameScene.getChildren().add(background);
+			gameScene.getChildren().add(canvas);
 		}
+		currentLives = DEF.MAX_LIFE;
+		if (livesText != null) {
+            // Remove the previous Text node
+            gameScene.getChildren().remove(livesText);
+        }
+		livesText = new Text("Lives Left: 3");
+		livesText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 19));
+		livesText.setFill(Color.BROWN);
+		livesText.setX(245);
+		livesText.setY(560);
+		gameScene.getChildren().add(livesText);
+		
+        currentScores = 0;
+        if (livesText != null) {
+            // Remove the previous Text node
+            gameScene.getChildren().remove(scoreText);
+        }
+     // Create a Text object to display the score
+        scoreText = new Text("Score: 0");
+ 		scoreText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 19));
+ 		scoreText.setFill(Color.WHITE);
+ 		scoreText.setX(8);
+ 		scoreText.setY(20);
+       
+        // Add Text node to the gameScenex
+        gameScene.getChildren().add(scoreText);
+        
 		// initialize floor
 		for(int i=0; i<DEF.FLOOR_COUNT; i++) {
 			int posX = i * DEF.FLOOR_WIDTH;
@@ -218,7 +234,7 @@ public class AngryFlappyBird extends Application {
 			dPipes.add(dPipe);
 			//somehow bringing white egg up here work, but down doesnt
 			whiteEgg = new Sprite(DEF.D_PIPE_POS_X-13, uPipeInitialY-60, DEF.IMAGE.get("white_egg"));
-			goldEgg = new Sprite(DEF.D_PIPE_POS_X-13, uPipeInitialY-60, DEF.IMAGE.get("golden_egg"));
+			goldEgg = new Sprite(DEF.D_PIPE_POS_X+2000, uPipeInitialY-60, DEF.IMAGE.get("golden_egg"));
 			
 			// Calculate the initial Y forU uPipe based on the corresponding dPipe
 			uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
@@ -239,8 +255,8 @@ public class AngryFlappyBird extends Application {
 		blob.render(gc);
 		
 		double pigStart = initialY+DEF.PIG_POS_START;
-		pig = new Sprite(DEF.PIG_POS_X, initialY + DEF.D_PIPE_HEIGHT, DEF.IMAGE.get("monster_thief"));
-		System.out.println("tHE PIG: " + pig);
+		pig = new Sprite(DEF.PIG_POS_X-12, initialY + DEF.D_PIPE_HEIGHT, DEF.IMAGE.get("monster_thief"));
+		//System.out.println("tHE PIG: " + pig);
 		pig.setVelocity(0, DEF.BLOB_DROP_VEL);
 		pig.render(gc);
 		
@@ -294,7 +310,7 @@ class MyTimer extends AnimationTimer {
 	 	 movePig();
 	 	
 	 	 //step5: check for collision
-	 	 //checkCollision();
+	 	 checkCollision();
 	 }
 	 }
 	 private void displayBackground() {
@@ -362,7 +378,7 @@ class MyTimer extends AnimationTimer {
 				 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
 				 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
 				 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
-		 		 System.out.println("Pig is moving " + nextY_down);
+		 		 //System.out.println("Pig is moving " + nextY_down);
 		 		 
 		 		//nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
 		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
@@ -371,15 +387,15 @@ class MyTimer extends AnimationTimer {
 				 double curr_dpipe_pos_x = dPipes.get(i).getPositionX();
 //				 System.out.println("curr pig x position: "+curr_dpipe_pos_x);
 				 double curr_dpipe_pos_y = dPipes.get(i).getPositionY();
-				 System.out.println("curr pig y position: "+curr_dpipe_pos_y);
+				 //System.out.println("curr pig y position: "+curr_dpipe_pos_y);
 //				 UTILIZE THE HEIGHT OF THE PIG TO SET IT DOWN
-				 pig.setPositionXY(nextX_down, nextY_down+DEF.D_PIPE_HEIGHT);
+				 pig.setPositionXY(nextX_down-9, nextY_down+DEF.D_PIPE_HEIGHT);
 
 			 }
 
 		 }
 		
-			 pig.setVelocity(-0.4, whiteEgg.getPositionY());
+			 pig.setVelocity(-0.4, 0.2);
 			 pig.render(gc);
 			 pig.update(DEF.EASY_SCENE_SHIFT_TIME);
 			//pig.render(gc);
@@ -406,22 +422,22 @@ class MyTimer extends AnimationTimer {
 		 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
 		 		 
 		 		 double randWhite=rand.nextDouble();
-		 		System.out.println("rand white " +randWhite );
+		 		//System.out.println("rand white " +randWhite );
 		 		 
 		 		double randGold=rand.nextDouble();
-		 		System.out.println("rand gold " +randGold );
+		 		//System.out.println("rand gold " +randGold );
 		 		
 		 		 //Randomize whether eggs show up
 		 		//if white show up and gold wont showup
 		 		if (randWhite < 0.5 & randGold>=0.3) {
-		 			System.out.println("WHITE SHOW " );
+		 			//System.out.println("WHITE SHOW " );
 		 			showWhite=true;
-		 		    whiteEgg.setPositionXY(nextX_down-8, nextY_up-60);
+		 		    whiteEgg.setPositionXY(nextX_down-10, nextY_up-60);
 		 		}
 		 		if (randGold < 0.3) {
-		 			System.out.println("GOLD SHOW " );
+		 			//System.out.println("GOLD SHOW " );
 		 			showGold=true;
-		 		    goldEgg.setPositionXY(nextX_down-8, nextY_up-60);
+		 		    goldEgg.setPositionXY(nextX_down-10, nextY_up-60);
 		 		}
 				 
 			 }
@@ -567,7 +583,7 @@ class MyTimer extends AnimationTimer {
 		 // check if the bird goes through a pair of pipes without collision
 		    if (!GAME_OVER && blob.getPositionX() > uPipes.get(0).getPositionX() + DEF.D_PIPE_WIDTH) {
 		        int currentPassedPipeIndex = (int) (blob.getPositionX() / (DEF.D_PIPE_WIDTH + DEF.PIPE_X_GAP));
-		        System.out.println("currentPassedPipeIndex:"+currentPassedPipeIndex);
+		        //System.out.println("currentPassedPipeIndex:"+currentPassedPipeIndex);
 		        if (currentPassedPipeIndex > lastPassedPipeIndex) {
 		            // The bird has passed through a new set of pipes
 		            currentScores = pairNumber; // Set the score equal to the pair number

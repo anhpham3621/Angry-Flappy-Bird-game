@@ -11,7 +11,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class Defines {
-    
+    final int MAX_LIFE=3;
     // dimension of the GUI application
     final int APP_HEIGHT = 600;
     final int APP_WIDTH = 600;
