@@ -1,10 +1,12 @@
 package angryflappybird;
 
+import java.io.File;
 import java.util.HashMap;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -100,9 +102,13 @@ public class Defines {
     "dpipe2", "dpipe2", "dpipe3", "dpipe4", "dpipe5", "upipe1", "upipe2", "upipe3", "upipe4", "upipe5", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
         "special_coin", "start_button_sprite", "upipe1", "white_egg", "upipe1", "golden_egg"};
     //image_pipe
+    
+    private final String AUDIO_DIR = "../final_audio/";
+    final String[] AUDIO_FILES = {"collect_coin_1", "bird_flapping_1", "obstacle_hit_1", "obstacle_hit_2"};
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
+    final HashMap<String, Media> AUDIO = new HashMap<String, Media>();
     
     //nodes on the scene graph
     Button startButton;
@@ -112,6 +118,13 @@ public class Defines {
     
     // constructor
     Defines() {
+    	
+    	//initialize audio
+    	for(int i = 0; i < AUDIO_FILES.length; i++) {
+    		Media audio;
+    		audio = new Media(new File(pathAudio(AUDIO_FILES[i])).toURI().toString());
+    		AUDIO.put(AUDIO_FILES[i], audio);
+    	}
         
         // initialize images
         for(int i=0; i<IMAGE_FILES.length; i++) {
@@ -122,7 +135,8 @@ public class Defines {
             }
 
             else if (IMAGE_FILES[i] == "dpipe2"){
-//                System.out.println(IMAGE_FILES[i]);
+//              
+            	System.out.println(IMAGE_FILES[i]);
                 img = new Image(pathImage(IMAGE_FILES[i]), D_PIPE_WIDTH, D_PIPE_HEIGHT, false, false);
             } else if (IMAGE_FILES[i] == "upipe1") {
                 img = new Image(pathImage(IMAGE_FILES[i]), U_PIPE_WIDTH, U_PIPE_HEIGHT, false, false);
@@ -171,5 +185,10 @@ public class Defines {
     public Image resizeImage(String filepath, int width, int height) {
         IMAGE.put(filepath, new Image(pathImage(filepath), width, height, false, false));
         return IMAGE.get(filepath);
+    }
+    
+    public String pathAudio(String filepath) {
+    	String fullpath = AUDIO_DIR+filepath;
+    	return fullpath;
     }
 }

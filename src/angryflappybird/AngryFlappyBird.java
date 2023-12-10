@@ -22,6 +22,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -36,6 +37,7 @@ import java.util.Random;
 
 //The Application layer
 public class AngryFlappyBird extends Application {
+    private MediaPlayer mediaPlayer;
 	private Defines DEF = new Defines();
 	//text display
 	private int currentLives;
@@ -79,6 +81,7 @@ public class AngryFlappyBird extends Application {
 	private boolean isNightBackground = true;
 	private boolean pigHitsEgg = false;
 	private boolean blobHitsEgg = false;
+	private boolean showEgg = true;
 		// the mandatory main method
 	public static void main(String[] args) {
 		launch(args);
@@ -313,6 +316,7 @@ class MyTimer extends AnimationTimer {
 	 	 //step5: update pig
 	 	 movePig();
 	 	
+//	 	 moveEggandPig();
 	 	 //step5: check for collision
 	 	 checkCollision();
 	 }
@@ -337,6 +341,8 @@ class MyTimer extends AnimationTimer {
 			floors.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
 		}
 	 }
+	 
+	 //function to check when the blob is between the pipes
 	 /**
 	 * @params None
 	 * movePipe is responsible for animating the upward and downward pipes
@@ -346,6 +352,16 @@ class MyTimer extends AnimationTimer {
 
 	 	for (int i = 0; i < DEF.PIPE_COUNT; i++) {
 	 		 //System.out.println("Pipe " + i + " X: " + dPipes.get(i).getPositionX());
+	 		if (blob.getPositionY() > dPipes.get(i).getPositionY() && blob.getPositionY() < uPipes.get(i).getPositionY()) {
+	 			System.out.println("the blob is between the pipes");
+	 			Pipe dPipe = dPipes.get(i);
+	 			Pipe uPipe = uPipes.get(i);
+	 			if(!blob.intersectsPipe(dPipe) && !blob.intersectsPipe(uPipe)) {
+	 				System.out.println("successfully passed a set of pipes");
+	 				currentScores++;
+	 				updateScoreText();
+	 			}
+	 		}
 	 		 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
 	 			 pairNumber++;
 	 			 
@@ -359,8 +375,6 @@ class MyTimer extends AnimationTimer {
 		 		 //nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
 		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
 		 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
-		 		 
-		 		
 		 		 }
 				 dPipes.get(i).render(gc);
 				 dPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
@@ -369,6 +383,97 @@ class MyTimer extends AnimationTimer {
 				 uPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
 	 }
 	 	//System.out.println("pairNumber" + pairNumber);
+	 }
+	 
+	 public void moveEggandPig() {
+		 for (int i = 0; i < DEF.PIPE_COUNT; i++) {
+			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
+				 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX()+DEF.PIPE_X_GAP;
+				 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
+				 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
+				 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
+				 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
+				 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
+		 		 //System.out.println("Pig is moving " + nextY_down);
+		 		 
+		 		//nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
+		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
+		 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
+		 		
+//				 UTILIZE THE HEIGHT OF THE PIG TO SET IT DOWN
+				 pig.setPositionXY(nextX_down-9, nextY_down+DEF.D_PIPE_HEIGHT);
+				 showEgg = true;
+
+			 }
+
+		 }
+		
+		 pig.setVelocity(-0.4, 0.2);
+		 pig.render(gc);
+		 pig.update(DEF.EASY_SCENE_SHIFT_TIME);
+		 
+		 boolean showWhite=false;
+		 boolean showGold=false;
+		 Random rand = new Random();
+		 for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
+			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
+	 			 pairNumber++;
+	 			 
+		 		 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX()+DEF.PIPE_X_GAP;
+		 		 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
+		 		 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
+		 		 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
+		 		 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
+		 		 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
+		 		
+		 		 //nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
+		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
+		 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
+		 		 
+		 		 double randWhite=rand.nextDouble();
+		 		//System.out.println("rand white " +randWhite );
+		 		 
+		 		double randGold=rand.nextDouble();
+		 		//System.out.println("rand gold " +randGold );
+		 		
+		 		 //Randomize whether eggs show up
+		 		//if white show up and gold wont showup
+		 		if (randWhite < 0.5 & randGold>=0.3) {
+		 			//System.out.println("WHITE SHOW " );
+		 			showWhite=true;
+		 		    whiteEgg.setPositionXY(nextX_down-10, nextY_up-60);
+		 		}
+		 		if (randGold < 0.3) {
+		 			//System.out.println("GOLD SHOW " );
+		 			showGold=true;
+		 		    goldEgg.setPositionXY(nextX_down-10, nextY_up-60);
+		 		}
+				 
+			 }
+			 
+			// Render and update the gold egg only if it's positioned
+		     }
+		 
+		    if (!showWhite && pig.getPositionX() <= whiteEgg.getPositionX()) {
+		    	//System.out.println("the pig position is here");
+		        whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+		        whiteEgg.render(gc);
+		        System.out.println(whiteEgg);
+		        whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
+		    }
+
+		    // Render and update the gold egg only if it's positioned and the pig is near
+		    if (!showGold && pig.getPositionX() <= goldEgg.getPositionX()) {
+		    	System.out.println("the gold pig position is here");
+		        goldEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+		        goldEgg.render(gc);
+		        goldEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
+		    }
+			//pig.render(gc);
+			 
+			 
+		 
+	 
 	 }
 	 /**
 	  * This method is responsible for adding animation to the pig
@@ -390,6 +495,7 @@ class MyTimer extends AnimationTimer {
 		 		
 //				 UTILIZE THE HEIGHT OF THE PIG TO SET IT DOWN
 				 pig.setPositionXY(nextX_down-9, nextY_down+DEF.D_PIPE_HEIGHT);
+				 showEgg = true;
 
 			 }
 
@@ -438,12 +544,27 @@ class MyTimer extends AnimationTimer {
 		 			//System.out.println("GOLD SHOW " );
 		 			showGold=true;
 		 		    goldEgg.setPositionXY(nextX_down-10, nextY_up-60);
-		 		}
-				 
+		 		}				 
 			 }
 			 
 			// Render and update the gold egg only if it's positioned
 		     }
+		 
+//		    if (!showWhite && pig.getPositionX() <= whiteEgg.getPositionX()) {
+//		    	//System.out.println("the pig position is here");
+//		        whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+//		        whiteEgg.render(gc);
+//		        System.out.println(whiteEgg);
+//		        whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
+//		    }
+
+		    // Render and update the gold egg only if it's positioned and the pig is near
+//		    if (!showGold && pig.getPositionX() <= goldEgg.getPositionX()) {
+//		    	System.out.println("the gold pig position is here");
+//		        goldEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+//		        goldEgg.render(gc);
+//		        goldEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
+//		    }
 		 if (!showWhite) {
 			 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
 			 whiteEgg.render(gc);
@@ -454,9 +575,7 @@ class MyTimer extends AnimationTimer {
 			 goldEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
 	         goldEgg.render(gc);
 	         goldEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
-	 		}
-		 
-		 	
+	 		}  	
 	 }
 	 
 	 
@@ -586,13 +705,15 @@ class MyTimer extends AnimationTimer {
 		        	blobHitsEgg = false;
 		        }
 		    }
+		    
+		    //
 		 // check if the bird goes through a pair of pipes without collision
 		    if (!GAME_OVER && blob.getPositionX() > uPipes.get(0).getPositionX() + DEF.D_PIPE_WIDTH) {
 		        int currentPassedPipeIndex = (int) (blob.getPositionX() / (DEF.D_PIPE_WIDTH + DEF.PIPE_X_GAP));
 		        //System.out.println("currentPassedPipeIndex:"+currentPassedPipeIndex);
 		        if (currentPassedPipeIndex > lastPassedPipeIndex) {
 		            // The bird has passed through a new set of pipes
-		            currentScores = pairNumber; // Set the score equal to the pair number
+		            currentScores += pairNumber; // Set the score equal to the pair number
 		            lastPassedPipeIndex = currentPassedPipeIndex;
 
 		            // Update the score text on the screen
@@ -614,8 +735,17 @@ class MyTimer extends AnimationTimer {
 		    	 currentScores -= 5;
 				 updateScoreText();
 				 pigHitsEgg = true;
+//				 pig.setVisible(false);
+				 pig.render(gc);
+//				 whiteEgg.setVisible(false);
+				 whiteEgg.render(gc);
+				 whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
 			    } else if (!pig.intersectsSprite(whiteEgg)) {
 			    	pigHitsEgg = false;
+			    	pig.setVisible(true);
+			    	whiteEgg.setVisible(true);
+			    	whiteEgg.render(gc);
+					 whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
 			    }
 
 		    

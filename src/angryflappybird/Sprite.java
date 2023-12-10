@@ -84,6 +84,10 @@ public class Sprite {
 
     public void render(GraphicsContext gc) {
         gc.drawImage(image, positionX, positionY);
+
+//    	if (isVisible) {
+//
+//    	}
     }
 
     public Rectangle2D getBoundary() {
@@ -97,5 +101,13 @@ public class Sprite {
     public void update(double time) {
         positionX += velocityX * time;
         positionY += velocityY * time;
+    }
+    
+    public void setVisible(boolean visible) {
+    	isVisible = visible;
+    }
+    
+    public boolean isVisible() {
+    	return isVisible;
     }
 }
