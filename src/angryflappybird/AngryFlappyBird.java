@@ -432,7 +432,7 @@ class MyTimer extends AnimationTimer {
 		 		if (randWhite < 0.5 & randGold>=0.3) {
 		 			//System.out.println("WHITE SHOW " );
 		 			showWhite=true;
-		 		    whiteEgg.setPositionXY(nextX_down-10, nextY_up-60);
+		 		    whiteEgg.setPositionXY(nextX_down-10, nextY_up-100);
 		 		}
 		 		if (randGold < 0.3) {
 		 			//System.out.println("GOLD SHOW " );
@@ -441,6 +441,7 @@ class MyTimer extends AnimationTimer {
 		 		}
 				 
 			 }
+			 
 			// Render and update the gold egg only if it's positioned
 		     }
 		 if (!showWhite) {
@@ -570,6 +571,7 @@ class MyTimer extends AnimationTimer {
 		// handling the logic for letting the white eggs increment the total coins available
 		    for (Pipe dPipe : dPipes) {
 		        if (blob.intersectsSprite(whiteEgg)) {
+		        	System.out.println("hit the white egg");
 		            currentScores += 5;
 		            // show the additional score gained
 		            //showHitEffect();
@@ -593,6 +595,12 @@ class MyTimer extends AnimationTimer {
 		            updateScoreText();
 		        }
 		    }
+		    
+		    //check for blob intersection with pig
+		    if (blob.intersectsPig(pig)) {
+		    	System.out.println("the blob has intersected the pig");
+		    	GAME_OVER = true;
+		    }
 
 		 // end the game when blob hit stuff
 		 if (GAME_OVER) {
@@ -600,8 +608,7 @@ class MyTimer extends AnimationTimer {
 			 for (Sprite floor: floors) {
 			 floor.setVelocity(0, 0);
 			 timer.stop();
-			 }
-			 
+			 } 
 		 }
 		 
 		// Set the game_over to true if no lives remaining

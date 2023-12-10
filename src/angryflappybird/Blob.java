@@ -53,8 +53,8 @@ public class Blob extends SpriteAbstract{
         return p.getBoundary().intersects(this.getBoundary());
     }
     
-    public boolean intersectsPig(Pig p) {
-    	return p.getBoundary().intersects(this.getBoundary());
+    public boolean intersectsPig(Sprite pig) {
+    	return pig.getBoundary().intersects(this.getBoundary());
     }
     
     public boolean intersectsSprite(Sprite e) {

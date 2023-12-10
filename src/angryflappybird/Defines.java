@@ -21,8 +21,8 @@ public class Defines {
     // coefficients related to the blob
     
     //for some reason this changes the background
-    final int BLOB_WIDTH = 70;
-    final int BLOB_HEIGHT = 70;
+    final int BLOB_WIDTH = 50;
+    final int BLOB_HEIGHT = 50;
     
     final int BLOB_POS_X = 10;
     final int BLOB_POS_Y = 100;
