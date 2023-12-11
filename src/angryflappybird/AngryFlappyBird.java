@@ -9,6 +9,8 @@ import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -17,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -50,6 +53,8 @@ public class AngryFlappyBird extends Application {
     private boolean up = false;
 	private boolean isAutoPilotMode = false;
 	private boolean collisionDetected = false;
+	private int SCENE_SHIFT_TIME = 0;
+	private int SCENE_SHIFT = 0;
 
 	private int gold_egg_counter = 0;
 	private boolean isInitGame = false;
@@ -102,6 +107,7 @@ public class AngryFlappyBird extends Application {
 	private boolean blobHitsGoldEgg = false;
 	private boolean showEgg = true;
 	private boolean isGoldEggIntersected = false;
+	private ComboBox<String> comboBox;
 		// the mandatory main method
 	public static void main(String[] args) {
 		launch(args);
@@ -109,6 +115,8 @@ public class AngryFlappyBird extends Application {
 		// the start method sets the Stage layer
 		@Override
 	public void start(Stage primaryStage) throws Exception {
+			
+
 			
 	
 		// initialize scene graphs and UIs
@@ -160,8 +168,24 @@ public class AngryFlappyBird extends Application {
 		HBox gHBox = new HBox(5);
 		gHBox.getChildren().addAll(goldEggImage, goldEggLabel);
 		gameDesc.getChildren().addAll(pHBox, gHBox, wHBox, piHBox);
+		
+		//adding a control panel
+		
+		ObservableList<String> options = 
+			    FXCollections.observableArrayList(
+			        "Easy",
+			        "Medium",
+			        "Hard"
+			    );
+		 comboBox = new ComboBox<String>(options);
+
+//		comboBox.getItems().addAll(
+//			    "Easy",
+//			    "Medium",
+//			    "Hard"
+//			);
 		gameLevel = new VBox(5);
-		gameLevel.getChildren().addAll(DEF.easyButton, DEF.mediumButton, DEF.hardButton);
+		gameLevel.getChildren().addAll(DEF.easyButton, DEF.mediumButton, DEF.hardButton, comboBox);
 		gameControl.getChildren().addAll(DEF.startButton, gameLevel, gameDesc);
 		
 
@@ -213,7 +237,7 @@ public class AngryFlappyBird extends Application {
 		livesText.setY(560);
 		gameScene.getChildren().add(livesText);
 		
-        currentScores = 0;
+        currentScores = 1;
         if (livesText != null) {
             // Remove the previous Text node
             gameScene.getChildren().remove(scoreText);
@@ -420,9 +444,6 @@ class MyTimer extends AnimationTimer {
 		 		 
 	 		 }
 	 		 
-	 		
-	 		 
-	 		 
 				 dPipes.get(i).render(gc);
 				 dPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
 				
@@ -578,7 +599,7 @@ class MyTimer extends AnimationTimer {
 //		 checkCollision_blob_pig();
 		 
 		 //check for blob intersection with dpipes
-//		 checkCollision_blob_dpipes();
+		 checkCollision_blob_dpipes();
 		 
 		 //check collision pig with pipe
 		 checkCollision_pig_pipe();
@@ -606,6 +627,7 @@ class MyTimer extends AnimationTimer {
 			 System.out.println("the game is over");
 			 gameOverText.setVisible(true);
 			 showHitEffect();
+			 blob.stopCollisionSound();
 			 for (Sprite floor: floors) {
 			 floor.setVelocity(0, 0);
 			 timer.stop();
@@ -687,34 +709,34 @@ class MyTimer extends AnimationTimer {
 
 	 }
 	 
-//	 private void checkCollision_blob_dpipes() {
-//		 
-//
-//		 if(!collisionDetected) {
-//		 for (Pipe dPipe: dPipes) {
-//
-//			 if (blob.intersectsPipe(dPipe)) {
-//				 blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
-//				 blob.playCollisionSound();
-////				System.out.println("Hit uPipe");
-//				System.out.println("lives BEFORE dPIPE:" + currentLives);
-//			 	currentLives--;
-////			 	 System.out.println("lives AFTER uPIPE:" + currentLives);
-//			 	// if (currentLives>=0){
-//			 	updateLivesText();
-//			 	 //}
-////			 	GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
-//			 // Reset the position of the bird after collision with pipes
-//	            resetBirdPosition();
-//	            collisionDetected = true;
-//	            break;
-//			 }
-//			 
-//		 }
-//		 } else {
-//			 collisionDetected = false;
-//		 }
-//	 }
+	 private void checkCollision_blob_dpipes() {
+		 
+
+		 if(!collisionDetected) {
+		 for (Pipe dPipe: dPipes) {
+
+			 if (blob.intersectsPipe(dPipe)) {
+				 blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
+				 blob.playCollisionSound();
+//				System.out.println("Hit uPipe");
+				System.out.println("lives BEFORE dPIPE:" + currentLives);
+			 	currentLives--;
+//			 	 System.out.println("lives AFTER uPIPE:" + currentLives);
+			 	// if (currentLives>=0){
+			 	updateLivesText();
+			 	 //}
+//			 	GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
+			 // Reset the position of the bird after collision with pipes
+	            resetBirdPosition();
+	            collisionDetected = true;
+	            break;
+			 }
+			 
+		 }
+		 } else {
+			 collisionDetected = false;
+		 }
+	 }
 //private void checkCollision_blob_upipes() {
 //		 
 //
