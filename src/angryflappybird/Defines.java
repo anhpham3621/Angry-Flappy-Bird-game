@@ -92,7 +92,7 @@ public class Defines {
     final int EASY_SCENE_SHIFT_TIME = 10;
     final int MID_SCENE_SHIFT_TIME = 30;
     final int HARD_SCENE_SHIFT_TIME = 50;
-    final double SCENE_SHIFT_INCR = -0.4;
+    final double SCENE_SHIFT_INCR = -0.2;
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;
     final double TRANSITION_TIME = 0.1;
     final int TRANSITION_CYCLE = 2;

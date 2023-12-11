@@ -80,7 +80,7 @@ public class Blob extends SpriteAbstract{
     }
     
     public void applyBounceAnimation() {
-    	System.out.println("the bouncer is bouncing");
+    	//System.out.println("the bouncer is bouncing");
         // Create a TranslateTransition for the bounce effect
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(5));
 

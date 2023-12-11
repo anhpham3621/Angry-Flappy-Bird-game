@@ -172,20 +172,12 @@ public class AngryFlappyBird extends Application {
 	}
 		else if (GAME_START){
 			clickTime = System.nanoTime();
+			//resetGameScene(true);
 	}
 		GAME_START = true;
 		CLICKED = true;
 	}
 	private void resetGameScene(boolean firstEntry) {
-		
-		
-		gameOverText = new Text("Game Over, click to play again");
-		gameOverText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
-		gameOverText.setFill(Color.RED);
-		gameOverText.setX(DEF.SCENE_WIDTH / 2 - 150);
-		gameOverText.setY(DEF.SCENE_HEIGHT / 2);
-		// Set the initial visibility of gameOverText to false
-		gameOverText.setVisible(false);
 		
 		// reset variables
 		CLICKED = false;
@@ -236,6 +228,26 @@ public class AngryFlappyBird extends Application {
         // Add Text node to the gameScenex
         gameScene.getChildren().add(scoreText);
         
+        
+        
+        gameOverText = new Text("Game Over, click to play again");
+		gameOverText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+		gameOverText.setFill(Color.RED);
+		gameOverText.setX(DEF.SCENE_WIDTH / 2 - 150);
+		gameOverText.setY(DEF.SCENE_HEIGHT / 2);
+		// Set the initial visibility of gameOverText to false
+		gameScene.getChildren().add(gameOverText);
+		gameOverText.setVisible(false);
+		
+		if (gameOverText.isVisible()) {
+            // Remove the previous Text node
+			//gameOverText.setVisible(false);
+            gameScene.getChildren().remove(gameOverText);
+            //gameOverText.setVisible(false);
+            
+        }
+		
+		
 		// initialize floor
 		for(int i=0; i<DEF.FLOOR_COUNT; i++) {
 			int posX = i * DEF.FLOOR_WIDTH;
@@ -264,7 +276,7 @@ public class AngryFlappyBird extends Application {
 			dPipes.add(dPipe);
 			//somehow bringing white egg up here work, but down doesnt
 			whiteEgg = new Sprite(DEF.D_PIPE_POS_X-13, uPipeInitialY-60, DEF.IMAGE.get("white_egg"));
-			goldEgg = new Sprite(DEF.D_PIPE_POS_X+2000, uPipeInitialY-60, DEF.IMAGE.get("golden_egg"));
+			goldEgg = new Sprite(DEF.D_PIPE_POS_X+DEF.PIPE_X_GAP-8, initialY + DEF.PIPE_Y_GAP-DEF.GOLD_EGG_HEIGHT+15, DEF.IMAGE.get("golden_egg"));
 			
 //			whiteEgg = new Sprite(0, 0, DEF.IMAGE.get("white_egg"));
 //			goldEgg = new Sprite(0, 0, DEF.IMAGE.get("golden_egg"));
@@ -381,7 +393,8 @@ class MyTimer extends AnimationTimer {
 
 	 	for (int i = 0; i < DEF.PIPE_COUNT; i++) {
 	 		 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
-	 			 pairNumber++;
+	 			 //currentScores++;
+	 			 //updateScoreText();
 	 			 
 		 		 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX()+DEF.PIPE_X_GAP;
 		 		 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
@@ -393,7 +406,23 @@ class MyTimer extends AnimationTimer {
 		 		 //nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
 		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
 		 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
+		 		 
+		 		 //Check if bird passes thru
+		 		 //boolean isScored=false;
+		 		 if (!blob.intersectsPipe(dPipes.get(i))){
+		 			 currentScores++;
+		 			 updateScoreText();
+		 			 //isScored=true;
+		 			System.out.println("index "+ i);
+		 			 System.out.println("Gain 1 score for this "+ i + "dPipe");
 		 		 }
+		 		
+		 		 
+	 		 }
+	 		 
+	 		
+	 		 
+	 		 
 				 dPipes.get(i).render(gc);
 				 dPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
 				
@@ -428,7 +457,7 @@ class MyTimer extends AnimationTimer {
 
 		 }
 		
-			 pig.setVelocity(-0.4, 0.2);
+			 pig.setVelocity(DEF.SCENE_SHIFT_INCR, 0.1);
 			 pig.render(gc);
 			 pig.update(DEF.EASY_SCENE_SHIFT_TIME);
 			//pig.render(gc);
@@ -441,8 +470,8 @@ class MyTimer extends AnimationTimer {
 		 Random rand = new Random();
 		 for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
 			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
-	 			 currentScores++;
-	 			 updateScoreText();
+	 			 //currentScores++;
+	 			 //updateScoreText();
 	 			 
 		 		 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX()+DEF.PIPE_X_GAP;
 		 		 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
@@ -489,7 +518,7 @@ class MyTimer extends AnimationTimer {
 	         whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
 		 }
 		 
-		 pig.setVelocity(-0.4, 0.2);
+		 pig.setVelocity(DEF.SCENE_SHIFT_INCR, 0.1);
 		 pig.render(gc);
 		 pig.update(DEF.EASY_SCENE_SHIFT_TIME);
 	 }
@@ -575,10 +604,14 @@ class MyTimer extends AnimationTimer {
 		 // end the game when blob hit stuff
 		 if (GAME_OVER) {
 			 System.out.println("the game is over");
+			 gameOverText.setVisible(true);
 			 showHitEffect();
 			 for (Sprite floor: floors) {
 			 floor.setVelocity(0, 0);
 			 timer.stop();
+			 //DO NOT DELETE COMMENT BELOW, IT HAS A FUNCTION WE MIGHT WANT LATER
+			 resetGameScene(false);
+			 
 			 } 
 		 	}
 //		 } 
@@ -595,9 +628,6 @@ class MyTimer extends AnimationTimer {
 
 		 for (Pipe uPipe: uPipes) {
 				blob.applyBounceAnimation();
-				
-				 
-
 
 			 if (blob.intersectsPipe(uPipe)) {
 				 blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_2"));
@@ -615,33 +645,15 @@ class MyTimer extends AnimationTimer {
 			 }
 			 
 		 }
-			 // check if the bird goes through a pair of pipes without collision
-		    if (!GAME_OVER && blob.getPositionX() > uPipes.get(0).getPositionX() + DEF.D_PIPE_WIDTH) {
-		        int currentPassedPipeIndex = (int) (blob.getPositionX() / (DEF.D_PIPE_WIDTH + DEF.PIPE_X_GAP));
-		        //System.out.println("currentPassedPipeIndex:"+currentPassedPipeIndex);
-		        if (currentPassedPipeIndex > lastPassedPipeIndex) {
-		            // The bird has passed through a new set of pipes
-		            currentScores += pairNumber; // Set the score equal to the pair number
-		            lastPassedPipeIndex = currentPassedPipeIndex;
-
-		            // Update the score text on the screen
-		            updateScoreText();
-		        }
-		 }
-
-	 }
-	 
-	 private void checkCollision_blob_dpipes() {
 		 
-
-		 if(!collisionDetected) {
-		 for (Pipe dPipe: dPipes) {
+		 for (Pipe uPipe: dPipes) {
+				blob.applyBounceAnimation();
 
 			 if (blob.intersectsPipe(dPipe)) {
-				 blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
+				 blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_2"));
 				 blob.playCollisionSound();
 //				System.out.println("Hit uPipe");
-				System.out.println("lives BEFORE dPIPE:" + currentLives);
+				System.out.println("lives BEFORE uPIPE:" + currentLives);
 			 	currentLives--;
 //			 	 System.out.println("lives AFTER uPIPE:" + currentLives);
 			 	// if (currentLives>=0){
@@ -650,15 +662,87 @@ class MyTimer extends AnimationTimer {
 //			 	GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
 			 // Reset the position of the bird after collision with pipes
 	            resetBirdPosition();
-	            collisionDetected = true;
-	            break;
 			 }
 			 
 		 }
-		 } else {
-			 collisionDetected = false;
-		 }
+		 
+		 
+		 //_JUSTCOMMENT OUT TO TRY NEW TRICK
+			 // check if the bird goes through a pair of pipes without collision
+//		    if (!GAME_OVER && blob.getPositionX() > uPipes.get(0).getPositionX() + DEF.D_PIPE_WIDTH) {
+//		        int currentPassedPipeIndex = (int) (blob.getPositionX() / (DEF.D_PIPE_WIDTH + DEF.PIPE_X_GAP));
+//		        //System.out.println("currentPassedPipeIndex:"+currentPassedPipeIndex);
+//		        if (currentPassedPipeIndex > lastPassedPipeIndex) {
+//		            // The bird has passed through a new set of pipes
+//		            currentScores += pairNumber; // Set the score equal to the pair number
+//		            lastPassedPipeIndex = currentPassedPipeIndex;
+//
+//		            // Update the score text on the screen
+//		            updateScoreText();
+//		        }
+//		 }
+//		    
+		    
+		    
+
 	 }
+	 
+//	 private void checkCollision_blob_dpipes() {
+//		 
+//
+//		 if(!collisionDetected) {
+//		 for (Pipe dPipe: dPipes) {
+//
+//			 if (blob.intersectsPipe(dPipe)) {
+//				 blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
+//				 blob.playCollisionSound();
+////				System.out.println("Hit uPipe");
+//				System.out.println("lives BEFORE dPIPE:" + currentLives);
+//			 	currentLives--;
+////			 	 System.out.println("lives AFTER uPIPE:" + currentLives);
+//			 	// if (currentLives>=0){
+//			 	updateLivesText();
+//			 	 //}
+////			 	GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
+//			 // Reset the position of the bird after collision with pipes
+//	            resetBirdPosition();
+//	            collisionDetected = true;
+//	            break;
+//			 }
+//			 
+//		 }
+//		 } else {
+//			 collisionDetected = false;
+//		 }
+//	 }
+//private void checkCollision_blob_upipes() {
+//		 
+//
+//		 if(!collisionDetected) {
+//		 for (Pipe dPipe: dPipes) {
+//
+//			 if (blob.intersectsPipe(uPipe)) {
+//				 blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
+//				 blob.playCollisionSound();
+////				System.out.println("Hit uPipe");
+//				System.out.println("lives BEFORE dPIPE:" + currentLives);
+//			 	currentLives--;
+////			 	 System.out.println("lives AFTER uPIPE:" + currentLives);
+//			 	// if (currentLives>=0){
+//			 	updateLivesText();
+//			 	 //}
+////			 	GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
+//			 // Reset the position of the bird after collision with pipes
+//	            resetBirdPosition();
+//	            collisionDetected = true;
+//	            break;
+//			 }
+//			 
+//		 }
+//		 } else {
+//			 collisionDetected = false;
+//		 }
+//	 }
 	 
 	 private void checkCollision_blob_pig() {
 		    if (blob.intersectsPig(pig)) {
@@ -860,7 +944,7 @@ class MyTimer extends AnimationTimer {
 
 		 }
 		
-		 pig.setVelocity(-0.4, 0.2);
+		 pig.setVelocity(DEF.SCENE_SHIFT_INCR, 0.1);
 		 pig.render(gc);
 		 pig.update(DEF.EASY_SCENE_SHIFT_TIME);
 		 
