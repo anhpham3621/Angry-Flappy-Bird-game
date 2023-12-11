@@ -1,10 +1,12 @@
 package angryflappybird;
 
+import javafx.animation.TranslateTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 public class Blob extends SpriteAbstract{
 	
@@ -71,5 +73,32 @@ public class Blob extends SpriteAbstract{
     
     public void playCollisionSound() {
         collisionSound.play();
+    }
+    
+    public void stopCollisionSound() {
+    	collisionSound.stop();
+    }
+    
+    public void applyBounceAnimation() {
+    	System.out.println("the bouncer is bouncing");
+        // Create a TranslateTransition for the bounce effect
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(5));
+
+        // Set the initial and final positions for the bounce effect
+//        translateTransition.setFromY(10);
+//        translateTransition.setToY(30); // Adjust the bounce height as needed
+        
+        translateTransition.setFromX(300);
+        translateTransition.setToX(100);
+
+
+        // Set the number of cycles for the bounce effect
+        translateTransition.setCycleCount(TranslateTransition.INDEFINITE);
+
+        // Set the auto-reverse property to true for a smoother bounce effect
+        translateTransition.setAutoReverse(true);
+
+        // Play the animation
+        translateTransition.play();
     }
 }

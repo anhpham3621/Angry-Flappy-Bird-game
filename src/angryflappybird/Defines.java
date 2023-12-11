@@ -25,8 +25,8 @@ public class Defines {
     // coefficients related to the blob
     
     //for some reason this changes the background
-    final int BLOB_WIDTH = 50;
-    final int BLOB_HEIGHT = 50;
+    final int BLOB_WIDTH = 60;
+    final int BLOB_HEIGHT = 60;
     final int BLOB_WITH_PARACHUTE_WIDTH = 70;
     final int BLOB_WITH_PARACHUTE_HEIGHT = 70;
     
@@ -107,6 +107,8 @@ public class Defines {
         "special_coin", "start_button_sprite", "upipe1", "white_egg", "upipe1", "golden_egg"};
     //image_pipe
     
+//    private final String AUDIO_DIR = "../resources/sounds/";
+
     private final String AUDIO_DIR = "../final_audio/";
     final String[] AUDIO_FILES = {"collect_coin_1", "bird_flapping_1", "obstacle_hit_1", "obstacle_hit_2"};
 
@@ -124,12 +126,12 @@ public class Defines {
     Defines() {
     	
     	//initialize audio
-//    	for(int i = 0; i < AUDIO_FILES.length; i++) {
-//    		Media audio;
-//    		audio = new Media(pathAudio(AUDIO_FILES[i]));
-//    		MediaPlayer media = new MediaPlayer(audio);
-//    		AUDIO.put(AUDIO_FILES[i], media);
-//    	}
+    	for(int i = 0; i < AUDIO_FILES.length; i++) {
+    		Media audio;
+    		audio = new Media(pathAudio(AUDIO_FILES[i]));
+    		MediaPlayer media = new MediaPlayer(audio);
+    		AUDIO.put(AUDIO_FILES[i], media);
+    	}
         
         // initialize images
         for(int i=0; i<IMAGE_FILES.length; i++) {

@@ -7,6 +7,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -25,6 +26,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -38,7 +40,17 @@ import java.util.Random;
 
 //The Application layer
 public class AngryFlappyBird extends Application {
+	private double movex = 0;
+    private double movey = 0;
+    private double xvariation = 0;
+    private double yvariation = 0;
+    private double rate = 1;
+
+    private boolean right = true;
+    private boolean up = false;
 	private boolean isAutoPilotMode = false;
+	private boolean collisionDetected = false;
+
 	private int gold_egg_counter = 0;
 	private boolean isInitGame = false;
     private MediaPlayer mediaPlayer;
@@ -97,6 +109,8 @@ public class AngryFlappyBird extends Application {
 		// the start method sets the Stage layer
 		@Override
 	public void start(Stage primaryStage) throws Exception {
+			
+	
 		// initialize scene graphs and UIs
 		resetGameControl(); // resets the gameControl
 		resetGameScene(true); // resets the gameScene
@@ -149,6 +163,8 @@ public class AngryFlappyBird extends Application {
 		gameLevel = new VBox(5);
 		gameLevel.getChildren().addAll(DEF.easyButton, DEF.mediumButton, DEF.hardButton);
 		gameControl.getChildren().addAll(DEF.startButton, gameLevel, gameDesc);
+		
+
 		}
 	private void mouseClickHandler(MouseEvent e) {
 		if (GAME_OVER) {
@@ -364,17 +380,6 @@ class MyTimer extends AnimationTimer {
 	 public void movePipe() {
 
 	 	for (int i = 0; i < DEF.PIPE_COUNT; i++) {
-	 		 //System.out.println("Pipe " + i + " X: " + dPipes.get(i).getPositionX());
-	 		if (blob.getPositionY() > dPipes.get(i).getPositionY() && blob.getPositionY() < uPipes.get(i).getPositionY()) {
-	 			System.out.println("the blob is between the pipes");
-	 			Pipe dPipe = dPipes.get(i);
-	 			Pipe uPipe = uPipes.get(i);
-	 			if(!blob.intersectsPipe(dPipe) && !blob.intersectsPipe(uPipe)) {
-	 				System.out.println("successfully passed a set of pipes");
-	 				currentScores++;
-	 				updateScoreText();
-	 			}
-	 		}
 	 		 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
 	 			 pairNumber++;
 	 			 
@@ -394,8 +399,7 @@ class MyTimer extends AnimationTimer {
 				
 				 uPipes.get(i).render(gc);
 				 uPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
-	 }
-	 	//System.out.println("pairNumber" + pairNumber);
+	 	}
 	 }
 	 
 	 /**
@@ -437,7 +441,8 @@ class MyTimer extends AnimationTimer {
 		 Random rand = new Random();
 		 for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
 			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
-	 			 pairNumber++;
+	 			 currentScores++;
+	 			 updateScoreText();
 	 			 
 		 		 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX()+DEF.PIPE_X_GAP;
 		 		 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
@@ -455,7 +460,7 @@ class MyTimer extends AnimationTimer {
 
 		 		 //Randomize whether eggs show up
 		 		//if white show up and gold wont showup
-		 		if (randWhite < 0.3 & randGold>=0.2) {
+		 		if (randWhite > 0.3 & randGold>=0.2) {
 		 			//System.out.println("WHITE SHOW " );
 		 			showWhite=true;
 		 		    whiteEgg.setPositionXY(nextX_down-10, nextY_up-60);
@@ -466,17 +471,17 @@ class MyTimer extends AnimationTimer {
 		 		    goldEgg.setPositionXY(nextX_down-10, nextY_up-60);
 		 		}
 		 		
-				 pig.setPositionXY(nextX_down-9, nextY_down+DEF.D_PIPE_HEIGHT);
+		 		pig.setPositionXY(nextX_down-9, nextY_down+385);
 
 			 }
 
 		     }
 		// Render and update the gold egg only if it's positioned
-//		 if(!showGold) {
+		 if(!showGold) {
 			 goldEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
 	         goldEgg.render(gc);
 	         goldEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
-//		 }
+		 }
 		 
 		 if(!showWhite) {
 			 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
@@ -492,6 +497,8 @@ class MyTimer extends AnimationTimer {
 	 
 	 // step2: update blob
 	 private void moveBlob() {
+		 	blob.setCollisionSound(DEF.AUDIO.get("bird_flapping_1"));
+		 	blob.playCollisionSound();
 			long diffTime = System.nanoTime() - clickTime;
 			
 			// blob flies upward with animation
@@ -539,13 +546,16 @@ class MyTimer extends AnimationTimer {
 		 checkCollision_pipes();
 		    
 		 //check for blob intersection with pig
-		 checkCollision_blob_pig();
+//		 checkCollision_blob_pig();
+		 
+		 //check for blob intersection with dpipes
+//		 checkCollision_blob_dpipes();
 		 
 		 //check collision pig with pipe
 		 checkCollision_pig_pipe();
 
 		 //check collision pig with egg
-		 checkCollision_pig_white_egg();	
+//		 checkCollision_pig_white_egg();	
 		 
 		 //check for collision with gold egg
 //		 checkCollision_pig_gold_egg();
@@ -556,12 +566,8 @@ class MyTimer extends AnimationTimer {
 		 //check collision blob gold egg
 		 checkCollision_blob_gold_egg();
 		 
-		 if (currentScores < 0) {
-			 GAME_OVER = true;
-		 }
-		 
 		// Set the game_over to true if no lives remaining
-		 if (currentLives == 0) {
+		 if (currentLives <= 0) {
 			 
 		     GAME_OVER = true;
 		 }
@@ -586,8 +592,16 @@ class MyTimer extends AnimationTimer {
 	 }
 	 
 	 private void checkCollision_pipes() {
+
 		 for (Pipe uPipe: uPipes) {
+				blob.applyBounceAnimation();
+				
+				 
+
+
 			 if (blob.intersectsPipe(uPipe)) {
+				 blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_2"));
+				 blob.playCollisionSound();
 //				System.out.println("Hit uPipe");
 				System.out.println("lives BEFORE uPIPE:" + currentLives);
 			 	currentLives--;
@@ -595,26 +609,12 @@ class MyTimer extends AnimationTimer {
 			 	// if (currentLives>=0){
 			 	updateLivesText();
 			 	 //}
-			 	GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
+//			 	GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
 			 // Reset the position of the bird after collision with pipes
 	            resetBirdPosition();
 			 }
 			 
-	      for (Pipe dPipe: dPipes) {
-			 if (!isCollided && blob.intersectsPipe(dPipe)) {
-				 System.out.println("Hit dPipe");
-				 System.out.println("lives BEFORE dPIPE:" + currentLives);
-			 	 currentLives--;
-			 	 System.out.println("lives AFTER dPIPE:" + currentLives);
-			 	 updateLivesText();
-
-	            resetBirdPosition();
-	            isCollided = true;
-			 } else if(!blob.intersectsPipe(dPipe)) {
-		            isCollided = false;
-			 }
-	      	}
-	      
+		 }
 			 // check if the bird goes through a pair of pipes without collision
 		    if (!GAME_OVER && blob.getPositionX() > uPipes.get(0).getPositionX() + DEF.D_PIPE_WIDTH) {
 		        int currentPassedPipeIndex = (int) (blob.getPositionX() / (DEF.D_PIPE_WIDTH + DEF.PIPE_X_GAP));
@@ -627,7 +627,36 @@ class MyTimer extends AnimationTimer {
 		            // Update the score text on the screen
 		            updateScoreText();
 		        }
-		    }
+		 }
+
+	 }
+	 
+	 private void checkCollision_blob_dpipes() {
+		 
+
+		 if(!collisionDetected) {
+		 for (Pipe dPipe: dPipes) {
+
+			 if (blob.intersectsPipe(dPipe)) {
+				 blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
+				 blob.playCollisionSound();
+//				System.out.println("Hit uPipe");
+				System.out.println("lives BEFORE dPIPE:" + currentLives);
+			 	currentLives--;
+//			 	 System.out.println("lives AFTER uPIPE:" + currentLives);
+			 	// if (currentLives>=0){
+			 	updateLivesText();
+			 	 //}
+//			 	GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
+			 // Reset the position of the bird after collision with pipes
+	            resetBirdPosition();
+	            collisionDetected = true;
+	            break;
+			 }
+			 
+		 }
+		 } else {
+			 collisionDetected = false;
 		 }
 	 }
 	 
@@ -684,6 +713,8 @@ class MyTimer extends AnimationTimer {
 	 
 	private void checkCollision_blob_white_egg() {
 		if (blob.intersectsSprite(whiteEgg) && !blobHitsEgg) {
+			blob.setCollisionSound(DEF.AUDIO.get("collect_coin_1"));
+			blob.playCollisionSound();
 //	    	System.out.println("the blob eats the white egg");
 	    	currentScores += 5;
 			updateScoreText();
@@ -699,6 +730,7 @@ class MyTimer extends AnimationTimer {
 
 		if (blob.intersectsSprite(goldEgg) && !blobHitsGoldEgg) {
 			System.out.println("I hit the gold egg");
+			blob.applyBounceAnimation();
 //			System.out.println("the gold egg obj: " + goldEgg);
 //			System.out.println("The gold eggx: " +goldEgg.getPositionX());
 //	    	System.out.println("the blob eats the gold egg");
@@ -739,7 +771,71 @@ class MyTimer extends AnimationTimer {
 			scoreText.setText("Score: " + currentScores);
 		}
 	 }
-	 	 
+	 
+	    public void randomBounceAngle(){
+	        double ran = Math.random();
+	        if(ran >= .50){
+	            //shallow bounce angle
+	            xvariation = 3;
+	            yvariation = 2;
+
+	        }else{
+	            //sharp bounce angle
+	            xvariation = 2;
+	            yvariation = 3;
+	        }
+	    }
+
+//	    private void calculateMotion(Line touchedWall){
+//	        if(touchedWall.equals(rightWall)){
+//	            right = false;
+//	            up = false;
+//
+//	        }
+//	        if(touchedWall.equals(leftWall)){
+//	            right = true;
+//	            up = true;
+//	        }
+//	        if(touchedWall.equals(ceiling)){
+//	            right = true;
+//	            up = false;
+//	        }
+//	        if(touchedWall.equals(floor)){
+//	            right = false;
+//	            up = true;
+//	        }
+//
+//
+//
+//	    }
+//	    public void move(boolean right, boolean up){
+//	        if(right && !up){
+//	            blob.setTranslateX((movex += (getRate() + xvariation)));
+//	            blob.setTranslateY((movey += (getRate() + yvariation)));  
+//	        }
+//	        if(right && up){
+//	            blob.setTranslateX((movex += (getRate() + xvariation)));
+//	            blob.setTranslateY((movey -= (getRate() + yvariation)));
+//	        }
+////	        if(!right && up){
+////	            ball.setTranslateX((movex -= (getRate() + xvariation)));
+////	            ball.setTranslateY((movey -= (getRate() + yvariation)));
+////	        }
+////	        if(!right && !up){
+////	            ball.setTranslateX((movex -= (getRate() + xvariation)));
+////	            ball.setTranslateY((movey += (getRate() + yvariation)));
+////	        }
+//	        System.out.println("("+movex+", "+movey+")");
+//
+//	    }
+	    
+	    public double getRate(){
+	        return rate;
+	    }
+
+//	    public void setRate(double rate){
+//	        this.rate = rate; 
+//	    }
 	 Random rand100 = new Random();
 	 public void moveEggandPig() {
 		 for (int i = 0; i < DEF.PIPE_COUNT; i++) {
