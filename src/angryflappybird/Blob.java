@@ -2,6 +2,9 @@ package angryflappybird;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class Blob extends SpriteAbstract{
 	
@@ -12,6 +15,7 @@ public class Blob extends SpriteAbstract{
 	public double velocityY;
 	public double width;
 	public double height;
+	private MediaPlayer collisionSound;
 	
 	public Blob() {
 		super();
@@ -59,5 +63,13 @@ public class Blob extends SpriteAbstract{
     
     public boolean intersectsSprite(Sprite e) {
     	return super.intersectsSprite(e);
+    }
+    
+    public void setCollisionSound(MediaPlayer media) {
+        collisionSound = media;
+    }
+    
+    public void playCollisionSound() {
+        collisionSound.play();
     }
 }

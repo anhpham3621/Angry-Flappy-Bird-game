@@ -3,6 +3,7 @@ package angryflappybird;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
 
 public class Sprite {  
 	
@@ -13,6 +14,7 @@ public class Sprite {
     private double velocityY;
     private double width;
     private double height;
+    private AudioClip collisionSound;
     
  // Add these boolean attributes
     private boolean isVisible = true;
@@ -94,8 +96,8 @@ public class Sprite {
         return new Rectangle2D(positionX, positionY, width, height);
     }
 
-    public boolean intersectsSprite(Sprite s) {
-        return s.getBoundary().intersects(this.getBoundary());
+    public boolean intersectsPipe(Pipe uPipe) {
+        return uPipe.getBoundary().intersects(this.getBoundary());
     }
 
     public void update(double time) {
@@ -110,4 +112,17 @@ public class Sprite {
     public boolean isVisible() {
     	return isVisible;
     }
+    
+    public void setCollisionSound(AudioClip sound) {
+        collisionSound = sound;
+    }
+    
+    public void playCollisionSound() {
+        collisionSound.play();
+    }
+
+	public boolean intersectsSprite(Sprite egg) {
+		// TODO Auto-generated method stub
+        return egg.getBoundary().intersects(this.getBoundary());
+	}
 }

@@ -6,7 +6,9 @@ import java.util.HashMap;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -25,6 +27,8 @@ public class Defines {
     //for some reason this changes the background
     final int BLOB_WIDTH = 50;
     final int BLOB_HEIGHT = 50;
+    final int BLOB_WITH_PARACHUTE_WIDTH = 70;
+    final int BLOB_WITH_PARACHUTE_HEIGHT = 70;
     
     final int BLOB_POS_X = 10;
     final int BLOB_POS_Y = 100;
@@ -108,7 +112,7 @@ public class Defines {
 
     final HashMap<String, ImageView> IMVIEW = new HashMap<String, ImageView>();
     final HashMap<String, Image> IMAGE = new HashMap<String, Image>();
-    final HashMap<String, Media> AUDIO = new HashMap<String, Media>();
+    final HashMap<String, MediaPlayer> AUDIO = new HashMap<String, MediaPlayer>();
     
     //nodes on the scene graph
     Button startButton;
@@ -120,11 +124,12 @@ public class Defines {
     Defines() {
     	
     	//initialize audio
-    	for(int i = 0; i < AUDIO_FILES.length; i++) {
-    		Media audio;
-    		audio = new Media(new File(pathAudio(AUDIO_FILES[i])).toURI().toString());
-    		AUDIO.put(AUDIO_FILES[i], audio);
-    	}
+//    	for(int i = 0; i < AUDIO_FILES.length; i++) {
+//    		Media audio;
+//    		audio = new Media(pathAudio(AUDIO_FILES[i]));
+//    		MediaPlayer media = new MediaPlayer(audio);
+//    		AUDIO.put(AUDIO_FILES[i], media);
+//    	}
         
         // initialize images
         for(int i=0; i<IMAGE_FILES.length; i++) {
@@ -152,6 +157,9 @@ public class Defines {
             }
             else if (i == 1 || i == 2 || i == 3 || i == 4){
                 img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WIDTH, BLOB_HEIGHT, false, false);
+            } 
+            else if(IMAGE_FILES[i] == "bird_with_parachute") {
+            	img = new Image(pathImage(IMAGE_FILES[i]), BLOB_WITH_PARACHUTE_WIDTH, BLOB_WITH_PARACHUTE_WIDTH, false, false);
             }
             else {
                 img = new Image(pathImage(IMAGE_FILES[i]), SCENE_WIDTH, SCENE_HEIGHT, false, false);
@@ -188,7 +196,7 @@ public class Defines {
     }
     
     public String pathAudio(String filepath) {
-    	String fullpath = AUDIO_DIR+filepath;
+    	String fullpath = getClass().getResource(AUDIO_DIR+filepath+".mp3").toExternalForm();
     	return fullpath;
     }
 }

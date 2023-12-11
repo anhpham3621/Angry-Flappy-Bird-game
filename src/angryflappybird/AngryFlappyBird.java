@@ -5,6 +5,7 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -37,8 +38,12 @@ import java.util.Random;
 
 //The Application layer
 public class AngryFlappyBird extends Application {
+	private boolean isAutoPilotMode = false;
+	private int gold_egg_counter = 0;
+	private boolean isInitGame = false;
     private MediaPlayer mediaPlayer;
 	private Defines DEF = new Defines();
+	private boolean isCollided = false;
 	//text display
 	private int currentLives;
 	private Text livesText;
@@ -80,8 +85,11 @@ public class AngryFlappyBird extends Application {
 	private Pipe dPipe;
 	private boolean isNightBackground = true;
 	private boolean pigHitsEgg = false;
+	private boolean pigHitsGoldEgg = false;
 	private boolean blobHitsEgg = false;
+	private boolean blobHitsGoldEgg = false;
 	private boolean showEgg = true;
+	private boolean isGoldEggIntersected = false;
 		// the mandatory main method
 	public static void main(String[] args) {
 		launch(args);
@@ -172,6 +180,7 @@ public class AngryFlappyBird extends Application {
 		dPipes = new ArrayList<>();
 		
 		if(firstEntry) {
+			isInitGame = true;
 			// create two canvases
 			Canvas canvas = new Canvas(DEF.SCENE_WIDTH, DEF.SCENE_HEIGHT);
 			gc = canvas.getGraphicsContext2D();
@@ -241,6 +250,9 @@ public class AngryFlappyBird extends Application {
 			whiteEgg = new Sprite(DEF.D_PIPE_POS_X-13, uPipeInitialY-60, DEF.IMAGE.get("white_egg"));
 			goldEgg = new Sprite(DEF.D_PIPE_POS_X+2000, uPipeInitialY-60, DEF.IMAGE.get("golden_egg"));
 			
+//			whiteEgg = new Sprite(0, 0, DEF.IMAGE.get("white_egg"));
+//			goldEgg = new Sprite(0, 0, DEF.IMAGE.get("golden_egg"));
+			
 			// Calculate the initial Y forU uPipe based on the corresponding dPipe
 			uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
 			
@@ -257,12 +269,13 @@ public class AngryFlappyBird extends Application {
 		//whiteEgg.render(gc);
 		// initialize blob
 		blob = new Blob(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
+//		blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
 		blob.render(gc);
 		
 		double pigStart = initialY+DEF.PIG_POS_START;
-		pig = new Sprite(DEF.PIG_POS_X-12, initialY + DEF.D_PIPE_HEIGHT, DEF.IMAGE.get("monster_thief"));
+		pig = new Sprite(570, 570, DEF.IMAGE.get("monster_thief"));
 		//System.out.println("tHE PIG: " + pig);
-		pig.setVelocity(0, DEF.BLOB_DROP_VEL);
+		pig.setVelocity(0, 0);
 		pig.render(gc);
 		
 		// initialize timer
@@ -314,7 +327,7 @@ class MyTimer extends AnimationTimer {
 	 	 moveEgg();
 	 	 
 	 	 //step5: update pig
-	 	 movePig();
+//	 	 movePig();
 	 	
 //	 	 moveEggandPig();
 	 	 //step5: check for collision
@@ -385,6 +398,349 @@ class MyTimer extends AnimationTimer {
 	 	//System.out.println("pairNumber" + pairNumber);
 	 }
 	 
+	 /**
+	  * This method is responsible for adding animation to the pig
+	  */
+	 public void movePig() {
+		 for (int i = 0; i < DEF.PIPE_COUNT; i++) {
+			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
+				 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX()+DEF.PIPE_X_GAP;
+				 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
+				 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
+				 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
+				 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
+				 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
+		 		 //System.out.println("Pig is moving " + nextY_down);
+		 		 
+		 		//nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
+		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
+		 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
+		 		
+//				 UTILIZE THE HEIGHT OF THE PIG TO SET IT DOWN
+				 pig.setPositionXY(nextX_down-9, nextY_down+DEF.D_PIPE_HEIGHT);
+				 showEgg = true;
+
+			 }
+
+		 }
+		
+			 pig.setVelocity(-0.4, 0.2);
+			 pig.render(gc);
+			 pig.update(DEF.EASY_SCENE_SHIFT_TIME);
+			//pig.render(gc);
+		 
+	 }
+	 
+	 public void moveEgg() {
+		 boolean showWhite=false;
+		 boolean showGold=false;
+		 Random rand = new Random();
+		 for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
+			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
+	 			 pairNumber++;
+	 			 
+		 		 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX()+DEF.PIPE_X_GAP;
+		 		 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
+		 		 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
+		 		 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
+		 		 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
+		 		 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
+		 		
+		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
+		 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
+		 		 
+		 		 double randWhite=rand.nextDouble();
+		 		 
+		 		 double randGold=rand.nextDouble();
+
+		 		 //Randomize whether eggs show up
+		 		//if white show up and gold wont showup
+		 		if (randWhite < 0.3 & randGold>=0.2) {
+		 			//System.out.println("WHITE SHOW " );
+		 			showWhite=true;
+		 		    whiteEgg.setPositionXY(nextX_down-10, nextY_up-60);
+		 		}
+		 		if (randGold < 0.2) {
+		 			//System.out.println("GOLD SHOW " );
+		 			showGold=true;
+		 		    goldEgg.setPositionXY(nextX_down-10, nextY_up-60);
+		 		}
+		 		
+				 pig.setPositionXY(nextX_down-9, nextY_down+DEF.D_PIPE_HEIGHT);
+
+			 }
+
+		     }
+		// Render and update the gold egg only if it's positioned
+//		 if(!showGold) {
+			 goldEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+	         goldEgg.render(gc);
+	         goldEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
+//		 }
+		 
+		 if(!showWhite) {
+			 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
+	         whiteEgg.render(gc);
+	         whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
+		 }
+		 
+		 pig.setVelocity(-0.4, 0.2);
+		 pig.render(gc);
+		 pig.update(DEF.EASY_SCENE_SHIFT_TIME);
+	 }
+	 
+	 
+	 // step2: update blob
+	 private void moveBlob() {
+			long diffTime = System.nanoTime() - clickTime;
+			
+			// blob flies upward with animation
+			if (CLICKED && diffTime <= DEF.BLOB_DROP_TIME) {
+				
+				int imageIndex = Math.floorDiv(counter++, DEF.BLOB_IMG_PERIOD);
+				imageIndex = Math.floorMod(imageIndex, DEF.BLOB_IMG_LEN);
+				blob.setImage(DEF.IMAGE.get("bird"+String.valueOf(imageIndex+1)));
+				blob.setVelocity(0, DEF.BLOB_FLY_VEL);
+			}
+			// blob drops after a period of time without button click
+			else {
+				
+				//check the image when it's landing
+				//if the wing is upward, flip it to a downward flapping wing
+			 blob.setVelocity(0, DEF.BLOB_DROP_VEL);
+			 CLICKED = false;
+			}
+			// render blob on GUI
+			blob.update(elapsedTime * DEF.NANOSEC_TO_SEC);
+			blob.render(gc);
+	 }
+	 
+	 
+	// Helper method to reset the position of the bird
+	 //should be fixed, the bird should be where?
+	 private void resetBirdPosition() {
+	     blob.setPositionXY(DEF.BLOB_POS_X, DEF.BLOB_POS_Y);
+	     blob.setVelocity(0, 0);
+	 }
+	 
+	 
+	
+	 public void checkCollision() {
+//		 if (isAutoPilotMode == false) {
+			 
+		 
+		 boolean hitAPig = false;
+		 boolean hitAUpipe = false;
+		 
+		 // check collision with the floor
+		 checkCollision_floor();
+		
+		 //check blob collision with the pipes
+		 checkCollision_pipes();
+		    
+		 //check for blob intersection with pig
+		 checkCollision_blob_pig();
+		 
+		 //check collision pig with pipe
+		 checkCollision_pig_pipe();
+
+		 //check collision pig with egg
+		 checkCollision_pig_white_egg();	
+		 
+		 //check for collision with gold egg
+//		 checkCollision_pig_gold_egg();
+		 
+		 //check for pig intersecting the egg
+		 checkCollision_blob_white_egg();
+		 
+		 //check collision blob gold egg
+		 checkCollision_blob_gold_egg();
+		 
+		 if (currentScores < 0) {
+			 GAME_OVER = true;
+		 }
+		 
+		// Set the game_over to true if no lives remaining
+		 if (currentLives == 0) {
+			 
+		     GAME_OVER = true;
+		 }
+		    
+		 // end the game when blob hit stuff
+		 if (GAME_OVER) {
+			 System.out.println("the game is over");
+			 showHitEffect();
+			 for (Sprite floor: floors) {
+			 floor.setVelocity(0, 0);
+			 timer.stop();
+			 } 
+		 	}
+//		 } 
+
+	 }
+	 
+	 private void checkCollision_floor() {
+		 for (Sprite floor: floors) {
+		 GAME_OVER = GAME_OVER || blob.intersectsSprite(floor);
+		 }
+	 }
+	 
+	 private void checkCollision_pipes() {
+		 for (Pipe uPipe: uPipes) {
+			 if (blob.intersectsPipe(uPipe)) {
+//				System.out.println("Hit uPipe");
+				System.out.println("lives BEFORE uPIPE:" + currentLives);
+			 	currentLives--;
+//			 	 System.out.println("lives AFTER uPIPE:" + currentLives);
+			 	// if (currentLives>=0){
+			 	updateLivesText();
+			 	 //}
+			 	GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
+			 // Reset the position of the bird after collision with pipes
+	            resetBirdPosition();
+			 }
+			 
+	      for (Pipe dPipe: dPipes) {
+			 if (!isCollided && blob.intersectsPipe(dPipe)) {
+				 System.out.println("Hit dPipe");
+				 System.out.println("lives BEFORE dPIPE:" + currentLives);
+			 	 currentLives--;
+			 	 System.out.println("lives AFTER dPIPE:" + currentLives);
+			 	 updateLivesText();
+
+	            resetBirdPosition();
+	            isCollided = true;
+			 } else if(!blob.intersectsPipe(dPipe)) {
+		            isCollided = false;
+			 }
+	      	}
+	      
+			 // check if the bird goes through a pair of pipes without collision
+		    if (!GAME_OVER && blob.getPositionX() > uPipes.get(0).getPositionX() + DEF.D_PIPE_WIDTH) {
+		        int currentPassedPipeIndex = (int) (blob.getPositionX() / (DEF.D_PIPE_WIDTH + DEF.PIPE_X_GAP));
+		        //System.out.println("currentPassedPipeIndex:"+currentPassedPipeIndex);
+		        if (currentPassedPipeIndex > lastPassedPipeIndex) {
+		            // The bird has passed through a new set of pipes
+		            currentScores += pairNumber; // Set the score equal to the pair number
+		            lastPassedPipeIndex = currentPassedPipeIndex;
+
+		            // Update the score text on the screen
+		            updateScoreText();
+		        }
+		    }
+		 }
+	 }
+	 
+	 private void checkCollision_blob_pig() {
+		    if (blob.intersectsPig(pig)) {
+	    	System.out.println("the blob has intersected the pig");
+	    	GAME_OVER = true;
+	    	showHitEffect();
+	    }
+	 }
+	 
+	 private void checkCollision_pig_pipe() {
+		 for (Pipe uPipe: uPipes) {
+			 if(pig.intersectsPipe(uPipe)) {
+				 pig.setPositionXY(-100, -100);
+			 }
+
+		 }
+	 }
+	 
+	 private void checkCollision_pig_white_egg() {
+	    	if (pig.intersectsSprite(whiteEgg) && !pigHitsEgg) {
+//		    	System.out.println("the pig stole the white egg");
+		    	currentScores -= 5;
+				updateScoreText();
+				pig.setPositionXY(-100, -100);
+				whiteEgg.setPositionXY(-100, -100);
+				pigHitsEgg = true;
+		    } else if (!pig.intersectsSprite(whiteEgg)) {
+		    	pigHitsEgg = false;
+		    }
+	 }
+	
+	 /**
+	  * Not working , the pig collides wuth the egg somewhere else
+	  */
+//	 private void checkCollision_pig_gold_egg() {
+//		 if (pig.intersectsSprite(goldEgg) && !pigHitsGoldEgg) {
+////		    	System.out.println("the pig stole the gold egg");
+//				System.out.println("the gold egg obj: " + goldEgg);
+//
+//				System.out.println("The gold eggx pig: " +goldEgg.getPositionX());
+//		    	currentScores -= 5;
+//				updateScoreText();
+//				pig.setPositionXY(-100, -100);
+//				goldEgg.setPositionXY(500, 500);
+//				pigHitsEgg = true;
+//				timer.stop();
+//		    } else if (!pig.intersectsSprite(goldEgg)) {
+//		    	pigHitsGoldEgg = false;
+//		    }
+//	 	}
+//	 }
+	 
+	private void checkCollision_blob_white_egg() {
+		if (blob.intersectsSprite(whiteEgg) && !blobHitsEgg) {
+//	    	System.out.println("the blob eats the white egg");
+	    	currentScores += 5;
+			updateScoreText();
+//			whiteEgg.setPositionXY(-100, -100);
+			blobHitsEgg = true;
+	    } else if (!blob.intersectsSprite(whiteEgg)) {
+	    	blobHitsEgg = false;
+	    }
+	}
+	
+	private void checkCollision_blob_gold_egg() {
+//		System.out.println("The gold eggx blob: " +goldEgg.getPositionX());
+
+		if (blob.intersectsSprite(goldEgg) && !blobHitsGoldEgg) {
+			System.out.println("I hit the gold egg");
+//			System.out.println("the gold egg obj: " + goldEgg);
+//			System.out.println("The gold eggx: " +goldEgg.getPositionX());
+//	    	System.out.println("the blob eats the gold egg");
+			int counter = 6000;
+			isAutoPilotMode = true;
+			while (counter > 0) {
+				blob.setImage(DEF.IMAGE.get("bird_with_parachute"));
+				counter --;
+			}
+	    } else if (!blob.intersectsSprite(whiteEgg)) {
+	    	blobHitsGoldEgg = false;
+	    }
+	}
+
+	private void showHitEffect() {
+		 ParallelTransition parallelTransition = new ParallelTransition();
+		 FadeTransition fadeTransition = new FadeTransition(Duration.seconds(DEF.TRANSITION_TIME), gameScene);
+		 fadeTransition.setToValue(0);
+		 fadeTransition.setCycleCount(DEF.TRANSITION_CYCLE);
+		 fadeTransition.setAutoReverse(true);
+		 parallelTransition.getChildren().add(fadeTransition);
+		 parallelTransition.play();
+	 }
+	
+	 private void updateLivesText() {
+	 	 if (currentLives > 0) {
+	 		 livesText.setText("Lives Left: " + currentLives);
+	 		System.out.println("You have " + currentLives + " lives left");
+	 	 } else {
+	 		 livesText.setText("Lives Left: 0");
+	 	 }
+	 }
+		
+	 private void updateScoreText() {
+		if (currentScores <= 0 ) {
+			scoreText.setText("Score: " + 0);
+		} else {
+			scoreText.setText("Score: " + currentScores);
+		}
+	 }
+	 	 
+	 Random rand100 = new Random();
 	 public void moveEggandPig() {
 		 for (int i = 0; i < DEF.PIPE_COUNT; i++) {
 			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
@@ -475,353 +831,6 @@ class MyTimer extends AnimationTimer {
 		 
 	 
 	 }
-	 /**
-	  * This method is responsible for adding animation to the pig
-	  */
-	 public void movePig() {
-		 for (int i = 0; i < DEF.PIPE_COUNT; i++) {
-			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
-				 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX()+DEF.PIPE_X_GAP;
-				 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
-				 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
-				 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
-				 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
-				 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
-		 		 //System.out.println("Pig is moving " + nextY_down);
-		 		 
-		 		//nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
-		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
-		 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
-		 		
-//				 UTILIZE THE HEIGHT OF THE PIG TO SET IT DOWN
-				 pig.setPositionXY(nextX_down-9, nextY_down+DEF.D_PIPE_HEIGHT);
-				 showEgg = true;
-
-			 }
-
-		 }
-		
-			 pig.setVelocity(-0.4, 0.2);
-			 pig.render(gc);
-			 pig.update(DEF.EASY_SCENE_SHIFT_TIME);
-			//pig.render(gc);
-		 
-	 }
-	 
-	 public void moveEgg() {
-		 boolean showWhite=false;
-		 boolean showGold=false;
-		 Random rand = new Random();
-		 for (int i = 0; i < DEF.PIPE_COUNT-1; i++) {
-			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
-	 			 pairNumber++;
-	 			 
-		 		 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX()+DEF.PIPE_X_GAP;
-		 		 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
-		 		 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
-		 		 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
-		 		 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
-		 		 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
-		 		
-		 		 //nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
-		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
-		 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
-		 		 
-		 		 double randWhite=rand.nextDouble();
-		 		//System.out.println("rand white " +randWhite );
-		 		 
-		 		double randGold=rand.nextDouble();
-		 		//System.out.println("rand gold " +randGold );
-		 		
-		 		 //Randomize whether eggs show up
-		 		//if white show up and gold wont showup
-		 		if (randWhite < 0.5 & randGold>=0.3) {
-		 			//System.out.println("WHITE SHOW " );
-		 			showWhite=true;
-		 		    whiteEgg.setPositionXY(nextX_down-10, nextY_up-60);
-		 		}
-		 		if (randGold < 0.3) {
-		 			//System.out.println("GOLD SHOW " );
-		 			showGold=true;
-		 		    goldEgg.setPositionXY(nextX_down-10, nextY_up-60);
-		 		}				 
-			 }
-			 
-			// Render and update the gold egg only if it's positioned
-		     }
-		 
-//		    if (!showWhite && pig.getPositionX() <= whiteEgg.getPositionX()) {
-//		    	//System.out.println("the pig position is here");
-//		        whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-//		        whiteEgg.render(gc);
-//		        System.out.println(whiteEgg);
-//		        whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
-//		    }
-
-		    // Render and update the gold egg only if it's positioned and the pig is near
-//		    if (!showGold && pig.getPositionX() <= goldEgg.getPositionX()) {
-//		    	System.out.println("the gold pig position is here");
-//		        goldEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-//		        goldEgg.render(gc);
-//		        goldEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
-//		    }
-		 if (!showWhite) {
-			 whiteEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-			 whiteEgg.render(gc);
-			 whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
-	 		}
-		
-		if(!showGold) {
-			 goldEgg.setVelocity(DEF.SCENE_SHIFT_INCR, 0);
-	         goldEgg.render(gc);
-	         goldEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
-	 		}  	
-	 }
-	 
-	 
-	 // step2: update blob
-	 private void moveBlob() {
-			long diffTime = System.nanoTime() - clickTime;
-			
-			// blob flies upward with animation
-			if (CLICKED && diffTime <= DEF.BLOB_DROP_TIME) {
-				
-				int imageIndex = Math.floorDiv(counter++, DEF.BLOB_IMG_PERIOD);
-				imageIndex = Math.floorMod(imageIndex, DEF.BLOB_IMG_LEN);
-				blob.setImage(DEF.IMAGE.get("bird"+String.valueOf(imageIndex+1)));
-				blob.setVelocity(0, DEF.BLOB_FLY_VEL);
-			}
-			// blob drops after a period of time without button click
-			else {
-				
-				//check the image when it's landing
-				//if the wing is upward, flip it to a downward flapping wing
-			 blob.setVelocity(0, DEF.BLOB_DROP_VEL);
-			 CLICKED = false;
-			}
-			// render blob on GUI
-			blob.update(elapsedTime * DEF.NANOSEC_TO_SEC);
-			blob.render(gc);
-	 }
-	 
-	 
-	 
-	 /**
-	  * Create a helper method
-	  * for loop to check the size of the pipe
-	  * check if the pipe is offscreen
-	  * 	calc the nextx and the nextY from the pipe similar to 324
-	  *     nextY set from the uPipe gotten from the height of the pipe on the top to have a range of how high 
-	  *     the egg should be from pipe. more calc done on the x var
-	  *     then set position for the egg
-	  *     randomize where the egg should show up
-	  */
-	
-	 
-	 
-	// Helper method to reset the position of the bird
-	 //should be fixed, the bird should be where?
-	 private void resetBirdPosition() {
-	     blob.setPositionXY(DEF.BLOB_POS_X, DEF.BLOB_POS_Y);
-	     blob.setVelocity(0, 0);
-	     //bird appear again
-	     //blob.render(gc);
-	 }
-	 
-	 public void checkCollision() {
-		 boolean hitAPig = false;
-		 boolean hitAUpipe = false;
-		 // check collision with the floor
-		 for (Sprite floor: floors) {
-		 GAME_OVER = GAME_OVER || blob.intersectsSprite(floor);
-		 }
-		
-		 /**handling the blob intersecting with a upipe
-		 * the life of the blob should go to life - 1
-		 * the UI should be updated
-		 * if the life reaches 0, the game ends
-		 **/
-		
-		 for (Pipe uPipe: uPipes) {
-			 if (blob.intersectsPipe(uPipe)) {
-				 //show the hit effect
-				 //showHitEffect();
-				 //re-render the current_lives
-				 System.out.println("Hit uPipe");
-				System.out.println("lives BEFORE uPIPE:" + currentLives);
-			 	currentLives--;
-			 	 System.out.println("lives AFTER uPIPE:" + currentLives);
-			 	// if (currentLives>=0){
-			 	updateLivesText();
-			 	 //}
-			 	GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
-			 // Reset the position of the bird after collision with pipes
-	            resetBirdPosition();
-			 }
-		 }
-		
-		 /**handling the blob intersecting with a dpipe
-		 *the life of the blob should go to life - 1
-		 *the UI should be updated
-		 *if the life reaches 0, the game ends
-		 **/
-		 for (Pipe dPipe: dPipes) {
-			 if (blob.intersectsPipe(dPipe)) {
-				//show the hit effect
-				//showHitEffect();
-				//re-render the current_lives
-				 System.out.println("Hit dPipe");
-				 System.out.println("lives BEFORE dPIPE:" + currentLives);
-			 	 currentLives--;
-			 	 System.out.println("lives AFTER dPIPE:" + currentLives);
-		// 	 	 if (currentLives>0){
-			 	 updateLivesText();
-			 		 
-			 	 //}
-			 GAME_OVER = GAME_OVER || blob.intersectsPipe(dPipe);
-			// Reset the position of the bird after collision with pipes
-	            resetBirdPosition();
-			 }
-		 }
-		 
-		 /**
-		 * This handles the logic for letting the white eggs increment the total coins
-		 * available
-		 */
-		// handling the logic for letting the white eggs increment the total coins available
-		    for (Pipe uPipe : uPipes) {
-		        if (blob.intersectsSprite(whiteEgg) && !blobHitsEgg) {
-		        	System.out.println("hit the white egg");
-		            currentScores += 5;
-		            // show the additional score gained
-		            //showHitEffect();
-		            // re-render the current_score on the screen
-		            updateScoreText();
-		            blobHitsEgg = true;
-
-		            // Reset the position of the bird after collecting a white egg
-		            //resetBirdPosition();
-		        } else if(!blob.intersectsPig(whiteEgg)) {
-		        	blobHitsEgg = false;
-		        }
-		    }
-		    
-		    //
-		 // check if the bird goes through a pair of pipes without collision
-		    if (!GAME_OVER && blob.getPositionX() > uPipes.get(0).getPositionX() + DEF.D_PIPE_WIDTH) {
-		        int currentPassedPipeIndex = (int) (blob.getPositionX() / (DEF.D_PIPE_WIDTH + DEF.PIPE_X_GAP));
-		        //System.out.println("currentPassedPipeIndex:"+currentPassedPipeIndex);
-		        if (currentPassedPipeIndex > lastPassedPipeIndex) {
-		            // The bird has passed through a new set of pipes
-		            currentScores += pairNumber; // Set the score equal to the pair number
-		            lastPassedPipeIndex = currentPassedPipeIndex;
-
-		            // Update the score text on the screen
-		            updateScoreText();
-		        }
-		    }
-		    
-		    //check for blob intersection with pig
-		    if (blob.intersectsPig(pig)) {
-		    	System.out.println("the blob has intersected the pig");
-		    	GAME_OVER = true;
-		    	showHitEffect();
-		    }
-		    
-		    
-		    	if (pig.intersectsSprite(whiteEgg) && !pigHitsEgg) {
-			    	System.out.println("the pig stole the white egg");
-//			    	hitAPig = true;
-		    	 currentScores -= 5;
-				 updateScoreText();
-				 pigHitsEgg = true;
-//				 pig.setVisible(false);
-				 pig.render(gc);
-//				 whiteEgg.setVisible(false);
-				 whiteEgg.render(gc);
-				 whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
-			    } else if (!pig.intersectsSprite(whiteEgg)) {
-			    	pigHitsEgg = false;
-			    	pig.setVisible(true);
-			    	whiteEgg.setVisible(true);
-			    	whiteEgg.render(gc);
-					 whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
-			    }
-
-		    
-		    //check for pig intersecting the egg
-		    
-		 // end the game when blob hit stuff
-		 if (GAME_OVER) {
-			 showHitEffect();
-			 for (Sprite floor: floors) {
-			 floor.setVelocity(0, 0);
-			 timer.stop();
-			 } 
-		 }
-		 
-//		 if (hitAPig) {
-//			 System.out.println("we hit a pig");
-//			
-//		 }
-		 
-		// Set the game_over to true if no lives remaining
-		 if (currentLives == 0) {
-		         GAME_OVER = true;
-		         showHitEffect();
-				 for (Sprite floor: floors) {
-				 floor.setVelocity(0, 0);
-				 timer.stop();
-				 }
-		        System.out.println("Game Over! Scores: " + currentScores + ", Lives: " + currentLives);
-		        System.out.println("Game Restarted!");
-//		        timer.stop();
-		 }
-	 }
-
-	 private void showHitEffect() {
-		 ParallelTransition parallelTransition = new ParallelTransition();
-		 FadeTransition fadeTransition = new FadeTransition(Duration.seconds(DEF.TRANSITION_TIME), gameScene);
-		 fadeTransition.setToValue(0);
-		 fadeTransition.setCycleCount(DEF.TRANSITION_CYCLE);
-		 fadeTransition.setAutoReverse(true);
-		 parallelTransition.getChildren().add(fadeTransition);
-		 parallelTransition.play();
-	 }
-	
-	 //when bird loses a life, update remaining lives
-		 //when bird loses a life, update remaining lives
-	 //havent tested this function
-	 private void updateLivesText() {
-	 	 if (currentLives >= 0) {
-	 		 livesText.setText("Lives Left: " + currentLives);
-	 		System.out.println("You have " + currentLives + " lives left");
-	 	 } else {
-	 		 livesText.setText("Lives Left: 0");
-	 	 }
-	 	}
-		
-		 private void updateScoreText() {
-//		 if (blob.intersectsSprite(whiteEgg)) {
-//		 currentScore += 5;
-		 // Update the score text on the screen
-			 scoreText.setText("Score: " + currentScores);
-			 //System.out.println("Update Score " + currentScores);
-		 }
-		
-		
-	} // End of MyTimer class
-	} // End of AngryFlappyBird Class
-	//Draft (do not delete)
-	//if (currentLives==0) {
-//		GAME_OVER = true;
-//	 	gameOverText.setVisible(true);
-//	 	gameScene.setOnMouseClicked(e -> {
-	// gameOverText.setVisible(false); // Hide the game over message when restarting
-	// });
-		// Allow the player to play again by clicking anywhere on the scene
-	// gameScene.setOnMouseClicked(e -> {
-	// gameOverText.setVisible(false); // Hide the game over message when restarting
-	// });
-//		}
+ // End of MyTimer class
+}}// End of AngryFlappyBird Class
 
