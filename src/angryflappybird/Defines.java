@@ -41,7 +41,7 @@ public class Defines {
     final int BLOB_HARD_DROP_VEL = 500;
     final int BLOB_FLY_VEL = -40;
     final int EASY_BLOB_FLY_VEL = -40;
-    final int MED_BLOB_FLY_VEL = -50;
+    final int MED_BLOB_FLY_VEL = -40;
     final int HARD_BLOB_FLY_VEL = -60;
 
     final int BLOB_IMG_LEN = 4;
@@ -99,12 +99,12 @@ public class Defines {
     
     // coefficients related to time
     final int EASY_SCENE_SHIFT_TIME = 10;
-    final int MED_SCENE_SHIFT_TIME = 30;
-    final int HARD_SCENE_SHIFT_TIME = 50;
+    final int MED_SCENE_SHIFT_TIME = 12;
+    final int HARD_SCENE_SHIFT_TIME = 15;
     final double SCENE_SHIFT_INCR = -0.2;
     final double EASY_SCENE_SHIFT_INCR = -0.2;
-    final double MED_SCENE_SHIFT_INCR = -0.4;
-    final double HARD_SCENE_SHIFT_INCR = -0.6;
+    final double MED_SCENE_SHIFT_INCR = -0.3;
+    final double HARD_SCENE_SHIFT_INCR = -0.4;
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;
     final double TRANSITION_TIME = 0.1;
     final int TRANSITION_CYCLE = 2;

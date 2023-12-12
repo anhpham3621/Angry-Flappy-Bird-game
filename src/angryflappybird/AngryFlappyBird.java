@@ -134,7 +134,6 @@ public class AngryFlappyBird extends Application {
 	
 		// initialize scene graphs and UIs
 		resetGameControl(); // resets the gameControl
-		GameModeHandler(gameMode); //init the modeg
 		resetGameScene(true); // resets the gameScene
 			
 		HBox root = new HBox();
@@ -217,12 +216,13 @@ public class AngryFlappyBird extends Application {
 		    	 gameMode = "easy";
 		     }
 		     // You can perform additional actions or checks depending on the selected option
+				GameModeHandler(gameMode);
+
 		 });
 		gameLevel = new VBox(5);
 		gameLevel.getChildren().addAll(DEF.easyButton, DEF.mediumButton, DEF.hardButton, comboBox);
 		gameControl.getChildren().addAll(DEF.startButton, gameLevel, gameDesc);
 		
-		GameModeHandler(gameMode);
 		}
 	
 	private void GameModeHandler(String mode) {
@@ -241,6 +241,7 @@ public class AngryFlappyBird extends Application {
 			BLOB_FLY_VEL = DEF.MED_BLOB_FLY_VEL;
 		} else if (isHardMode){
 			SCENE_SHIFT_INCR = DEF.HARD_SCENE_SHIFT_INCR;
+			System.out.println(SCENE_SHIFT_INCR);
 			SCENE_SHIFT_TIME = DEF.HARD_SCENE_SHIFT_TIME;
 			BLOB_DROP_TIME = DEF.BLOB_HARD_DROP_TIME;
 			BLOB_DROP_VEL = DEF.BLOB_HARD_DROP_VEL;
@@ -321,10 +322,7 @@ public class AngryFlappyBird extends Application {
 		gameOverText.setVisible(false);
 		
 		if (gameOverText.isVisible()) {
-            // Remove the previous Text node
-			//gameOverText.setVisible(false);
             gameScene.getChildren().remove(gameOverText);
-            //gameOverText.setVisible(false);
             
         }
 		
@@ -338,15 +336,13 @@ public class AngryFlappyBird extends Application {
 			floor.render(gc);
 			floors.add(floor);
 		}
+		
 		//initialize Pipes n eggs
 		Random rand = new Random();
 		for (int i = 0; i < DEF.PIPE_COUNT; i++) {
 			pairNumber=1;
 			//unfinished x-calculation
 		    double initialX = i*DEF.PIPE_X_GAP + DEF.SCENE_WIDTH;
-			//temporary x-value
-			//double initialX =DEF.D_PIPE_POS_X;
-			//Random value in the range [-PIPE_GAP, PIPE_GAP]
 			double randomOffset = rand.nextDouble() * DEF.PIPE_RANGE;
 			// Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
 			randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
@@ -359,10 +355,6 @@ public class AngryFlappyBird extends Application {
 			whiteEgg = new Sprite(DEF.D_PIPE_POS_X-13, uPipeInitialY-60, DEF.IMAGE.get("white_egg"));
 			goldEgg = new Sprite(DEF.D_PIPE_POS_X+DEF.PIPE_X_GAP-8, initialY + DEF.PIPE_Y_GAP-DEF.GOLD_EGG_HEIGHT+15, DEF.IMAGE.get("golden_egg"));
 			
-//			whiteEgg = new Sprite(0, 0, DEF.IMAGE.get("white_egg"));
-//			goldEgg = new Sprite(0, 0, DEF.IMAGE.get("golden_egg"));
-			
-			// Calculate the initial Y forU uPipe based on the corresponding dPipe
 			uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
 			
 			uPipe = new Pipe(initialX, uPipeInitialY, DEF.IMAGE.get("upipe1"));
@@ -374,13 +366,10 @@ public class AngryFlappyBird extends Application {
 			
 		}
 		
-		//for rendering the eggs on the pipe
-		
-		//whiteEgg.render(gc);
+
 		// initialize blob
 		blob = new Blob(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
 		blob.setImageName("bird1");
-//		blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
 		blob.render(gc);
 		
 		double pigStart = initialY+DEF.PIG_POS_START;
@@ -440,13 +429,9 @@ class MyTimer extends AnimationTimer {
 	 	 // step4: update blob
 	 	 moveBlob();
 	 	
-	 	 //setp5: update egg
+	 	 //setp5: update egg and pig
 	 	 moveEgg();
-	 	 
-	 	 //step5: update pig
-//	 	 movePig();
-	 	
-//	 	 moveEggandPig();
+
 	 	 //step5: check for collision
 	 	 if(!isAutoPilot) {
 	 	 checkCollision();
@@ -461,6 +446,7 @@ class MyTimer extends AnimationTimer {
 			 gc.drawImage (DEF.IMAGE.get("day_background"), 0, 0);
 		 }
 		 }
+	 
 	 // step1: update floor
 	 private void moveFloor() {
 		for(int i=0; i<DEF.FLOOR_COUNT; i++) {
@@ -470,7 +456,8 @@ class MyTimer extends AnimationTimer {
 			 	floors.get(i).setPositionXY(nextX, nextY);
 			}
 			floors.get(i).render(gc);
-			floors.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
+			System.out.println(SCENE_SHIFT_TIME);
+			floors.get(i).update(SCENE_SHIFT_TIME);
 		}
 	 }
 	 
@@ -484,8 +471,6 @@ class MyTimer extends AnimationTimer {
 
 	 	for (int i = 0; i < DEF.PIPE_COUNT; i++) {
 	 		 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
-	 			 //currentScores++;
-	 			 //updateScoreText();
 	 			 
 		 		 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX()+DEF.PIPE_X_GAP;
 		 		 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
@@ -494,7 +479,6 @@ class MyTimer extends AnimationTimer {
 		 		 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
 		 		 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
 		 		
-		 		 //nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
 		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
 		 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
 		 		 
@@ -513,46 +497,13 @@ class MyTimer extends AnimationTimer {
 	 		 
 				 dPipes.get(i).render(gc);
 //				 System.out.println("Scene shift time dpipe: "+SCENE_SHIFT_TIME);
-				 dPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
+				 dPipes.get(i).update(SCENE_SHIFT_TIME);
 				
 				 uPipes.get(i).render(gc);
 //				 System.out.println("Scene shift time dpipe: "+SCENE_SHIFT_TIME);
 
-				 uPipes.get(i).update(DEF.EASY_SCENE_SHIFT_TIME);
+				 uPipes.get(i).update(SCENE_SHIFT_TIME);
 	 	}
-	 }
-	 
-	 /**
-	  * This method is responsible for adding animation to the pig
-	  */
-	 public void movePig() {
-		 for (int i = 0; i < DEF.PIPE_COUNT; i++) {
-			 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
-				 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX()+DEF.PIPE_X_GAP;
-				 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
-				 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
-				 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
-				 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
-				 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
-		 		 //System.out.println("Pig is moving " + nextY_down);
-		 		 
-		 		//nextX_up = uPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX();
-		 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
-		 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
-		 		
-//				 UTILIZE THE HEIGHT OF THE PIG TO SET IT DOWN
-				 pig.setPositionXY(nextX_down-9, nextY_down+DEF.D_PIPE_HEIGHT);
-				 showEgg = true;
-
-			 }
-
-		 }
-		
-			 pig.setVelocity(SCENE_SHIFT_INCR, 0.1);
-			 pig.render(gc);
-			 pig.update(DEF.EASY_SCENE_SHIFT_TIME);
-			//pig.render(gc);
-		 
 	 }
 	 
 	 public void moveEgg() {
@@ -578,14 +529,12 @@ class MyTimer extends AnimationTimer {
 		 		 
 		 		 double randGold=rand.nextDouble();
 
-		 		 //Randomize whether eggs show up
-		 		//if white show up and gold wont showup
-		 		if (randWhite > 0.3 & randGold>=0.2) {
+		 		if (randWhite > 0.5 & randGold>=0.3) {
 		 			//System.out.println("WHITE SHOW " );
 		 			showWhite=true;
 		 		    whiteEgg.setPositionXY(nextX_down-10, nextY_up-60);
 		 		}
-		 		if (randGold < 0.2) {
+		 		if (randGold < 0.3) {
 		 			//System.out.println("GOLD SHOW " );
 		 			showGold=true;
 		 		    goldEgg.setPositionXY(nextX_down-10, nextY_up-60);
@@ -598,15 +547,15 @@ class MyTimer extends AnimationTimer {
 		     }
 		// Render and update the gold egg only if it's positioned
 		 if(!showGold) {
-			 goldEgg.setVelocity(DEF.EASY_SCENE_SHIFT_INCR, 0);
+			 goldEgg.setVelocity(SCENE_SHIFT_INCR, 0);
 	         goldEgg.render(gc);
-	         goldEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
+	         goldEgg.update(SCENE_SHIFT_TIME);
 		 }
 		 
 		 if(!showWhite) {
-			 whiteEgg.setVelocity(DEF.EASY_SCENE_SHIFT_INCR, 0);
+			 whiteEgg.setVelocity(SCENE_SHIFT_INCR, 0);
 	         whiteEgg.render(gc);
-	         whiteEgg.update(DEF.EASY_SCENE_SHIFT_TIME);
+	         whiteEgg.update(SCENE_SHIFT_TIME);
 		 }
 		 
 		 pig.setVelocity(SCENE_SHIFT_INCR, 0.1);
@@ -622,17 +571,19 @@ class MyTimer extends AnimationTimer {
 			long diffTime = System.nanoTime() - clickTime;
 			
 			// blob flies upward with animation
-			if (CLICKED && diffTime <= DEF.BLOB_DROP_TIME) {
+			if (CLICKED && diffTime <= BLOB_DROP_TIME) {
 				
 				int imageIndex = Math.floorDiv(counter++, DEF.BLOB_IMG_PERIOD);
 				imageIndex = Math.floorMod(imageIndex, DEF.BLOB_IMG_LEN);
 				blob.setImage(DEF.IMAGE.get("bird"+String.valueOf(imageIndex+1)));
 				blob.setImageName("bird"+String.valueOf(imageIndex+1));
-				blob.setVelocity(0, DEF.BLOB_FLY_VEL);
+				System.out.println("The blob fly vel: " +BLOB_FLY_VEL);
+				blob.setVelocity(0, BLOB_FLY_VEL);
 			} 
 			
 			//check if we are on autoPilot mode
 			else if (isAutoPilot){
+				 //Will set the vals as variables once fully tested that it works
 			blob.setPositionXY(200, 250);
 			 blob.setVelocity(0, 0);
 			 blob.setImage(DEF.IMAGE.get("bird_with_parachute"));
@@ -643,13 +594,16 @@ class MyTimer extends AnimationTimer {
 			else if (!isAutoPilot && blob.blobGetName().equals("bird_with_parachute")) {
 				 blob.setImage(DEF.IMAGE.get("bird1"));
 				 System.out.println("The bird is in position y: "+blob.getPositionY());
+				 
+				 //Will set the vals as variables once fully tested that it works
 				 blob.setVelocity(0, 100);
 				 CLICKED = false;
 				 pig.setVelocity(-0.6, 0.1);
+				 //this is to prevent unnecessary collision when we get out of autopilot mode.
 				 pig.setPositionXY(600, 600);
 			}
 			else {
-			 blob.setVelocity(0, DEF.BLOB_EASY_DROP_VEL);
+			 blob.setVelocity(0, BLOB_DROP_VEL);
 			 CLICKED = false;
 			}
 			// render blob on GUI
@@ -745,12 +699,8 @@ class MyTimer extends AnimationTimer {
 //				System.out.println("Hit uPipe");
 				System.out.println("lives BEFORE dPIPE:" + currentLives);
 			 	currentLives--;
-//			 	 System.out.println("lives AFTER uPIPE:" + currentLives);
-			 	// if (currentLives>=0){
+			 	 System.out.println("lives AFTER uPIPE:" + currentLives);
 			 	updateLivesText();
-			 	 //}
-//			 	GAME_OVER = GAME_OVER || blob.intersectsPipe(uPipe);
-			 // Reset the position of the bird after collision with pipes
 	            resetBirdPosition();
 	            collisionDetected = true;
 	            break;
@@ -889,6 +839,35 @@ class MyTimer extends AnimationTimer {
 	    public double getRate(){
 	        return rate;
 	    }
+	    
+//		 /**
+//		  * This method is responsible for adding animation to the pig
+//		  */
+//		 public void movePig() {
+//			 for (int i = 0; i < DEF.PIPE_COUNT; i++) {
+//				 if (dPipes.get(i).getPositionX() <= -DEF.D_PIPE_WIDTH) {
+//					 nextX_down = dPipes.get((i+1)%DEF.PIPE_COUNT).getPositionX()+DEF.PIPE_X_GAP;
+//					 double randomOffset = rand1.nextDouble() * DEF.PIPE_RANGE;
+//					 // Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
+//					 randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
+//					 nextY_down = DEF.D_PIPE_POS_Y - randomOffset;
+//					 dPipes.get(i).setPositionXY(nextX_down, nextY_down);
+//			 		 
+//			 		 nextY_up = nextY_down + DEF.PIPE_Y_GAP;
+//			 		 uPipes.get(i).setPositionXY(nextX_down, nextY_up);
+//			 		
+//					 pig.setPositionXY(nextX_down-9, nextY_down+DEF.D_PIPE_HEIGHT);
+//					 showEgg = true;
+	//
+//				 }
+	//
+//			 }
+//				 pig.setVelocity(SCENE_SHIFT_INCR, 0.1);
+//				 pig.render(gc);
+//				 pig.update(SCENE_SHIFT_TIME);
+//				//pig.render(gc);
+//			 
+//		 }
  // End of MyTimer class
 }}// End of AngryFlappyBird Class
 
