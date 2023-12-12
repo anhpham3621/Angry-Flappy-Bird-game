@@ -18,6 +18,7 @@ public class Blob extends SpriteAbstract{
 	public double width;
 	public double height;
 	private MediaPlayer collisionSound;
+	private String blob_image_name;
 	
 	public Blob() {
 		super();
@@ -100,5 +101,21 @@ public class Blob extends SpriteAbstract{
 
         // Play the animation
         translateTransition.play();
+    }
+    
+    /**
+     * Sets the image name of the blob
+     * @param image_name
+     */
+    void setImageName(String image_name) {
+    	blob_image_name = image_name;
+    }
+    
+    /**
+     * gets the name of the image
+     * @return
+     */
+    public String blobGetName() {
+    	return blob_image_name;
     }
 }

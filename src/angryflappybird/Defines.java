@@ -33,8 +33,17 @@ public class Defines {
     final int BLOB_POS_X = 10;
     final int BLOB_POS_Y = 100;
     final int BLOB_DROP_TIME = 300000000;  	// the elapsed time threshold before the blob starts dropping
-    final int BLOB_DROP_VEL = 300;    		// the blob drop velocity
+    final int BLOB_MED_DROP_TIME = 100000000;
+    final int BLOB_HARD_DROP_TIME = 90000000;
+    final int BLOB_EASY_DROP_TIME = 300000000;
+    final int BLOB_EASY_DROP_VEL = 300;    		// the blob drop velocity
+    final int BLOB_MED_DROP_VEL = 400;
+    final int BLOB_HARD_DROP_VEL = 500;
     final int BLOB_FLY_VEL = -40;
+    final int EASY_BLOB_FLY_VEL = -40;
+    final int MED_BLOB_FLY_VEL = -50;
+    final int HARD_BLOB_FLY_VEL = -60;
+
     final int BLOB_IMG_LEN = 4;
     final int BLOB_IMG_PERIOD = 5;
     
@@ -90,9 +99,12 @@ public class Defines {
     
     // coefficients related to time
     final int EASY_SCENE_SHIFT_TIME = 10;
-    final int MID_SCENE_SHIFT_TIME = 30;
+    final int MED_SCENE_SHIFT_TIME = 30;
     final int HARD_SCENE_SHIFT_TIME = 50;
     final double SCENE_SHIFT_INCR = -0.2;
+    final double EASY_SCENE_SHIFT_INCR = -0.2;
+    final double MED_SCENE_SHIFT_INCR = -0.4;
+    final double HARD_SCENE_SHIFT_INCR = -0.6;
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;
     final double TRANSITION_TIME = 0.1;
     final int TRANSITION_CYCLE = 2;
