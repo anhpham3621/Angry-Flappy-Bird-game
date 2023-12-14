@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
@@ -33,15 +34,22 @@ public class Defines {
     final int BLOB_POS_X = 10;
     final int BLOB_POS_Y = 100;
     final int BLOB_DROP_TIME = 300000000;  	// the elapsed time threshold before the blob starts dropping
-    final int BLOB_MED_DROP_TIME = 100000000;
-    final int BLOB_HARD_DROP_TIME = 90000000;
+//    final int BLOB_MED_DROP_TIME = 450000000;
+//    final int BLOB_HARD_DROP_TIME = 360000000;
+//    final int BLOB_EASY_DROP_TIME = 300000000;
+    
+    
+    
+    final int BLOB_MED_DROP_TIME = 900000000;
+    final int BLOB_HARD_DROP_TIME = 300000000;
     final int BLOB_EASY_DROP_TIME = 300000000;
-    final int BLOB_EASY_DROP_VEL = 300;    		// the blob drop velocity
-    final int BLOB_MED_DROP_VEL = 400;
-    final int BLOB_HARD_DROP_VEL = 500;
+    
+    int BLOB_EASY_DROP_VEL = 300;    		// the blob drop velocity
+    final int BLOB_MED_DROP_VEL = 360;
+    final int BLOB_HARD_DROP_VEL = 450;
     final int BLOB_FLY_VEL = -40;
     final int EASY_BLOB_FLY_VEL = -40;
-    final int MED_BLOB_FLY_VEL = -40;
+    final int MED_BLOB_FLY_VEL = -48;
     final int HARD_BLOB_FLY_VEL = -60;
 
     final int BLOB_IMG_LEN = 4;
@@ -77,6 +85,7 @@ public class Defines {
     final int PIG_WIDTH = 80;
     final int PIG_POS_X = 400;
     final int PIG_POS_Y = 300;
+    double PIG_DROP_Y_VEL = 0.09;
     final int PIG_POS_START = 300;
 
     //initial pipe position
@@ -98,13 +107,25 @@ public class Defines {
     final double GOLD_EGG_POS_X = 200;
     
     // coefficients related to time
+//    final int EASY_SCENE_SHIFT_TIME = 10;
+//    final int MED_SCENE_SHIFT_TIME = 12;
+//    final int HARD_SCENE_SHIFT_TIME = 15;
+//    final double SCENE_SHIFT_INCR = -0.2;
+//    final double EASY_SCENE_SHIFT_INCR = -0.2;
+//    final double MED_SCENE_SHIFT_INCR = -0.24;
+//    final double HARD_SCENE_SHIFT_INCR = -0.3;
+    
+    
     final int EASY_SCENE_SHIFT_TIME = 10;
-    final int MED_SCENE_SHIFT_TIME = 12;
-    final int HARD_SCENE_SHIFT_TIME = 15;
-    final double SCENE_SHIFT_INCR = -0.2;
+    final int MED_SCENE_SHIFT_TIME = 20;
+    final int HARD_SCENE_SHIFT_TIME = 30;
+    //final double SCENE_SHIFT_INCR = -0.2;
     final double EASY_SCENE_SHIFT_INCR = -0.2;
-    final double MED_SCENE_SHIFT_INCR = -0.3;
-    final double HARD_SCENE_SHIFT_INCR = -0.4;
+    final double MED_SCENE_SHIFT_INCR = -0.4;
+    final double HARD_SCENE_SHIFT_INCR = -0.6;
+    
+    
+    
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;
     final double TRANSITION_TIME = 0.1;
     final int TRANSITION_CYCLE = 2;
@@ -116,7 +137,7 @@ public class Defines {
     private final String IMAGE_DIR = "../final_images/";
     final String[] IMAGE_FILES = {"day_background", "bird1", "bird2", "bird3", "bird4",  "floor1", "bird_with_parachute",
     "dpipe2", "dpipe2", "dpipe3", "dpipe4", "dpipe5", "upipe1", "upipe2", "upipe3", "upipe4", "upipe5", "game_over_sprite", "golden_egg", "monster_thief", "night_background",
-        "special_coin", "start_button_sprite", "upipe1", "white_egg", "upipe1", "golden_egg"};
+        "special_coin", "start_button_sprite", "upipe1", "white_egg", "upipe1", "golden_egg","game_over_sprite"};
     //image_pipe
     
 //    private final String AUDIO_DIR = "../resources/sounds/";
@@ -130,9 +151,10 @@ public class Defines {
     
     //nodes on the scene graph
     Button startButton;
-    Button easyButton;
-    Button mediumButton;
-    Button hardButton;
+    ComboBox<String> levels;
+    //Button easyButton;
+    //Button mediumButton;
+    //Button hardButton;
     
     // constructor
     Defines() {
@@ -189,11 +211,15 @@ public class Defines {
         
         // initialize scene nodes
         startButton = new Button("Go!");
-        easyButton = new Button("Easy");
+        
+        levels = new ComboBox<String>();
+        levels.getItems().addAll("Easy", "Medium", "Hard");
+        //levels.setValue("Easy");
+        //easyButton = new Button("Easy");
 //		easyButton.setStyle("-fx-background-color: #FFFF00;");
-        mediumButton = new Button("Medium");
+        //mediumButton = new Button("Medium");
 //		mediumButton.setStyle("-fx-background-color: #808080;");
-        hardButton = new Button("Hard");
+        //hardButton = new Button("Hard");
 //		hardButton.setStyle("-fx-background-color: #808080;");
     }
     

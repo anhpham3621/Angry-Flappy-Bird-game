@@ -54,19 +54,22 @@ public class AngryFlappyBird extends Application {
     private double xvariation = 0;
     private double yvariation = 0;
     private double rate = 1;
-
+    
     private boolean right = true;
     private boolean up = false;
 	private boolean isAutoPilotMode = false;
 	private boolean collisionDetected = false;
-	private double SCENE_SHIFT_TIME = 5;
-	private double SCENE_SHIFT_INCR = -0.2;
-	private int BLOB_FLY_VEL = 0;
-	private int BLOB_DROP_VEL = 0;
-	private int BLOB_DROP_TIME = 0;
-	private boolean isEasyMode = false;
-	private boolean isHardMode = false;
-	private boolean isMedMode = false;
+	private double SCENE_SHIFT_TIME=10;
+	private double SCENE_SHIFT_INCR=-0.2;
+	private int BLOB_FLY_VEL;
+	private int BLOB_DROP_VEL;
+	private int BLOB_DROP_TIME;
+//	private boolean isEasyMode = false;
+//	private boolean isHardMode = false;
+//	private boolean isMedMode = false;
+	
+	private ImageView gameOverImage;
+	
 
 	private int gold_egg_counter = 0;
 	private boolean isInitGame = false;
@@ -130,8 +133,6 @@ public class AngryFlappyBird extends Application {
 		@Override
 	public void start(Stage primaryStage) throws Exception {
 			
-
-			
 	
 		// initialize scene graphs and UIs
 		resetGameControl(); // resets the gameControl
@@ -153,6 +154,7 @@ public class AngryFlappyBird extends Application {
 	// the getContent method sets the Scene layer
 	private void resetGameControl() {
 		DEF.startButton.setOnMouseClicked(this::mouseClickHandler);
+		GameModeHandler(gameMode);
 		gameControl = new VBox(30);
 		gameDesc = new VBox(15);
 		Text pigTextLabel = new Text("Avoid the pigs");
@@ -185,73 +187,118 @@ public class AngryFlappyBird extends Application {
 		
 		//adding a control panel
 		
-		ObservableList<String> options = 
-			    FXCollections.observableArrayList(
-			        "Easy",
-			        "Medium",
-			        "Hard"
-			    );
-		 comboBox = new ComboBox<String>(options);
+//		ObservableList<String> options = 
+//			    FXCollections.observableArrayList(
+//			        "Easy",
+//			        "Medium",
+//			        "Hard"
+//			    );
+		 //comboBox = new ComboBox<String>(options);
+		 DEF.levels.setPromptText("Change Mode");
 
 		// Add an event listener to the combo box to detect when an item is selected
-		 comboBox.setOnAction(event -> {
-		     // Get the selected item from the combo box
-		     String selectedOption = comboBox.getSelectionModel().getSelectedItem();
-		     
-		     // Add your logic here based on the selected option
-		     System.out.println("Selected option: " + selectedOption);
-		     if (selectedOption.equals("Easy")) {
-		    	 System.out.println("we're in the easy mode");
-		    	 isEasyMode = true;
-		     } else if (selectedOption.equals("Medium")) {
-		    	 System.out.println("we're in the medium mode");
-		    	 isMedMode = true;
-		    	 gameMode = "med";
-		     } else if (selectedOption.equals("Hard")){
-		    	 System.out.println("we're in the hard mode");
-		    	 isHardMode = true;
-		    	 gameMode = "hard";
-		     } else {
-		    	 System.out.println("we're in the easy mode");
-		    	 isEasyMode = true;
-		    	 gameMode = "easy";
-		     }
-		     // You can perform additional actions or checks depending on the selected option
-				GameModeHandler(gameMode);
+		 DEF.levels.setOnAction(event -> GameModeHandler(DEF.levels.getValue()));
+		 //{
+			 
+//			 
+//		     // Get the selected item from the combo box
+//		     String selectedOption = comboBox.getSelectionModel().getSelectedItem();
+//		     
+//		     // Add your logic here based on the selected option
+//		     System.out.println("Selected option: " + selectedOption);
+//		     if (selectedOption.equals("Easy")) {
+//		    	 System.out.println("we're in the easy mode");
+////		    	 SCENE_SHIFT_TIME = 10;
+////	             SCENE_SHIFT_INCR = -0.20;
+//		    	 isEasyMode = true;
+//		     } else if (selectedOption.equals("Medium")) {
+////		    	 SCENE_SHIFT_TIME = 12;
+////	             SCENE_SHIFT_INCR = -0.24;
+//		    	 System.out.println("we're in the medium mode");
+//		    	 isMedMode = true;
+//		    	 gameMode = "med";
+//		     } else if (selectedOption.equals("Hard")){
+////		    	 SCENE_SHIFT_TIME = 15;
+////	             SCENE_SHIFT_INCR = -0.30;
+//		    	 System.out.println("we're in the hard mode");
+//		    	 isHardMode = true;
+//		    	 gameMode = "hard";
+//		     } else {
+//		    	 System.out.println("we're in the easy mode");
+//		    	 isEasyMode = true;
+//		    	 gameMode = "easy";
+//		     }
+//		     // You can perform additional actions or checks depending on the selected option
+//				GameModeHandler(gameMode);
 
-		 });
+		 //});
 		gameLevel = new VBox(5);
-		gameLevel.getChildren().addAll(DEF.easyButton, DEF.mediumButton, DEF.hardButton, comboBox);
+		//gameLevel.getChildren().addAll(DEF.easyButton, DEF.mediumButton, DEF.hardButton, comboBox);
+		gameLevel.getChildren().addAll( DEF.levels);
 		gameControl.getChildren().addAll(DEF.startButton, gameLevel, gameDesc);
 		
 		}
-	
-	private void GameModeHandler(String mode) {
-		if (isEasyMode) {
-			System.out.println("in the easy mode");
-			SCENE_SHIFT_INCR = DEF.EASY_SCENE_SHIFT_INCR;
-			SCENE_SHIFT_TIME = DEF.EASY_SCENE_SHIFT_TIME;
-			BLOB_DROP_TIME = DEF.BLOB_EASY_DROP_TIME;
-			BLOB_DROP_VEL = DEF.BLOB_EASY_DROP_VEL;
-			BLOB_FLY_VEL = DEF.EASY_BLOB_FLY_VEL;
-		} else if (isMedMode) {
-			SCENE_SHIFT_INCR = DEF.MED_SCENE_SHIFT_INCR;
-			SCENE_SHIFT_TIME = DEF.MED_SCENE_SHIFT_TIME;
-			BLOB_DROP_TIME = DEF.BLOB_MED_DROP_TIME;
-			BLOB_DROP_VEL = DEF.BLOB_MED_DROP_VEL;
-			BLOB_FLY_VEL = DEF.MED_BLOB_FLY_VEL;
-		} else if (isHardMode){
-			SCENE_SHIFT_INCR = DEF.HARD_SCENE_SHIFT_INCR;
-			//System.out.println(SCENE_SHIFT_INCR);
-			SCENE_SHIFT_TIME = DEF.HARD_SCENE_SHIFT_TIME;
-			BLOB_DROP_TIME = DEF.BLOB_HARD_DROP_TIME;
-			BLOB_DROP_VEL = DEF.BLOB_HARD_DROP_VEL;
-			BLOB_FLY_VEL = DEF.HARD_BLOB_FLY_VEL;
-		}
-	}
+
+	private void GameModeHandler(String difficulty) {
+	       switch (difficulty) {
+	           case "Easy":
+	        	System.out.println("EASY");
+	            SCENE_SHIFT_INCR = DEF.EASY_SCENE_SHIFT_INCR;
+	   			SCENE_SHIFT_TIME = DEF.EASY_SCENE_SHIFT_TIME;
+	   			BLOB_DROP_TIME = DEF.BLOB_EASY_DROP_TIME;
+	   			BLOB_DROP_VEL = DEF.BLOB_EASY_DROP_VEL;
+	   			BLOB_FLY_VEL = DEF.EASY_BLOB_FLY_VEL;
+	               break;
+	           case "Medium":
+	               //DEF.BLOB_EASY_DROP_VEL = 250; //increase bird drop velocity
+	        	System.out.println("MED");
+	   			SCENE_SHIFT_INCR = DEF.MED_SCENE_SHIFT_INCR;
+	   			SCENE_SHIFT_TIME = DEF.MED_SCENE_SHIFT_TIME;
+	   			BLOB_DROP_TIME = DEF.BLOB_MED_DROP_TIME;
+	   			BLOB_DROP_VEL = DEF.BLOB_MED_DROP_VEL;
+	   			BLOB_FLY_VEL = DEF.MED_BLOB_FLY_VEL;
+	               break;
+	           case "Hard":
+//	               DEF.PIG_DROP_Y_VEL=0.5; //increase speed of pigs falling down the pipes
+//	               DEF.BLOB_EASY_DROP_VEL = 250; //increase bird drop velocity
+	        	System.out.println("HARD");
+	        	SCENE_SHIFT_INCR = DEF.HARD_SCENE_SHIFT_INCR;
+	   			SCENE_SHIFT_TIME = DEF.HARD_SCENE_SHIFT_TIME;
+	   			BLOB_DROP_TIME = DEF.BLOB_HARD_DROP_TIME;
+	   			BLOB_DROP_VEL = DEF.BLOB_HARD_DROP_VEL;
+	   			BLOB_FLY_VEL = DEF.HARD_BLOB_FLY_VEL;
+	               break;
+	       }
+	 }
+	//private void GameModeHandler(String mode) {
+		
+//		if (isEasyMode) {
+//			System.out.println("in the easy mode");
+//			SCENE_SHIFT_INCR = DEF.EASY_SCENE_SHIFT_INCR;
+//			SCENE_SHIFT_TIME = DEF.EASY_SCENE_SHIFT_TIME;
+//			BLOB_DROP_TIME = DEF.BLOB_EASY_DROP_TIME;
+//			BLOB_DROP_VEL = DEF.BLOB_EASY_DROP_VEL;
+//			BLOB_FLY_VEL = DEF.EASY_BLOB_FLY_VEL;
+//		} else if (isMedMode) {
+//			System.out.println("in the med mode");
+//			SCENE_SHIFT_INCR = DEF.MED_SCENE_SHIFT_INCR;
+//			SCENE_SHIFT_TIME = DEF.MED_SCENE_SHIFT_TIME;
+//			BLOB_DROP_TIME = DEF.BLOB_MED_DROP_TIME;
+//			BLOB_DROP_VEL = DEF.BLOB_MED_DROP_VEL;
+//			BLOB_FLY_VEL = DEF.MED_BLOB_FLY_VEL;
+//		} else if (isHardMode){
+//			System.out.println("in the dif mode");
+//			SCENE_SHIFT_INCR = DEF.HARD_SCENE_SHIFT_INCR;
+//			SCENE_SHIFT_TIME = DEF.HARD_SCENE_SHIFT_TIME;
+//			BLOB_DROP_TIME = DEF.BLOB_HARD_DROP_TIME;
+//			BLOB_DROP_VEL = DEF.BLOB_HARD_DROP_VEL;
+//			BLOB_FLY_VEL = DEF.HARD_BLOB_FLY_VEL;
+//		}
+//	}
 	private void mouseClickHandler(MouseEvent e) {
 		if (GAME_OVER) {
 			resetGameScene(false);
+			//(false);
 	}
 		else if (GAME_START){
 			clickTime = System.nanoTime();
@@ -261,7 +308,7 @@ public class AngryFlappyBird extends Application {
 		CLICKED = true;
 	}
 	private void resetGameScene(boolean firstEntry) {
-		
+		//GameModeHandler(gameMode);
 		// reset variables
 		CLICKED = false;
 		GAME_OVER = false;
@@ -284,6 +331,11 @@ public class AngryFlappyBird extends Application {
 			gameScene.getChildren().add(background);
 			gameScene.getChildren().add(canvas);
 		}
+		
+		initializeFloors();
+		initializePipesEgg();
+        initializePigs();
+        initializeBird();
 		currentLives = DEF.MAX_LIFE;
 		if (livesText != null) {
             // Remove the previous Text node
@@ -311,79 +363,104 @@ public class AngryFlappyBird extends Application {
         // Add Text node to the gameScenex
         gameScene.getChildren().add(scoreText);
         
-        
-        
         gameOverText = new Text("Game Over, click to play again");
+//        gameOverText.setX(DEF.SCENE_WIDTH / 2 - 150);
+//		gameOverText.setY(DEF.SCENE_HEIGHT / 2);
 		gameOverText.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
 		gameOverText.setFill(Color.RED);
-		gameOverText.setX(DEF.SCENE_WIDTH / 2 - 150);
-		gameOverText.setY(DEF.SCENE_HEIGHT / 2);
+//		
 		// Set the initial visibility of gameOverText to false
 		gameScene.getChildren().add(gameOverText);
-		gameOverText.setVisible(false);
+		//gameOverText.setVisible(false);
+		gameOverText.setTranslateY(DEF.SCENE_HEIGHT + 50);
+//		gameOverText.setY(DEF.SCENE_HEIGHT + 50);
+		//gameScene.getChildren().remove(gameOverText);
 		
-		if (gameOverText.isVisible()) {
-            gameScene.getChildren().remove(gameOverText);
-            
-        }
+//		if (gameOverText.isVisible()) {
+//			System.out.println("GAMEVERVISIBLE");
+//            gameScene.getChildren().remove(gameOverText);
+//			gameOverText.setY(DEF.SCENE_HEIGHT + 50);
+//        }
+	} 
 		
-		
-		// initialize floor
-		for(int i=0; i<DEF.FLOOR_COUNT; i++) {
-			int posX = i * DEF.FLOOR_WIDTH;
-			int posY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
-			Sprite floor = new Sprite(posX, posY, DEF.IMAGE.get("floor1"));
-			floor.setVelocity(SCENE_SHIFT_INCR, 0);
-			floor.render(gc);
-			floors.add(floor);
+		private void initializeFloors() {
+			// initialize floor
+			for(int i=0; i<DEF.FLOOR_COUNT; i++) {
+				int posX = i * DEF.FLOOR_WIDTH;
+				int posY = DEF.SCENE_HEIGHT - DEF.FLOOR_HEIGHT;
+				Sprite floor = new Sprite(posX, posY, DEF.IMAGE.get("floor1"));
+				floor.setVelocity(SCENE_SHIFT_INCR, 0);
+				floor.render(gc);
+				floors.add(floor);
+			}
+		}
+		private void  initializePipesEgg() {
+			//initialize Pipes n eggs
+			Random rand = new Random();
+			for (int i = 0; i < DEF.PIPE_COUNT; i++) {
+				pairNumber=1;
+				//unfinished x-calculation
+			    double initialX = i*DEF.PIPE_X_GAP + DEF.SCENE_WIDTH;
+				double randomOffset = rand.nextDouble() * DEF.PIPE_RANGE;
+				// Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
+				randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
+				initialY = DEF.D_PIPE_POS_Y - randomOffset;
+				dPipe = new Pipe(initialX, initialY, DEF.IMAGE.get("dpipe2"));
+//				if (gameMode=="Easy") {
+//					SCENE_SHIFT_INCR=DEF.EASY_SCENE_SHIFT_INCR;
+//				}
+//				else if (gameMode=="Medium") {
+//					SCENE_SHIFT_INCR=DEF.MED_SCENE_SHIFT_INCR;
+//				}
+//				else if (gameMode=="Hard") {
+//					SCENE_SHIFT_INCR=DEF.HARD_SCENE_SHIFT_INCR;
+//				}
+				
+				dPipe.setVelocity(SCENE_SHIFT_INCR, 0);
+				System.out.println("SS dPipe incr: "+SCENE_SHIFT_INCR);
+				dPipe.render(gc);
+				dPipes.add(dPipe);
+				//somehow bringing white egg up here work, but down doesnt
+				whiteEgg = new Sprite(DEF.D_PIPE_POS_X-13, uPipeInitialY-60, DEF.IMAGE.get("white_egg"));
+				goldEgg = new Sprite(-100, -100, DEF.IMAGE.get("golden_egg"));
+				
+				uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
+				
+				uPipe = new Pipe(initialX, uPipeInitialY, DEF.IMAGE.get("upipe1"));
+				
+				uPipe.setVelocity(SCENE_SHIFT_INCR, 0);
+				System.out.println("SS uPipe incr: "+SCENE_SHIFT_INCR);
+				uPipe.render(gc);
+				uPipes.add(uPipe);
+				
+			}
+			
 		}
 		
-		//initialize Pipes n eggs
-		Random rand = new Random();
-		for (int i = 0; i < DEF.PIPE_COUNT; i++) {
-			pairNumber=1;
-			//unfinished x-calculation
-		    double initialX = i*DEF.PIPE_X_GAP + DEF.SCENE_WIDTH;
-			double randomOffset = rand.nextDouble() * DEF.PIPE_RANGE;
-			// Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
-			randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
-			initialY = DEF.D_PIPE_POS_Y - randomOffset;
-			dPipe = new Pipe(initialX, initialY, DEF.IMAGE.get("dpipe2"));
-			dPipe.setVelocity(SCENE_SHIFT_INCR, 0);
-			dPipe.render(gc);
-			dPipes.add(dPipe);
-			//somehow bringing white egg up here work, but down doesnt
-			whiteEgg = new Sprite(DEF.D_PIPE_POS_X-13, uPipeInitialY-60, DEF.IMAGE.get("white_egg"));
-			goldEgg = new Sprite(DEF.D_PIPE_POS_X+DEF.PIPE_X_GAP-8, initialY + DEF.PIPE_Y_GAP-DEF.GOLD_EGG_HEIGHT+15, DEF.IMAGE.get("golden_egg"));
+		//initialize Bird
+		private void initializeBird() {
+			// initialize blob
+			blob = new Blob(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
+			blob.setImageName("bird1");
+			blob.render(gc);
 			
-			uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
-			
-			uPipe = new Pipe(initialX, uPipeInitialY, DEF.IMAGE.get("upipe1"));
-			
-			uPipe.setVelocity(SCENE_SHIFT_INCR, 0);
-			System.out.println("The scene shift incr: "+SCENE_SHIFT_INCR);
-			uPipe.render(gc);
-			uPipes.add(uPipe);
-			
-		}
+		}	
 		
-
-		// initialize blob
-		blob = new Blob(DEF.BLOB_POS_X, DEF.BLOB_POS_Y, DEF.IMAGE.get("bird1"));
-		blob.setImageName("bird1");
-		blob.render(gc);
+		//initialize Pigs
+		private void initializePigs() {
+			double pigStart = initialY+DEF.PIG_POS_START;
+			pig = new Sprite(570, 570, DEF.IMAGE.get("monster_thief"));
+			//System.out.println("tHE PIG: " + pig);
+			pig.setVelocity(0, 0);
+			pig.render(gc);
+			
+			// initialize timer
+			startTime = System.nanoTime();
+			timer = new MyTimer();
+			timer.start();
+		}		
 		
-		double pigStart = initialY+DEF.PIG_POS_START;
-		pig = new Sprite(570, 570, DEF.IMAGE.get("monster_thief"));
-		//System.out.println("tHE PIG: " + pig);
-		pig.setVelocity(0, 0);
-		pig.render(gc);
-		
-		// initialize timer
-		startTime = System.nanoTime();
-		timer = new MyTimer();
-		timer.start();
-	}
+	
 	
 //timer stuff
 class MyTimer extends AnimationTimer {
@@ -497,11 +574,11 @@ class MyTimer extends AnimationTimer {
 	 		
 	 		   
 				 dPipes.get(i).render(gc);
-//				 System.out.println("Scene shift time dpipe: "+SCENE_SHIFT_TIME);
+				 
 				 dPipes.get(i).update(SCENE_SHIFT_TIME);
-				
+				 System.out.println("movePipe SST dPipe: "+ SCENE_SHIFT_TIME);
 				 uPipes.get(i).render(gc);
-//				 System.out.println("Scene shift time dpipe: "+SCENE_SHIFT_TIME);
+				 System.out.println("movePipe SST uPipe: "+ SCENE_SHIFT_TIME);
 
 				 uPipes.get(i).update(SCENE_SHIFT_TIME);
 	 	}
@@ -620,18 +697,21 @@ class MyTimer extends AnimationTimer {
 			 goldEgg.setVelocity(SCENE_SHIFT_INCR, 0);
 	         goldEgg.render(gc);
 	         goldEgg.update(SCENE_SHIFT_TIME);
+	         System.out.println("moveEgg SST goldEgg: "+ SCENE_SHIFT_TIME);
 		 }
 //		 
 		 if(!showWhite) {
 			 whiteEgg.setVelocity(SCENE_SHIFT_INCR, 0);
 	         whiteEgg.render(gc);
 	         whiteEgg.update(SCENE_SHIFT_TIME);
+	         System.out.println("moveEgg SST goldEgg: "+ SCENE_SHIFT_TIME);
 		 }
 		 
 		 if(!showPig) {
-		     pig.setVelocity(SCENE_SHIFT_INCR, 0.1);
+		     pig.setVelocity(SCENE_SHIFT_INCR, DEF.PIG_DROP_Y_VEL);
 	         pig.render(gc);
 	         pig.update(SCENE_SHIFT_TIME);
+	         System.out.println("moveEgg SST pig: "+ SCENE_SHIFT_TIME);
          }
 	
 	 }
@@ -700,7 +780,7 @@ class MyTimer extends AnimationTimer {
 		 boolean hitAUpipe = false;
 		 
 		 // check collision with the floor
-		// checkCollision_floor();
+		checkCollision_floor();
 		
 		 //check blob collision with the upipes
 		// checkCollision_blob_upipes();
@@ -729,21 +809,23 @@ class MyTimer extends AnimationTimer {
 		 
 		// Set the game_over to true if no lives remaining
 		 if (currentLives <= 0) {
-			 
 		     GAME_OVER = true;
 		 }
 		    
 		 // end the game when blob hit stuff
 		 if (GAME_OVER) {
 			 System.out.println("the game is over");
-			// gameOverText.setVisible(true);
+			 //gameOverText.setVisible(true);
+			 gameOverText.setTranslateX(DEF.SCENE_WIDTH / 2 - 150);
+			 gameOverText.setTranslateY(DEF.SCENE_HEIGHT / 2);
+			 //gameOverText.setVisible(true);
 			 //showHitEffect();
 			 blob.stopCollisionSound();
 			 for (Sprite floor: floors) {
 			 floor.setVelocity(0, 0);
 			 timer.stop();
 			 //DO NOT DELETE COMMENT BELOW, IT HAS A FUNCTION WE MIGHT WANT LATER
-			 resetGameScene(false);
+			 //resetGameScene(false);
 			 
 			 } 
 		 }
