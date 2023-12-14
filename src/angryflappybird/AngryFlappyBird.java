@@ -129,6 +129,7 @@ public class AngryFlappyBird extends Application {
 		@Override
 	public void start(Stage primaryStage) throws Exception {
 		// initialize scene graphs and UIs
+		GameModeHandler(DEF.mode.getValue());
 		resetGameControl(); // resets the gameControl
 		resetGameScene(true); // resets the gameScene
 			
@@ -148,7 +149,7 @@ public class AngryFlappyBird extends Application {
 	// the getContent method sets the Scene layer
 	private void resetGameControl() {
 		DEF.startButton.setOnMouseClicked(this::mouseClickHandler);
-		GameModeHandler(gameMode);
+		//GameModeHandler(DEF.mode.getValue());
 		gameControl = new VBox(30);
 		gameDesc = new VBox(15);
 		Text pigTextLabel = new Text("Avoid the pigs");
@@ -181,7 +182,7 @@ public class AngryFlappyBird extends Application {
 		DEF.mode.setPromptText("Change Mode");
 
 		// Add an event listener to the combo box to detect when an item is selected
-		 DEF.mode.setOnAction(event -> GameModeHandler(DEF.mode.getValue()));
+		DEF.mode.setOnAction(event -> GameModeHandler(DEF.mode.getValue()));
 		gameLevel = new VBox(5);
 		gameLevel.getChildren().addAll( DEF.mode);
 		gameControl.getChildren().addAll(DEF.startButton, gameLevel, gameDesc);
@@ -199,7 +200,7 @@ public class AngryFlappyBird extends Application {
 	               break;
 	           case "Medium":
 	               //DEF.BLOB_EASY_DROP_VEL = 250; //increase bird drop velocity
-	        	System.out.println("MED");
+	        	System.out.println("MEDIUM");
 	   			SCENE_SHIFT_INCR = DEF.MED_SCENE_SHIFT_INCR;
 	   			SCENE_SHIFT_TIME = DEF.MED_SCENE_SHIFT_TIME;
 	   			BLOB_DROP_TIME = DEF.BLOB_MED_DROP_TIME;

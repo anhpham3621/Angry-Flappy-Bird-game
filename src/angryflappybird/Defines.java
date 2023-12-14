@@ -211,6 +211,7 @@ public class Defines {
         
         mode = new ComboBox<String>();
         mode.getItems().addAll("Easy", "Medium", "Hard");
+        mode.setValue("Easy");
     }
     
 //	this returns the path of a specific image
