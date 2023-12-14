@@ -151,11 +151,8 @@ public class Defines {
     
     //nodes on the scene graph
     Button startButton;
-    ComboBox<String> levels;
-    //Button easyButton;
-    //Button mediumButton;
-    //Button hardButton;
-    
+    ComboBox<String> mode;
+
     // constructor
     Defines() {
     	
@@ -212,15 +209,8 @@ public class Defines {
         // initialize scene nodes
         startButton = new Button("Go!");
         
-        levels = new ComboBox<String>();
-        levels.getItems().addAll("Easy", "Medium", "Hard");
-        //levels.setValue("Easy");
-        //easyButton = new Button("Easy");
-//		easyButton.setStyle("-fx-background-color: #FFFF00;");
-        //mediumButton = new Button("Medium");
-//		mediumButton.setStyle("-fx-background-color: #808080;");
-        //hardButton = new Button("Hard");
-//		hardButton.setStyle("-fx-background-color: #808080;");
+        mode = new ComboBox<String>();
+        mode.getItems().addAll("Easy", "Medium", "Hard");
     }
     
 //	this returns the path of a specific image
