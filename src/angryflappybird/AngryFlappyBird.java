@@ -656,6 +656,8 @@ class MyTimer extends AnimationTimer {
 		 //check for blob intersection with dpipes
 		 
 		checkCollision_blob_dpipes();
+		
+		checkCollision_blob_upipes();
 		 
 		 //check collision pig with pipe
 		 checkCollision_pig_pipe();
@@ -712,54 +714,51 @@ class MyTimer extends AnimationTimer {
 		 }
 	 }
 	 
-	 private void checkCollision_blob_dpipes() {
-		 
-//		 if(!collisionDetected) {
-		 for (Pipe dPipe: dPipes) {
-
-			 if (blob.intersectsPipe(dPipe)) {
-				 blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
-				 blob.playCollisionSound();
-//				System.out.println("Hit uPipe");
-				System.out.println("lives BEFORE dPIPE:" + currentLives);
-//			 	currentLives--;
-//			 	 
-//			 	updateLivesText();
-//			 	System.out.println("lives AFTER uPIPE:" + currentLives);
-	            //resetBirdPosition();
-//	            collisionDetected = true;
-//	            break;
-			 }
-			 
-		 }
-//		 } else {
-//			 collisionDetected = false;
-//		 }
-		
-	 }
-	 
-	/**
-	 * checkCollision blob with up pipes
-	 */
-	private void checkCollision_blob_upipes() {
-	
-			 if(!collisionDetected) {
-			 for (Pipe dPipe: dPipes) {
-				 if (blob.intersectsPipe(uPipe)) {
-					 blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
-					 blob.playCollisionSound();
-					System.out.println("lives BEFORE dPIPE:" + currentLives);
-				 	currentLives--;
-				 	updateLivesText();
-		           // resetBirdPosition();
-		            collisionDetected = true;
-		            break;
-				 } 
-			 }
-			} else {
-				 collisionDetected = false;
-			 }
-		 }
+	private void checkCollision_blob_dpipes() {
+	    //        if(!collisionDetected) {
+	    //    }
+	                for (Pipe dPipe: dPipes) {
+	                    if ((dPipe.getPositionX()+10== blob.getPositionX() || dPipe.getPositionY()-10== blob.getPositionY())  && blob.intersectsPipe(dPipe)) {
+	                        blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
+	                        blob.playCollisionSound();
+	                       System.out.println("lives BEFORE dPIPE:" + currentLives);
+	                       currentLives--;
+	                       updateLivesText();
+	                       
+	                      
+	    //                   resetBirdPosition();
+	                       //collisionDetected = true;
+	                       
+	                   
+	                    }
+	                }
+	             //  }
+	    //          
+	           
+	    //      else {
+	    //          collisionDetected = false;
+	    //      }
+	            
+	        }
+	    //         
+	       /**
+	        * checkCollision blob with up pipes
+	        */
+	       private void checkCollision_blob_upipes() {
+	                    for (Pipe uPipe: uPipes) {
+	                        if ((uPipe.getPositionX()+10== blob.getPositionX()|| uPipe.getPositionY()-10== blob.getPositionY())  && blob.intersectsPipe(uPipe)) {
+	                            blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
+	                            blob.playCollisionSound();
+	                           System.out.println("lives BEFORE dPIPE:" + currentLives);
+	                           currentLives--;
+	                           updateLivesText();
+	    //                       resetBirdPosition();
+	                           //collisionDetected = true;
+	                       
+	                        }
+	                    }
+	    
+	            }
 	 
 	/**
 	 * checkCollision blob with pig
