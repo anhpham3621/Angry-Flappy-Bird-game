@@ -3,6 +3,7 @@ package angryflappybird;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
 
 public class Sprite {  
 	
@@ -13,7 +14,12 @@ public class Sprite {
     private double velocityY;
     private double width;
     private double height;
-    private String IMAGE_DIR = "../resources/images/";
+    private AudioClip collisionSound;
+    
+ // Add these boolean attributes
+    private boolean isVisible = true;
+    private boolean isDisabled = false;
+//    private String IMAGE_DIR = "../resources/images/";
 
     public Sprite() {
         this.positionX = 0;
@@ -29,7 +35,15 @@ public class Sprite {
         this.velocityY = 0;
     }
 
-    public void setImage(Image image) {
+    public Sprite(int bLOB_POS_X, int bLOB_POS_Y, Image image2) {
+		// TODO Auto-generated constructor stub
+    	setPositionXY(bLOB_POS_X, bLOB_POS_Y);
+        setImage(image2);
+        this.velocityX = 0;
+        this.velocityY = 0;
+	}
+
+	public void setImage(Image image) {
         this.image = image;
         this.width = image.getWidth();
         this.height = image.getHeight();
@@ -72,18 +86,43 @@ public class Sprite {
 
     public void render(GraphicsContext gc) {
         gc.drawImage(image, positionX, positionY);
+
+//    	if (isVisible) {
+//
+//    	}
     }
 
     public Rectangle2D getBoundary() {
         return new Rectangle2D(positionX, positionY, width, height);
     }
 
-    public boolean intersectsSprite(Sprite s) {
-        return s.getBoundary().intersects(this.getBoundary());
+    public boolean intersectsPipe(Pipe uPipe) {
+        return uPipe.getBoundary().intersects(this.getBoundary());
     }
 
     public void update(double time) {
         positionX += velocityX * time;
         positionY += velocityY * time;
     }
+    
+    public void setVisible(boolean visible) {
+    	isVisible = visible;
+    }
+    
+    public boolean isVisible() {
+    	return isVisible;
+    }
+    
+    public void setCollisionSound(AudioClip sound) {
+        collisionSound = sound;
+    }
+    
+    public void playCollisionSound() {
+        collisionSound.play();
+    }
+
+	public boolean intersectsSprite(Sprite egg) {
+		// TODO Auto-generated method stub
+        return egg.getBoundary().intersects(this.getBoundary());
+	}
 }
