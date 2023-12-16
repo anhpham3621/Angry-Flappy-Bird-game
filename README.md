@@ -27,16 +27,15 @@ The game Angry Flappy Bird features a dynamic bird navigating through obstacles 
   
 - The Legends: this is the information on the side giving the user information on the consequences of interacting with different elements on the bird's path.
 
-- Game Mode: We have 3 modes of the game: Easy, Hard and Medium. The speed of the game increases based on the mode. The easy mode has the lowest speed, and the hard mode has the hardest speed.
-  - [ ] Easy Mode: Slow movement of bird and other objects in the game  
-  - [ ] Medium Mode: Slightly fast movement of bird and other objects in the game  
-  - [ ] Hard Mode: Very Fast movement of bird and other objects in the game  
+- Game Mode: We have 3 modes of the game: Easy, Hard and Medium. The speed of the blob dropping and flying increases based on the game mode from easy to hard.
+  - [x] Easy Mode: The bird drop and fly velocity is slower
+  - [x] Medium Mode: The bird drop and fly velocity is intermediate speed
+  - [x] Hard Mode: The bird drop and fly velocity is very fast
 
 ## Additional Features
-  - [ ] Sound Effects: The game has a sound effect when the bird moves, collides with obstacles or gets an egg.  
-  - [ ] gameOver Animation: When the game is over, the animated GAME OVER text appears on the screen, informing the user of the status of the game.
-  - [ ] Autopilot mode: The bird switches to autopilot mode and does not need to avoid obstacles. It just goes through a straight line.
-  - [ ] Rotate the bird image when it drops: The bird is rotated downwards when it hits a pig and drops to the floor.  
+  - [x] Sound Effects: The game has a sound effect when the bird moves.
+  - [x] gameOver Animation: When the game is over, the animated GAME OVER text appears on the screen, informing the user of the status of the game.
+  - [x] Autopilot mode: The bird switches to autopilot mode and does not need to avoid obstacles. It just goes through a straight line.
 
 ## Playing the game: Requirements, Setup, and Playing the Game
   ### JAVA: Version 11 or higher is required to run this project.
