@@ -926,7 +926,13 @@ class MyTimer extends AnimationTimer {
 	 * updateScoreText is responsible for updating the score text
 	 */
 	private void updateScoreText() {
-		scoreText.setText("Score: " + currentScores);
+		if (currentScores > 0) {
+			scoreText.setText("Score: " + currentScores);
+		} 
+		else {
+			scoreText.setText("Scores: 0");
+			gameOverAnimation.setVisible(true);
+		}
 	}
 	
 	private void isBounced() {
