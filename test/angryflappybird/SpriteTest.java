@@ -12,87 +12,78 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * This is a unittest for the SpriteAbstractclass
+ * The SpriteTest is responsible for testing out all methods in the unittest file
  */
-class SpriteAbstractTest extends SpriteAbstract {
+class SpriteTest extends Sprite {
 
 	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeEach
-	void setUp() throws Exception {
-		SpriteAbstract sprite = new SpriteAbstract();
-		sprite.init();
-	}
-
-	/**
-	 * Test method for {@link angryflappybird.SpriteAbstract#setPositionXY(double, double)}.
+	 * Test method for setting the XY-axis position of the sprite
 	 */
 	@Test
 	final void testSetPositionXY() {
-		SpriteAbstract sprite = new SpriteAbstract();
+		Sprite sprite = new Sprite();
 		sprite.init();
 		assertEquals(sprite.getPositionX(), 50);
 		assertEquals(sprite.getPositionY(), 50);
 	}
 
 	/**
-	 * Test method for {@link angryflappybird.SpriteAbstract#setVelocity(double, double)}.
+	 * Test method for setting the sprite velocity
 	 */
 	@Test
 	final void testSetVelocity() {
-		SpriteAbstract sprite = new SpriteAbstract();
+		Sprite sprite = new Sprite();
 		sprite.init();
 		assertEquals(sprite.getVelocityX(), 50);
 		assertEquals(sprite.getVelocityY(), 50);	}
 
 	/**
-	 * Test method for {@link angryflappybird.SpriteAbstract#getPositionX()}.
+	 * Test method for getting the X-axis position of the sprite
 	 */
 	@Test
 	final void testGetPositionX() {
-		SpriteAbstract sprite = new SpriteAbstract();
+		Sprite sprite = new Sprite();
 		sprite.init();
 		assertEquals(50, sprite.getPositionX());
 	}
 
 	/**
-	 * Test method for {@link angryflappybird.SpriteAbstract#getPositionY()}.
+	 * Test method for getting the Y-axis position of the sprite
 	 */
 	@Test
 	final void testGetPositionY() {
-		SpriteAbstract sprite = new SpriteAbstract();
+		Sprite sprite = new Sprite();
 		sprite.init();
 		assertEquals(50, sprite.getPositionY());
 	}
 
 	/**
-	 * Test method for {@link angryflappybird.SpriteAbstract#getVelocityX()}.
+	 * Test method for getting the X-axis position of the sprite
 	 */
 	@Test
 	final void testGetVelocityX() {
-		SpriteAbstract sprite = new SpriteAbstract();
+		Sprite sprite = new Sprite();
 		sprite.init();
 		assertEquals(50, sprite.getVelocityX());
 	}
 
 	/**
-	 * Test method for {@link angryflappybird.SpriteAbstract#getVelocityY()}.
+	 * Test method for getting the downward velocity of the sprite
 	 */
 	@Test
 	final void testGetVelocityY() {
-		SpriteAbstract sprite = new SpriteAbstract();
+		Sprite sprite = new Sprite();
 		sprite.init();
 		assertEquals(50, sprite.getVelocityY());
 	}
 
 
 	/**
-	 * Test method for {@link angryflappybird.SpriteAbstract#update(double)}.
+	 * Test method for updating the Sprite's X and Y axis position
 	 */
 	@Test
 	final void testUpdate() {
-		SpriteAbstract sprite = new SpriteAbstract();
+		Sprite sprite = new Sprite();
 		sprite.init();
 		double oldPosX = sprite.getPositionX();
 		double oldPosY = sprite.getPositionY();
@@ -104,5 +95,4 @@ class SpriteAbstractTest extends SpriteAbstract {
 		assertEquals(oldPosX, newPosX);
 		assertEquals(oldPosY, newPosY);
 	}
-
 }
