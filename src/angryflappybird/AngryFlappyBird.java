@@ -783,7 +783,7 @@ class MyTimer extends AnimationTimer {
 	 */
 	private void checkCollision_blob_dpipes() {
 		for (Pipe dPipe: dPipes) {
-			if ((dPipe.getPositionX()+10== blob.getPositionX() || dPipe.getPositionY()-10== blob.getPositionY())  && blob.intersectsPipe(dPipe)) {
+			if ((dPipe.getPositionX()== blob.getPositionX()+30|| dPipe.getPositionY()-8== blob.getPositionY())  && blob.intersectsPipe(dPipe)) {
 				blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
 				blob.playCollisionSound();
 				currentLives--;
@@ -799,7 +799,7 @@ class MyTimer extends AnimationTimer {
 	 */
 	private void checkCollision_blob_upipes() {
 		for (Pipe uPipe: uPipes) {
-			if((uPipe.getPositionX()+10 == blob.getPositionX() || uPipe.getPositionY()-10 == blob.getPositionY()) && blob.intersectsPipe(uPipe)) {
+			if((uPipe.getPositionX() == blob.getPositionX()+30 || uPipe.getPositionY()-8 == blob.getPositionY()) && blob.intersectsPipe(uPipe)) {
 				blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
 				blob.playCollisionSound();
 				currentLives--;
