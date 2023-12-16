@@ -460,7 +460,7 @@ class MyTimer extends AnimationTimer {
 	 		displayBackground();
 			
 			//step2: update the autopilot mode of the blob if needed
-			if (isAutoPilot && gold_egg_counter % 1000 == 0) {
+			if (isAutoPilot && gold_egg_counter % 600 == 0) {
 				isAutoPilot = false;
 				gold_egg_counter = 0;
 			}
