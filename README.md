@@ -75,7 +75,7 @@ The game Angry Flappy Bird features a dynamic bird navigating through obstacles 
 **Your Computer Is All Set for Running JavaFX Programs**
 ## Reflection
 - Emmanuella
-  - I have learned a lot about JavaFX and Java through this project. We utilized all the concepts we learned so far in this class to finish AngryFlappyBird. It was a challenging project especially as we were not used to JavaFX, but I am glad we pulled through.
+  - I have learned a lot about JavaFX and Java through this project. We utilized all the concepts we learned so far in this class to finish AngryFlappyBird. It was a challenging project especially as we were not used to JavaFX, but I am glad we pulled through. One important thing I learned is how adding a UI to any project can be a huge game changer(and increase difficulty).
     
 - Anh
   - Doing projects is an active learning method as I get to experiment with different methods to implement what I've learned in class into a concrete product. It is also beneficial that I get to execute my vision for the project since we get to decide what we want to do with our unique game based on the given core orientation. Practicing Github has also been very helpful and I believe I will use this skill for a long time.
