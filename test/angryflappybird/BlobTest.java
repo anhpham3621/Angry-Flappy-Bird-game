@@ -1,7 +1,10 @@
+/**
+ * @author Emmanuella Umoye, Keisha Modi, Anh Pham
+ * @date 12/17/2023
+ */
 package angryflappybird;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

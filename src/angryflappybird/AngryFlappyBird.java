@@ -1,3 +1,8 @@
+/**
+ * @author Emmanuella Umoye, Keisha Modi, Anh Pham
+ * @date 12/17/2023
+ */
+
 package angryflappybird;
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;

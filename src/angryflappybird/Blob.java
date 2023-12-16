@@ -1,5 +1,6 @@
 /**
  * @author Emmanuella Umoye, Keisha Modi, Anh Pham
+ * @date 12/17/2023
  */
 package angryflappybird;
 
@@ -88,7 +89,7 @@ public class Blob extends Sprite{
 	
 	/** 
 	 * @param time
-	 * update updates the time frequency for the next velocity of the 
+	 * update updates the time frequency for the next blob's position
 	 */
 	public void update(double time) {
 		super.update(time);

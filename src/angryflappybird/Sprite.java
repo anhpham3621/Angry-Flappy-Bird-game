@@ -1,3 +1,7 @@
+/**
+ * @author Emmanuella Umoye, Keisha Modi, Anh Pham
+ * @date 12/17/2023
+ */
 package angryflappybird;
 
 import javafx.geometry.Rectangle2D;
@@ -5,6 +9,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 
+/**
+ * This class is used to create and manage sprite objects such as pipes, pigs etc in
+ * the AngryFlappyBird game.
+ */
 public class Sprite {  
 	
     private Image image;

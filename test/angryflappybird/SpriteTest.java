@@ -1,14 +1,10 @@
 /**
- * 
+ * @author Emmanuella Umoye, Keisha Modi, Anh Pham
+ * @date 12/17/2023
  */
 package angryflappybird;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -58,7 +54,7 @@ class SpriteTest extends Sprite {
 	}
 
 	/**
-	 * Test method for getting the X-axis position of the sprite
+	 * Test method for getting the forward velocity of the sprite
 	 */
 	@Test
 	final void testGetVelocityX() {
