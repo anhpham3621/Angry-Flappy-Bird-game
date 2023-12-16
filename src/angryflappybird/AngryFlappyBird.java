@@ -464,6 +464,11 @@ class MyTimer extends AnimationTimer {
 				gold_egg_counter = 0;
 			}
 			
+			//update the score
+			if(!isAutoPilot) {
+				updatePipesScore();
+			}
+			
 			//update the blob's score
 	 		updateScoreText();
 
@@ -778,7 +783,7 @@ class MyTimer extends AnimationTimer {
 	 */
 	private void checkCollision_blob_dpipes() {
 		for (Pipe dPipe: dPipes) {
-			if((dPipe.getPositionX() == blob.getPositionX() || dPipe.getPositionY() == blob.getPositionY()) && blob.intersectsPipe(dPipe)) {
+			if ((dPipe.getPositionX()+10== blob.getPositionX() || dPipe.getPositionY()-10== blob.getPositionY())  && blob.intersectsPipe(dPipe)) {
 				blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
 				blob.playCollisionSound();
 				currentLives--;
@@ -794,8 +799,7 @@ class MyTimer extends AnimationTimer {
 	 */
 	private void checkCollision_blob_upipes() {
 		for (Pipe uPipe: uPipes) {
-			if((uPipe.getPositionX() == blob.getPositionX() || uPipe.getPositionY() == blob.getPositionY()) && blob.intersectsPipe(uPipe)) {
-			
+			if((uPipe.getPositionX()+10 == blob.getPositionX() || uPipe.getPositionY()-10 == blob.getPositionY()) && blob.intersectsPipe(uPipe)) {
 				blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
 				blob.playCollisionSound();
 				currentLives--;
@@ -837,6 +841,7 @@ class MyTimer extends AnimationTimer {
 	*/
 	private void checkCollision_pig_white_egg() {
 		if (pig.intersectsSprite(whiteEgg)) {
+			currentScores -= 2;
 			pig.setPositionXY(-100, -100);
 			whiteEgg.setPositionXY(600, 600);
 		} 
@@ -882,6 +887,19 @@ class MyTimer extends AnimationTimer {
 			livesText.setText("Lives Left: 0");
 			gameOverAnimation.setVisible(true);
 		}
+	 }
+	
+	 /**
+	  * @param None
+	  * updatePipesScore updates the score when we pass through 
+	  */
+	 public void updatePipesScore() {
+	     for (int i = 0; i < DEF.PIPE_COUNT; i++) {
+	         if (dPipes.get(i).getPositionX()== -(dPipes.get(i).getPositionX())){
+                currentScores++;
+                updateScoreText();
+	         }
+	     }
 	 }
 	
 	/**
