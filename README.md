@@ -27,11 +27,15 @@ The game Angry Flappy Bird features a dynamic bird navigating through obstacles 
   
 - The Legends: this is the information on the side giving the user information on the consequences of interacting with different elements on the bird's path.
 
-- Game Mode: We have 3 modes of the game: Easy, Hard and Medium. The speed of the blob dropping and flying increases based on the game mode from easy to hard.
-  - [x] Easy Mode: The bird drop and fly velocity is slower
-  - [x] Medium Mode: The bird drop and fly velocity is intermediate speed
-  - [x] Hard Mode: The bird drop and fly velocity is very fast
-
+- Game Mode: We have 3 modes of the game: Easy, Hard, and Medium. 2 features are changed depending on the mode
+  - The speed of the blob dropping and flying increases based on the game mode from easy to hard.
+      - [x] Easy Mode: The bird drop and fly velocity is slower
+      - [x] Medium Mode: The bird drop and fly velocity is intermediate speed
+      - [x] Hard Mode: The bird drop and fly velocity is very fast
+  - The drop speed of the pig
+      - [x] Easy Mode: The pig drop velocity is fast
+      - [x] Medium Mode: The pig drop velocity is faster
+      - [x] Hard Mode: The pig drop velocity is fastest
 ## Additional Features
   - [x] Sound Effects: The game has a sound effect when the bird moves.
   - [x] gameOver Animation: When the game is over, the animated GAME OVER text appears on the screen, informing the user of the status of the game.
