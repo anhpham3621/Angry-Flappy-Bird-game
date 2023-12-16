@@ -35,7 +35,7 @@ public class Defines {
     final int BLOB_WIDTH = 55;
     final int BLOB_HEIGHT = 55;
     final int BLOB_WITH_PARACHUTE_WIDTH = 100;
-    final int BLOB_WITH_PARACHUTE_HEIGHT = 200;
+    final int BLOB_WITH_PARACHUTE_HEIGHT = 230;
     
     //blob drop time based on game mode
     final int BLOB_POS_X = 10;
@@ -90,7 +90,7 @@ public class Defines {
     final int PIG_POS_START = 300;
 
     //initial pipe position
-    final double PIPE_RANGE= 150;
+    final double PIPE_RANGE= 155;
     final double PIPE_Y_GAP=750;
     final double PIPE_X_GAP=300;
     

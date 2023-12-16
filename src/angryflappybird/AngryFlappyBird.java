@@ -657,7 +657,7 @@ class MyTimer extends AnimationTimer {
 			}
 			if(randPig>.5 && randPig<.8){
 				showPig=true;
-			pig.setPositionXY(nextX_down-9, nextY_down+280);
+			pig.setPositionXY(nextX_down-9, nextY_down+350);
 			}
 		}
 
@@ -858,8 +858,9 @@ class MyTimer extends AnimationTimer {
 		if (blob.intersectsSprite(pig)) {
 	    	GAME_OVER = true;
 			//Show a hit effect
-	    	showHitEffect();
+//	    	showHitEffect();
 			//bounce back animation
+	    	gameOverAnimation.setVisible(true);
 	    }
 	}
 	 
