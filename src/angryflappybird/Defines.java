@@ -5,20 +5,13 @@
 
 package angryflappybird;
 
-import java.io.File;
 import java.util.HashMap;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-
 /**
  * Defines class contains all the constants and variables used in the angry flappy bird game.
  */
@@ -38,7 +31,7 @@ public class Defines {
     final int BLOB_WITH_PARACHUTE_HEIGHT = 230;
     
     //blob drop time based on game mode
-    final int BLOB_POS_X = 10;
+    final int BLOB_POS_X = 60;
     final int BLOB_POS_Y = 100;
     final int BLOB_DROP_TIME = 300000000;  	
     final int BLOB_MED_DROP_TIME = 290000000;
@@ -134,6 +127,7 @@ public class Defines {
     
     //nodes on the scene graph
     Button startButton;
+    //drop down for game levels/modes
     ComboBox<String> mode;
 
     Defines() {
@@ -157,10 +151,8 @@ public class Defines {
             } else if (IMAGE_FILES[i] == "upipe1") {
                 img = new Image(pathImage(IMAGE_FILES[i]), U_PIPE_WIDTH, U_PIPE_HEIGHT, false, false);
             } else if(IMAGE_FILES[i] == "white_egg") {
-            	System.out.println("the white egg is visible");
                 img = new Image(pathImage("white_egg"), WHITE_EGG_WIDTH, WHITE_EGG_HEIGHT, false, false);
             } else if(IMAGE_FILES[i] == "golden_egg") {
-            	System.out.println("the golden egg is visible");
                 img = new Image(pathImage("golden_egg"), GOLD_EGG_WIDTH, GOLD_EGG_HEIGHT, false, false);
             }
             else if(IMAGE_FILES[i] == "monster_thief") {

@@ -1,48 +1,28 @@
 package angryflappybird;
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
-import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import java.awt.Label;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * AngryFlappyBird is a game inspired by Flappy Bird. It takes you through the journey of "Blob"
@@ -53,6 +33,7 @@ public class AngryFlappyBird extends Application {
 	//bounce method
 	private boolean bounced = false;
 	private boolean pipeCollision = false;
+	private boolean pigCollision = false;
 	private ArrayList<Sprite> pigs;
 	private ArrayList<Sprite> whiteEggs;
 	private ArrayList<Sprite> goldenEggs;
@@ -614,6 +595,10 @@ class MyTimer extends AnimationTimer {
 				if (bounced) {
 	                isBounced();
 	            }
+				else if(pigCollision) {
+					GAME_OVER=true;
+					gameOverAnimation.setVisible(true);
+				}
 			}
 			// render blob on GUI
 			blob.update(elapsedTime * DEF.NANOSEC_TO_SEC);
@@ -647,15 +632,15 @@ class MyTimer extends AnimationTimer {
 			double randGold=rand.nextDouble();
 			double randPig =rand.nextDouble();
 				
-			if (randWhite > 0.5 & randGold>=0.3) {
+			if (randWhite < 0.8 & randGold>=0.4) {
 				showWhite=true;
 				whiteEgg.setPositionXY(nextX_down-10, nextY_up-60);
 			}
-			if (randGold < 0.3) {
+			if (randGold < 0.4) {
 				showGold=true;
 				goldEgg.setPositionXY(nextX_down-10, nextY_up-60);
 			}
-			if(randPig>.5 && randPig<.8){
+			if(randPig>=.5 && randPig<.99){
 				showPig=true;
 			pig.setPositionXY(nextX_down-9, nextY_down+350);
 			}
@@ -747,14 +732,15 @@ class MyTimer extends AnimationTimer {
 		    GAME_OVER = true;
 		    bounced = false;
             pipeCollision = false;
+            pigCollision = false;
 		}
 		    
 		// if GAME_OVER == true, we stop the timer and display the game over animation
 		 if (GAME_OVER) {
 			bounced = false;
             pipeCollision = false;
+            pigCollision = false;
 			showHitEffect();
-			blob.stopCollisionSound();
 			for (Sprite floor: floors) {
 				//stop the floors animation
 				floor.setVelocity(0, 0);
@@ -801,6 +787,8 @@ class MyTimer extends AnimationTimer {
 	 */
 	private void checkCollision_blob_gold_egg() {
 		if (blob.intersectsSprite(goldEgg)) {
+			blob.setCollisionSound(DEF.AUDIO.get("collect_coin_1"));
+			blob.playCollisionSound();
 		    goldEgg.setPositionXY(-100, -100);
 			blob.setImage(DEF.IMAGE.get("bird_with_parachute"));
 			blob.setVelocity(0, 0);
@@ -856,11 +844,10 @@ class MyTimer extends AnimationTimer {
 	*/
 	 private void checkCollision_blob_pig() {
 		if (blob.intersectsSprite(pig)) {
-	    	GAME_OVER = true;
-			//Show a hit effect
-//	    	showHitEffect();
-			//bounce back animation
-	    	gameOverAnimation.setVisible(true);
+			pigCollision = true;
+			bounced = true;
+	    	//GAME_OVER = true;
+	    	//gameOverAnimation.setVisible(true);
 	    }
 	}
 	 
@@ -940,6 +927,7 @@ class MyTimer extends AnimationTimer {
 	
 	private void isBounced() {
 	    long bouncedDifference = System.nanoTime() - bounceTime;
+	    blob.stopCollisionSound();
 	    if (bouncedDifference <= 2000000000L) {
 	    	 if (bouncedDifference <= 1000000000L) {
 	    		 // Move the bird down and to left during the first second of bouncing
@@ -947,24 +935,17 @@ class MyTimer extends AnimationTimer {
 	    		 blob.setVelocity(-50, 100);
 	    	     
 	    	 } 
-	    	 //dont know if we need this
-	    	 else {
-			        // Move the bird down during the next second of bouncing
-			        blob.setVelocity(0, 100);
-             }
 	    	 haltOperation();
 	    }        
 	    else {
 	        // Reset the bouncing-related flags and bird's position after 2 seconds
 	        bounced = false;
 	        pipeCollision = false;
+	        pigCollision = false;
 	        resumeOperation();
-
 	        blob.setVelocity(0, DEF.BLOB_FLY_VEL);
 	        double newYPosition = Math.min(DEF.SCENE_HEIGHT - DEF.BLOB_HEIGHT, Math.max(0, DEF.SCENE_HEIGHT / 2));
-	        System.out.println("new Y bounce" + newYPosition);
 	        blob.setPositionXY(0, newYPosition-DEF.BLOB_HEIGHT);
-	        
 	        clickTime = System.nanoTime();
 	    }
 	}
