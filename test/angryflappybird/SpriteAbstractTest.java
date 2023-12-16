@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * This is a unittest for the spriteabstractclass
+ * This is a unittest for the SpriteAbstractclass
  */
 class SpriteAbstractTest extends SpriteAbstract {
 
