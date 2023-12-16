@@ -61,14 +61,16 @@ public class AngryFlappyBird extends Application {
 	private ImageView gameOverAnimation;
 	private MediaPlayer mediaPlayer;
 
-
+	private int bgr_counter = 0;
 	private int gold_egg_counter = 0;
+	private int counter = 0;
 	private boolean isInitGame = false;
 	private Defines DEF = new Defines();
 	private boolean isCollided = false;
 	
 	//text display
 	private int currentLives;
+	private Text scoreText;
 	private Text livesText;
 	public int currentScores;
 
@@ -80,6 +82,8 @@ public class AngryFlappyBird extends Application {
 	private ArrayList<Sprite> floors;
 	private ArrayList<Pipe> uPipes;
 	private ArrayList<Pipe> dPipes;
+	private Pipe dPipe;
+	private Pipe uPipe;
 	private Sprite whiteEgg;
 	private Sprite goldEgg;
 	private Sprite pig;
@@ -774,7 +778,7 @@ class MyTimer extends AnimationTimer {
 	 */
 	private void checkCollision_blob_dpipes() {
 		for (Pipe dPipe: dPipes) {
-			if ((dPipe.getPositionX() && blob.intersectsPipe(dPipe))) {
+			if((dPipe.getPositionX() == blob.getPositionX() || dPipe.getPositionY() == blob.getPositionY()) && blob.intersectsPipe(dPipe)) {
 				blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
 				blob.playCollisionSound();
 				currentLives--;
@@ -790,7 +794,8 @@ class MyTimer extends AnimationTimer {
 	 */
 	private void checkCollision_blob_upipes() {
 		for (Pipe uPipe: uPipes) {
-			if ((uPipe.getPositionX() && blob.intersectsPipe(uPipe))){
+			if((uPipe.getPositionX() == blob.getPositionX() || uPipe.getPositionY() == blob.getPositionY()) && blob.intersectsPipe(uPipe)) {
+			
 				blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
 				blob.playCollisionSound();
 				currentLives--;
@@ -805,12 +810,11 @@ class MyTimer extends AnimationTimer {
 	 * if it does, the game_over flag is set to true and the game ends.
 	*/
 	 private void checkCollision_blob_pig() {
-		    if (blob.intersectsSprite(pig)) {
+		if (blob.intersectsSprite(pig)) {
 	    	GAME_OVER = true;
 			//Show a hit effect
 	    	showHitEffect();
 			//bounce back animation
-			resetBirdPosition();
 	    }
 	}
 	 
@@ -887,58 +891,6 @@ class MyTimer extends AnimationTimer {
 	private void updateScoreText() {
 		scoreText.setText("Score: " + currentScores);
 	}
-
-	  
-	/**
-	 * 
-	 */
-	// public void updateScore() {
-	//      for (int i = 0; i < DEF.PIPE_COUNT; i++) {
-	//          if (dPipes.get(i).getPositionX()== -(dPipes.get(i).getPositionX())){
-    //             currentScores++;
-    //             updateScoreText();
-    //             System.out.println("currentscore:" + currentScores);
-	//          }
-	//      }
-	//     if(pig.getPositionY()== goldEgg.getPositionY()-80) {
-    //            currentScores -= 5;
-    //            updateScoreText();
-    //            if (currentScores<0) {
-    //                currentScores=0;
-    //                updateScoreText();
-    //            }
-    //            System.out.println("-goldegg:" + currentScores);
-    //     }
-	//     else if (pig.getPositionY()== whiteEgg.getPositionY()-80) {
-    //         System.out.println("the pig stole the white egg");
-	// 		currentScores -= 5;
-	// 		updateScoreText();
-	// 		if (currentScores<0) {
-	// 			currentScores=0;
-	// 			updateScoreText();
-			
-	// 		}
-	// 		System.out.println("-whiteEgg:" + currentScores);
-    //        }
-	// 		else if ((blob.intersectsSprite(whiteEgg))) {
-	// 		blob.setCollisionSound(DEF.AUDIO.get("collect_coin_1"));
-	// 		blob.playCollisionSound();
-	// 		currentScores += 5;
-	// 		updateScoreText();
-	// 		System.out.println("+whiteEgg:" + currentScores);
-    //        }
-	//  }
-	 
-	//  public void updateLives() {
-	//      for (int i = 0; i < DEF.PIPE_COUNT; i++) {
-    //          if (dPipes.get(i).getPositionX()== blob.getPositionX()){
-    //             if(blob.intersectsPipe(dPipe)){
-    //              currentLives--;
-    //              updateLivesText();
-    //              System.out.println("lives AFTER uPIPE:" + currentLives);
-    //             }
-    //          }
-	//      }
-	//  }
  // End of MyTimer class
-}}// End of AngryFlappyBird Class
+}}
+// End of AngryFlappyBird Class
