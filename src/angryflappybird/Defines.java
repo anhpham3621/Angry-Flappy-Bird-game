@@ -32,10 +32,10 @@ public class Defines {
 
    //coefficients related to the blob
     final int MAX_LIFE=3;
-    final int BLOB_WIDTH = 60;
-    final int BLOB_HEIGHT = 60;
-    final int BLOB_WITH_PARACHUTE_WIDTH = 70;
-    final int BLOB_WITH_PARACHUTE_HEIGHT = 70;
+    final int BLOB_WIDTH = 55;
+    final int BLOB_HEIGHT = 55;
+    final int BLOB_WITH_PARACHUTE_WIDTH = 100;
+    final int BLOB_WITH_PARACHUTE_HEIGHT = 200;
     
     //blob drop time based on game mode
     final int BLOB_POS_X = 10;
@@ -47,12 +47,14 @@ public class Defines {
     
     //blob drop velocity based on game mode
     int BLOB_EASY_DROP_VEL = 300;    		
-    final int BLOB_MED_DROP_VEL = 360;
-    final int BLOB_HARD_DROP_VEL = 450;
+    final int BLOB_MED_DROP_VEL = 450;
+    final int BLOB_HARD_DROP_VEL = 500;
+    
+    
     final int BLOB_FLY_VEL = -40;
     final int EASY_BLOB_FLY_VEL = -40;
-    final int MED_BLOB_FLY_VEL = -48;
-    final int HARD_BLOB_FLY_VEL = -60;
+    final int MED_BLOB_FLY_VEL = -60;
+    final int HARD_BLOB_FLY_VEL = -80;
     final int BLOB_IMG_LEN = 4;
     final int BLOB_IMG_PERIOD = 5;
     
@@ -77,11 +79,14 @@ public class Defines {
     final int PIPE_COUNT = 2;
     
     // coefficients related to the pigs
-    final int PIG_HEIGHT = 80;
-    final int PIG_WIDTH = 80;
+    final int PIG_HEIGHT = 70;
+    final int PIG_WIDTH = 70;
     final int PIG_POS_X = 400;
     final int PIG_POS_Y = 300;
     double PIG_DROP_Y_VEL = 0.09;
+    double EASY_PIG_DROP_Y_VEL = 0.09;
+    double MED_PIG_DROP_Y_VEL = 0.15;
+    double HARD_PIG_DROP_Y_VEL = 0.3;
     final int PIG_POS_START = 300;
 
     //initial pipe position
@@ -102,13 +107,8 @@ public class Defines {
     final double GOLD_EGG_POS_X = 200;
     
     // coefficients related to time
-    final int EASY_SCENE_SHIFT_TIME = 10;
-    final int MED_SCENE_SHIFT_TIME = 20;
-    final int HARD_SCENE_SHIFT_TIME = 30;
-    //final double SCENE_SHIFT_INCR = -0.2;
-    final double EASY_SCENE_SHIFT_INCR = -0.2;
-    final double MED_SCENE_SHIFT_INCR = -0.4;
-    final double HARD_SCENE_SHIFT_INCR = -0.6;
+    final int SCENE_SHIFT_TIME = 10;
+    final double SCENE_SHIFT_INCR = -0.2;
     
     // coefficients related to the time
     final double NANOSEC_TO_SEC = 1.0 / 1000000000.0;

@@ -52,24 +52,24 @@ public class AngryFlappyBird extends Application {
 	
 	//bounce method
 	private boolean bounced = false;
-	private boolean pigCollision = false;
 	private boolean pipeCollision = false;
 	private ArrayList<Sprite> pigs;
 	private ArrayList<Sprite> whiteEggs;
 	private ArrayList<Sprite> goldenEggs;
 
 	private boolean collisionDetected = false;
-	private double SCENE_SHIFT_TIME=10;
-	private double SCENE_SHIFT_INCR=-0.2;
+	private double SCENE_SHIFT_TIME;
+	private double SCENE_SHIFT_INCR;
 	private int BLOB_FLY_VEL;
 	private int BLOB_DROP_VEL;
 	private int BLOB_DROP_TIME;
+	private double PIG_DROP_Y_VEL;
 	
 	//Game Over Animation
 	private ImageView gameOverAnimation;
 	private MediaPlayer mediaPlayer;
 
-	private int bgr_counter = 0;
+	private int background_counter = 0;
 	private int gold_egg_counter = 0;
 	private int counter = 0;
 	private boolean isInitGame = false;
@@ -162,7 +162,6 @@ public class AngryFlappyBird extends Application {
 	 */
 	private void resetGameControl() {
 		DEF.startButton.setOnMouseClicked(this::mouseClickHandler);
-		//GameModeHandler(DEF.mode.getValue());
 		gameControl = new VBox(30);
 		gameDesc = new VBox(15);
 		Text pigTextLabel = new Text("Avoid the pigs");
@@ -208,32 +207,36 @@ public class AngryFlappyBird extends Application {
 	private void GameModeHandler(String mode) {
 	    	switch (mode) {
 				case "Easy":
-					SCENE_SHIFT_INCR = DEF.EASY_SCENE_SHIFT_INCR;
-					SCENE_SHIFT_TIME = DEF.EASY_SCENE_SHIFT_TIME;
+					SCENE_SHIFT_INCR = DEF.SCENE_SHIFT_INCR;
+					SCENE_SHIFT_TIME = DEF.SCENE_SHIFT_TIME;
 					BLOB_DROP_TIME = DEF.BLOB_EASY_DROP_TIME;
 					BLOB_DROP_VEL = DEF.BLOB_EASY_DROP_VEL;
 					BLOB_FLY_VEL = DEF.EASY_BLOB_FLY_VEL;
+					PIG_DROP_Y_VEL=DEF.EASY_PIG_DROP_Y_VEL;
 					break;
 	        	case "Medium":
-					SCENE_SHIFT_INCR = DEF.MED_SCENE_SHIFT_INCR;
-					SCENE_SHIFT_TIME = DEF.MED_SCENE_SHIFT_TIME;
+	        		SCENE_SHIFT_INCR = DEF.SCENE_SHIFT_INCR;
+					SCENE_SHIFT_TIME = DEF.SCENE_SHIFT_TIME;
 					BLOB_DROP_TIME = DEF.BLOB_MED_DROP_TIME;
 					BLOB_DROP_VEL = DEF.BLOB_MED_DROP_VEL;
 					BLOB_FLY_VEL = DEF.MED_BLOB_FLY_VEL;
+					PIG_DROP_Y_VEL=DEF.MED_PIG_DROP_Y_VEL;
 					break;
 	        	case "Hard":
-					SCENE_SHIFT_INCR = DEF.HARD_SCENE_SHIFT_INCR;
-					SCENE_SHIFT_TIME = DEF.HARD_SCENE_SHIFT_TIME;
+	        		SCENE_SHIFT_INCR = DEF.SCENE_SHIFT_INCR;
+					SCENE_SHIFT_TIME = DEF.SCENE_SHIFT_TIME;
 					BLOB_DROP_TIME = DEF.BLOB_HARD_DROP_TIME;
 					BLOB_DROP_VEL = DEF.BLOB_HARD_DROP_VEL;
 					BLOB_FLY_VEL = DEF.HARD_BLOB_FLY_VEL;
+					PIG_DROP_Y_VEL=DEF.HARD_PIG_DROP_Y_VEL;
 					break;
 				case "":
-					SCENE_SHIFT_INCR = DEF.HARD_SCENE_SHIFT_INCR;
-					SCENE_SHIFT_TIME = DEF.HARD_SCENE_SHIFT_TIME;
-					BLOB_DROP_TIME = DEF.BLOB_HARD_DROP_TIME;
-					BLOB_DROP_VEL = DEF.BLOB_HARD_DROP_VEL;
-					BLOB_FLY_VEL = DEF.HARD_BLOB_FLY_VEL;
+					SCENE_SHIFT_INCR = DEF.SCENE_SHIFT_INCR;
+					SCENE_SHIFT_TIME = DEF.SCENE_SHIFT_TIME;
+					BLOB_DROP_TIME = DEF.BLOB_EASY_DROP_TIME;
+					BLOB_DROP_VEL = DEF.BLOB_EASY_DROP_VEL;
+					BLOB_FLY_VEL = DEF.EASY_BLOB_FLY_VEL;
+					PIG_DROP_Y_VEL=DEF.EASY_PIG_DROP_Y_VEL;
 					break;
 	       }
 	}
@@ -447,7 +450,6 @@ public class AngryFlappyBird extends Application {
 class MyTimer extends AnimationTimer {
 
 	//this counter is used to set the background switch time
-	int background_counter = 0;
 	public void handle(long now) { 	
 		background_counter++;
 
@@ -465,8 +467,8 @@ class MyTimer extends AnimationTimer {
 		if (GAME_START) {
 	 	
 	 		//step1: update background
-			if (bgr_counter>450) {
-				bgr_counter=0;
+			if (background_counter>450) {
+				background_counter=0;
 				isNightBackground= !isNightBackground;
 			}
 	 		displayBackground();
@@ -492,7 +494,8 @@ class MyTimer extends AnimationTimer {
 			//step4: check for collision only when we are not in
 			//autopilot mode
 			if(!isAutoPilot) {
-			checkCollision();
+				updatePipesScore();
+				checkCollision();
 			}
 	 	
 			// step5: update blob
@@ -654,7 +657,7 @@ class MyTimer extends AnimationTimer {
 			}
 			if(randPig>.5 && randPig<.8){
 				showPig=true;
-			pig.setPositionXY(nextX_down-9, nextY_down+320);
+			pig.setPositionXY(nextX_down-9, nextY_down+280);
 			}
 		}
 
@@ -683,7 +686,18 @@ class MyTimer extends AnimationTimer {
 		}
 	}
 
-	
+	/**
+	  * @param None
+	  * updatePipesScore updates the score when we pass through 
+	  */
+	 public void updatePipesScore() {
+	     for (int i = 0; i < DEF.PIPE_COUNT; i++) {
+	         if (dPipes.get(i).getPositionX()== -(dPipes.get(i).getPositionX())){
+              currentScores++;
+              updateScoreText();
+	         }
+	     }
+	 }
 	/**
 	 * @params None
 	 * resetBirdPosition is responsible for resetting the bird's position by creating a bounce
@@ -732,14 +746,12 @@ class MyTimer extends AnimationTimer {
 		if (currentLives <= 0) {
 		    GAME_OVER = true;
 		    bounced = false;
-            pigCollision =  false;
             pipeCollision = false;
 		}
 		    
 		// if GAME_OVER == true, we stop the timer and display the game over animation
 		 if (GAME_OVER) {
 			bounced = false;
-            pigCollision =  false;
             pipeCollision = false;
 			showHitEffect();
 			blob.stopCollisionSound();
@@ -806,7 +818,7 @@ class MyTimer extends AnimationTimer {
 	 */
 	private void checkCollision_blob_dpipes() {
 		for (Pipe dPipe: dPipes) {
-			if((dPipe.getPositionX() == blob.getPositionX() || dPipe.getPositionY() == blob.getPositionY()) && blob.intersectsPipe(dPipe)) {
+			if((dPipe.getPositionX()+10 == blob.getPositionX() || dPipe.getPositionY()-10 == blob.getPositionY()) && blob.intersectsPipe(dPipe)) {
 				bounceTime = System.nanoTime();
 				bounced = true;
 	            pipeCollision=true;
@@ -825,7 +837,7 @@ class MyTimer extends AnimationTimer {
 	 */
 	private void checkCollision_blob_upipes() {
 		for (Pipe uPipe: uPipes) {
-			if((uPipe.getPositionX() == blob.getPositionX() || uPipe.getPositionY() == blob.getPositionY()) && blob.intersectsPipe(uPipe)) {
+			if((uPipe.getPositionX()+10 == blob.getPositionX()|| uPipe.getPositionY()-10 == blob.getPositionY()) && blob.intersectsPipe(uPipe)) {
 				bounceTime = System.nanoTime();
 				bounced = true;
 	            pipeCollision=true;
@@ -927,7 +939,6 @@ class MyTimer extends AnimationTimer {
 	
 	private void isBounced() {
 	    long bouncedDifference = System.nanoTime() - bounceTime;
-
 	    if (bouncedDifference <= 2000000000L) {
 	    	 if (bouncedDifference <= 1000000000L) {
 	    		 // Move the bird down and to left during the first second of bouncing
@@ -945,7 +956,6 @@ class MyTimer extends AnimationTimer {
 	    else {
 	        // Reset the bouncing-related flags and bird's position after 2 seconds
 	        bounced = false;
-	        pigCollision = false;
 	        pipeCollision = false;
 	        resumeOperation();
 
