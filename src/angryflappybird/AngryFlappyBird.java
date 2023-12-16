@@ -69,10 +69,10 @@ public class AngryFlappyBird extends Application {
 	// game components
 	private Blob blob;
 	private ArrayList<Sprite> floors;
-	private ArrayList<Pipe> uPipes;
-	private ArrayList<Pipe> dPipes;
-	private Pipe dPipe;
-	private Pipe uPipe;
+	private ArrayList<Sprite> uPipes;
+	private ArrayList<Sprite> dPipes;
+	private Sprite dPipe;
+	private Sprite uPipe;
 	private Sprite whiteEgg;
 	private Sprite goldEgg;
 	private Sprite pig;
@@ -359,7 +359,7 @@ public class AngryFlappyBird extends Application {
 				// Limit the randomOffset so that D_PIPE_POS_Y never goes higher than 0
 				randomOffset = Math.min(randomOffset, Math.abs(DEF.D_PIPE_POS_Y));
 				initialY = DEF.D_PIPE_POS_Y - randomOffset;
-				dPipe = new Pipe(initialX, initialY, DEF.IMAGE.get("dpipe2"));
+				dPipe = new Sprite(initialX, initialY, DEF.IMAGE.get("dpipe2"));
 				dPipe.setVelocity(SCENE_SHIFT_INCR, 0);
 				dPipe.render(gc);
 				dPipes.add(dPipe);
@@ -370,7 +370,7 @@ public class AngryFlappyBird extends Application {
 				goldenEggs.add(goldEgg);
 				
 				uPipeInitialY = initialY + DEF.PIPE_Y_GAP;
-				uPipe = new Pipe(initialX, uPipeInitialY, DEF.IMAGE.get("upipe1"));
+				uPipe = new Sprite(initialX, uPipeInitialY, DEF.IMAGE.get("upipe1"));
 				uPipe.setVelocity(SCENE_SHIFT_INCR, 0);
 				uPipe.render(gc);
 				uPipes.add(uPipe);
@@ -555,8 +555,8 @@ class MyTimer extends AnimationTimer {
 	 */
 	private void moveBlob() {
 		//set a sound for the blob's movement.
-		blob.setCollisionSound(DEF.AUDIO.get("bird_flapping_1"));
-		blob.playCollisionSound();
+		blob.setSound(DEF.AUDIO.get("bird_flapping_1"));
+		blob.playSound();
 		long diffTime = System.nanoTime() - clickTime;
 		
 		// this switches the blob into different images to create the illusion of flying
@@ -741,6 +741,7 @@ class MyTimer extends AnimationTimer {
             pipeCollision = false;
             pigCollision = false;
 			showHitEffect();
+			blob.stopSound();
 			for (Sprite floor: floors) {
 				//stop the floors animation
 				floor.setVelocity(0, 0);
@@ -774,8 +775,8 @@ class MyTimer extends AnimationTimer {
 	 */
 	private void checkCollision_blob_white_egg() {
 		if (blob.intersectsSprite(whiteEgg)) {
-			blob.setCollisionSound(DEF.AUDIO.get("collect_coin_1"));
-			blob.playCollisionSound();
+			blob.setSound(DEF.AUDIO.get("collect_coin_1"));
+			blob.playSound();
 			currentScores += 2;
 			updateScoreText();
 			whiteEgg.setPositionXY(-100, -100);
@@ -787,8 +788,8 @@ class MyTimer extends AnimationTimer {
 	 */
 	private void checkCollision_blob_gold_egg() {
 		if (blob.intersectsSprite(goldEgg)) {
-			blob.setCollisionSound(DEF.AUDIO.get("collect_coin_1"));
-			blob.playCollisionSound();
+			blob.setSound(DEF.AUDIO.get("collect_coin_1"));
+			blob.playSound();
 		    goldEgg.setPositionXY(-100, -100);
 			blob.setImage(DEF.IMAGE.get("bird_with_parachute"));
 			blob.setVelocity(0, 0);
@@ -805,13 +806,13 @@ class MyTimer extends AnimationTimer {
 	 * if it does, a live is taken and the total lives the blob has is updated.
 	 */
 	private void checkCollision_blob_dpipes() {
-		for (Pipe dPipe: dPipes) {
+		for (Sprite dPipe: dPipes) {
 			if((dPipe.getPositionX()+10 == blob.getPositionX() || dPipe.getPositionY()-10 == blob.getPositionY()) && blob.intersectsPipe(dPipe)) {
 				bounceTime = System.nanoTime();
 				bounced = true;
 	            pipeCollision=true;
-				blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
-				blob.playCollisionSound();
+				blob.setSound(DEF.AUDIO.get("obstacle_hit_1"));
+				blob.playSound();
 				currentLives--;
 				updateLivesText();
 			}
@@ -824,13 +825,13 @@ class MyTimer extends AnimationTimer {
 	 * if it does, a live is taken and the total lives the blob has is updated.
 	 */
 	private void checkCollision_blob_upipes() {
-		for (Pipe uPipe: uPipes) {
+		for (Sprite uPipe: uPipes) {
 			if((uPipe.getPositionX()+10 == blob.getPositionX()|| uPipe.getPositionY()-10 == blob.getPositionY()) && blob.intersectsPipe(uPipe)) {
 				bounceTime = System.nanoTime();
 				bounced = true;
 	            pipeCollision=true;
-				blob.setCollisionSound(DEF.AUDIO.get("obstacle_hit_1"));
-				blob.playCollisionSound();
+	            blob.setSound(DEF.AUDIO.get("obstacle_hit_1"));
+				blob.playSound();
 				currentLives--;
 				updateLivesText();
 			}
@@ -846,8 +847,6 @@ class MyTimer extends AnimationTimer {
 		if (blob.intersectsSprite(pig)) {
 			pigCollision = true;
 			bounced = true;
-	    	//GAME_OVER = true;
-	    	//gameOverAnimation.setVisible(true);
 	    }
 	}
 	 
@@ -856,7 +855,7 @@ class MyTimer extends AnimationTimer {
 	* CheckCollision pig with upipe to set it off screen when it interacts with a downard pipe
 	*/
 	 private void checkCollision_pig_pipe() {
-		for (Pipe uPipe: uPipes) {
+		for (Sprite uPipe: uPipes) {
 			if(pig.intersectsPipe(uPipe)) {
 				 pig.setPositionXY(-100, -100);
 			}
@@ -927,7 +926,7 @@ class MyTimer extends AnimationTimer {
 	
 	private void isBounced() {
 	    long bouncedDifference = System.nanoTime() - bounceTime;
-	    blob.stopCollisionSound();
+	    blob.stopSound();
 	    if (bouncedDifference <= 2000000000L) {
 	    	 if (bouncedDifference <= 1000000000L) {
 	    		 // Move the bird down and to left during the first second of bouncing
@@ -953,10 +952,10 @@ class MyTimer extends AnimationTimer {
         for (Sprite floor : floors) {
             floor.setVelocity(0, 0);        
         }
-        for (Pipe dPipe : dPipes) {
+        for (Sprite dPipe : dPipes) {
             dPipe.setVelocity(0, 0);        
         }
-        for (Pipe uPipe : uPipes) {
+        for (Sprite uPipe : uPipes) {
             uPipe.setVelocity(0, 0);        
         }
         for (Sprite whiteEgg : whiteEggs) {
@@ -973,10 +972,10 @@ class MyTimer extends AnimationTimer {
      for (Sprite floor : floors) {
          floor.setVelocity(SCENE_SHIFT_INCR, 0);       
      }
-     for (Pipe downPipe : dPipes) {
+     for (Sprite downPipe : dPipes) {
          downPipe.setVelocity(SCENE_SHIFT_INCR, 0);        
      }
-     for (Pipe upPipe : uPipes) {
+     for (Sprite upPipe : uPipes) {
          upPipe.setVelocity(SCENE_SHIFT_INCR, 0);         
      }
      for (Sprite whiteEgg : whiteEggs) {

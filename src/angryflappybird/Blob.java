@@ -1,3 +1,6 @@
+/**
+ * @author Emmanuella Umoye, Keisha Modi, Anh Pham
+ */
 package angryflappybird;
 
 import javafx.animation.TranslateTransition;
@@ -8,8 +11,12 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
-public class Blob extends SpriteAbstract{
+/**
+ * The blob class is a child class of the sprite class. It is responsible for defining the blob properties
+ */
+public class Blob extends Sprite{
 	
+	//Initializing blob instance properties
 	public Image image;
 	public double positionX;
 	public double positionY;
@@ -17,90 +24,135 @@ public class Blob extends SpriteAbstract{
 	public double velocityY;
 	public double width;
 	public double height;
-	private MediaPlayer collisionSound;
+	private MediaPlayer sound;
 	private String blob_image_name;
 	
+	/**
+	 * @param None
+	 * Declaring a blob with default properties set to 0 or empty character
+	 */
 	public Blob() {
 		super();
 	}
 	
+	/**
+	 * @param pX
+	 * @param pY
+	 * @param img
+	 * This blob constructor assigns X-axis, Y-axis and an image to the blob.
+	 */
 	public Blob(double pX, double pY, Image img) {
 		super(pX, pY, img);
 	}
+	
+	/**
+	 * init method is for unittests ONLY
+	 */
+	public void init() {
+		super.init();
+	}
 
+	/**
+	 * @param vX
+	 * @param vY
+	 * setVelocity sets the velocity of the blob
+	 */
 	public void setVelocity(double vX, double vY) {
 		super.setVelocity(vX, vY);
 	}
 	
+	/**
+	 * @param pX
+	 * @param pY
+	 * setPositionXY sets the X and Y axis of the blob
+	 */
 	public void setPositionXY(double pX, double pY) {
 		super.setPositionXY(pX, pY);
 	}
 	
+	/**
+	 * @param none
+	 * getPositionX returns the X-axis position of the blob
+	 */
 	public double getPositionX() {
 		return super.getPositionX();
 	}
 	
+	/**
+	 * @param none
+	 * getPositionY returns the Y-axis position of the blob
+	 */
 	public double getPositionY() {
 		return super.getPositionX();
 	}
 	
+	/** 
+	 * @param time
+	 * update updates the time frequency for the next velocity of the 
+	 */
 	public void update(double time) {
 		super.update(time);
 	}
 	
+	/**
+	 * @param img
+	 * setImage sets the image for the blob
+	 */
 	public void setImage(Image img) {
 		super.setImage(img);
 	}
 	
+	/**
+	 * @param None
+	 * render renders the graphic on the scene
+	 */
 	public void render(GraphicsContext gc) {
 		super.render(gc);
 	}
-	
-    public boolean intersectsPipe(Pipe p) {
-        return p.getBoundary().intersects(this.getBoundary());
-    }
     
+    /**
+     * @param pig
+     * @return True if the pig intersects the blob
+     * intersectsPig checks for an intersection of the blob with the pig. It returns true if there is an
+     * intersection. False otherwise
+     */
     public boolean intersectsPig(Sprite pig) {
     	return pig.getBoundary().intersects(this.getBoundary());
     }
     
+    
+    /**
+     * @param Sprite
+     * @return boolean
+     * intersectsSprite checks for an intersection of the blob with the another sprite(e.g pipes, egg).
+     * It returns true if there is an intersection. False otherwise
+     */
     public boolean intersectsSprite(Sprite e) {
     	return super.intersectsSprite(e);
     }
     
-    public void setCollisionSound(MediaPlayer media) {
-        collisionSound = media;
+    /**
+     * @param media
+     * setCollisionSound sets the sound of the game
+     */
+    public void setSound(MediaPlayer media) {
+        sound = media;
     }
     
-    public void playCollisionSound() {
-        collisionSound.play();
+    /**
+     * @param none
+     * playSound plays the sound of the game
+     */
+    public void playSound() {
+        sound.play();
     }
     
-    public void stopCollisionSound() {
-    	collisionSound.stop();
-    }
-    
-    public void applyBounceAnimation() {
-    	//System.out.println("the bouncer is bouncing");
-        // Create a TranslateTransition for the bounce effect
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(5));
-
-        // Set the initial and final positions for the bounce effect
-//        translateTransition.setFromY(10);
-//        translateTransition.setToY(30); // Adjust the bounce height as needed
-        
-        translateTransition.setFromX(300);
-        translateTransition.setToX(100);
-
-
-        // Set the number of cycles for the bounce effect
-        translateTransition.setCycleCount(TranslateTransition.INDEFINITE);
-
-        // Set the auto-reverse property to true for a smoother bounce effect
-        translateTransition.setAutoReverse(true);
-
-        // Play the animation
-        translateTransition.play();
+    /**
+     * @param None
+     * stopSound stops the game sound
+     */
+    public void stopSound() {
+    	sound.stop();
     }
     
     /**
